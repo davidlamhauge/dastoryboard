@@ -36,7 +36,7 @@ private:
     void resizeImage(QImage *image, const QSize &newSize);
 
     bool modified;
-    bool scribbling;
+    bool sketching;
     int myPenWidth;
     QColor myPenColor;
     QImage image;

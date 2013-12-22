@@ -28,21 +28,21 @@ void sketchPad::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
-        scribbling = true;
+        sketching = true;
     }
 }
 
 void sketchPad::mouseMoveEvent(QMouseEvent *event)
 {
-    if ((event->buttons() & Qt::LeftButton) && scribbling)
+    if ((event->buttons() & Qt::LeftButton) && sketching)
         drawLineTo(event->pos());
 }
 
 void sketchPad::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton && scribbling) {
+    if (event->button() == Qt::LeftButton && sketching) {
         drawLineTo(event->pos());
-        scribbling = false;
+        sketching = false;
     }
 }
 
