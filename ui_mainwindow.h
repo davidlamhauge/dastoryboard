@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Dec 22 22:44:39 2013
+** Created: Mon Dec 23 11:28:45 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -22,6 +22,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
+#include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
@@ -36,6 +37,9 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *action_New_Storyboard;
+    QAction *action_Save_Storyboard;
+    QAction *actionE_xit;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout_3;
@@ -67,6 +71,7 @@ public:
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
     QMenuBar *menuBar;
+    QMenu *menu_File;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -80,6 +85,12 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
+        action_New_Storyboard = new QAction(MainWindow);
+        action_New_Storyboard->setObjectName(QString::fromUtf8("action_New_Storyboard"));
+        action_Save_Storyboard = new QAction(MainWindow);
+        action_Save_Storyboard->setObjectName(QString::fromUtf8("action_Save_Storyboard"));
+        actionE_xit = new QAction(MainWindow);
+        actionE_xit->setObjectName(QString::fromUtf8("actionE_xit"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -91,6 +102,11 @@ public:
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         imageContainer = new QWidget(centralWidget);
         imageContainer->setObjectName(QString::fromUtf8("imageContainer"));
+        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(imageContainer->sizePolicy().hasHeightForWidth());
+        imageContainer->setSizePolicy(sizePolicy1);
         imageContainer->setMinimumSize(QSize(800, 130));
         imageContainer->setMaximumSize(QSize(16777215, 130));
 
@@ -132,11 +148,11 @@ public:
 
         btnApplyComment = new QPushButton(centralWidget);
         btnApplyComment->setObjectName(QString::fromUtf8("btnApplyComment"));
-        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(btnApplyComment->sizePolicy().hasHeightForWidth());
-        btnApplyComment->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(btnApplyComment->sizePolicy().hasHeightForWidth());
+        btnApplyComment->setSizePolicy(sizePolicy2);
 
         horizontalLayout_2->addWidget(btnApplyComment);
 
@@ -254,18 +270,26 @@ public:
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 1026, 25));
+        menu_File = new QMenu(menuBar);
+        menu_File->setObjectName(QString::fromUtf8("menu_File"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(mainToolBar->sizePolicy().hasHeightForWidth());
-        mainToolBar->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(mainToolBar->sizePolicy().hasHeightForWidth());
+        mainToolBar->setSizePolicy(sizePolicy3);
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
+
+        menuBar->addAction(menu_File->menuAction());
+        menu_File->addAction(action_New_Storyboard);
+        menu_File->addAction(action_Save_Storyboard);
+        menu_File->addSeparator();
+        menu_File->addAction(actionE_xit);
 
         retranslateUi(MainWindow);
 
@@ -275,12 +299,19 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "daStoryBoard", 0, QApplication::UnicodeUTF8));
+        action_New_Storyboard->setText(QApplication::translate("MainWindow", "&New Storyboard", 0, QApplication::UnicodeUTF8));
+        action_New_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+N", 0, QApplication::UnicodeUTF8));
+        action_Save_Storyboard->setText(QApplication::translate("MainWindow", "&Save Storyboard", 0, QApplication::UnicodeUTF8));
+        action_Save_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0, QApplication::UnicodeUTF8));
+        actionE_xit->setText(QApplication::translate("MainWindow", "E&xit", 0, QApplication::UnicodeUTF8));
+        actionE_xit->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         btnApplyComment->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot #", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
         btnCancel->setText(QApplication::translate("MainWindow", "Cancel", 0, QApplication::UnicodeUTF8));
         btnApplyShotFrames->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
+        menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon Dec 23 09:51:02 2013
+** Created: Mon Dec 23 15:16:06 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -32,17 +32,18 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x0a,
-      27,   11,   11,   11, 0x0a,
-      42,   11,   11,   11, 0x08,
-      53,   11,   11,   11, 0x08,
-      64,   11,   11,   11, 0x08,
+      30,   11,   11,   11, 0x0a,
+      47,   11,   11,   11, 0x08,
+      58,   11,   11,   11, 0x08,
+      69,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0hideStoryPad()\0showStoryPad()\0"
-    "penColor()\0penWidth()\0about()\0"
+    "MainWindow\0\0disableStoryPad()\0"
+    "enableStoryPad()\0penColor()\0penWidth()\0"
+    "about()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -51,8 +52,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_ASSERT(staticMetaObject.cast(_o));
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->hideStoryPad(); break;
-        case 1: _t->showStoryPad(); break;
+        case 0: _t->disableStoryPad(); break;
+        case 1: _t->enableStoryPad(); break;
         case 2: _t->penColor(); break;
         case 3: _t->penWidth(); break;
         case 4: _t->about(); break;

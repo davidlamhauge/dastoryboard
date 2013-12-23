@@ -9,9 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-  //  hideStoryPad();
     setupConnects();
+    scene = new QGraphicsScene(ui->gvSketchPad);
 
+    disableStoryPad();
 
 }
 
@@ -22,37 +23,40 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupConnects()
 {
+    connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
 }
 
-void MainWindow::hideStoryPad()
+void MainWindow::disableStoryPad()
 {
-    ui->gvSketchPad->hide();
-    ui->labShot->hide();
-    ui->labFrames->hide();
-    ui->leShot->hide();
-    ui->sbFrames->hide();
-    ui->btnCancel->hide();
-    ui->btnApplyShotFrames->hide();
-    ui->labComments->hide();
-    ui->leComment->hide();
+    ui->gvSketchPad->setEnabled(false);
+    ui->labShot->setEnabled(false);
+    ui->labFrames->setEnabled(false);
+    ui->leShot->setEnabled(false);
+    ui->sbFrames->setEnabled(false);
+    ui->btnCancel->setEnabled(false);
+    ui->btnApplyShotFrames->setEnabled(false);
+    ui->labComments->setEnabled(false);
+    ui->leComment->setEnabled(false);
+    ui->btnApplyComment->setEnabled(false);
 }
 
-void MainWindow::showStoryPad()
+void MainWindow::enableStoryPad()
 {
-    ui->gvSketchPad->show();
-    ui->labShot->show();
-    ui->labFrames->show();
-    ui->leShot->show();
-    ui->sbFrames->show();
-    ui->btnCancel->show();
-    ui->btnApplyShotFrames->show();
-    ui->labComments->show();
-    ui->leComment->show();
+    ui->gvSketchPad->setEnabled(true);
+    ui->labShot->setEnabled(true);
+    ui->labFrames->setEnabled(true);
+    ui->leShot->setEnabled(true);
+    ui->sbFrames->setEnabled(true);
+    ui->btnCancel->setEnabled(true);
+    ui->btnApplyShotFrames->setEnabled(true);
+    ui->labComments->setEnabled(true);
+    ui->leComment->setEnabled(true);
+    ui->btnApplyComment->setEnabled(true);
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    e->ignore(); // TODO!!!
+    e->accept(); // TODO!!!
 }
 
 void MainWindow::penColor()

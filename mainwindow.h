@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QList>
+#include <QtGui>
 #include <QMainWindow>
 
 class SketchPad;
@@ -19,8 +20,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void hideStoryPad();    // hides storypad + buttons etc
-    void showStoryPad();    // shows storypad + buttons etc
+    void disableStoryPad();     // disables storypad + buttons etc
+    void enableStoryPad();      // enables storypad + buttons etc
 
 protected:
     void closeEvent(QCloseEvent *e);
@@ -32,27 +33,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void setupConnects();   // initiates connects
-    void enFunktion();
-    void haHa();
 
-    void createMenus();
+    void setupConnects();   // initiates connects
+
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
 
+    QGraphicsScene *scene;
     SketchPad *sketchPad;
-
-    QMenu *fileMenu;
-    QMenu *optionMenu;
-    QMenu *helpMenu;
-
-    QAction *exitAct;
-    QAction *penColorAct;
-    QAction *penWidthAct;
-    QAction *clearScreenAct;
-    QAction *aboutAct;
-    QAction *aboutQtAct;
-
 };
 
 #endif // MAINWINDOW_H

@@ -5,6 +5,10 @@
 SketchPad::SketchPad(QWidget *parent) :
     QWidget(parent)
 {
+    modified = false;
+    sketching = false;
+    myPenWidth = 3;
+    myPenColor = Qt::gray;
 }
 
 void SketchPad::setPenColor(const QColor &newColor)
@@ -24,36 +28,36 @@ void SketchPad::clearImage()
     update();
 }
 
-void SketchPad::mousePressEvent(QMouseEvent *event)
+void SketchPad::mousePressEvent(QMouseEvent *e)
 {
-    if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos();
+    if (e->button() == Qt::LeftButton) {
+        lastPoint = e->pos();
         sketching = true;
     }
 }
 
-void SketchPad::mouseMoveEvent(QMouseEvent *event)
+void SketchPad::mouseMoveEvent(QMouseEvent *e)
 {
-    if ((event->buttons() & Qt::LeftButton) && sketching)
-        drawLineTo(event->pos());
+    if ((e->buttons() & Qt::LeftButton) && sketching)
+        drawLineTo(e->pos());
 }
 
-void SketchPad::mouseReleaseEvent(QMouseEvent *event)
+void SketchPad::mouseReleaseEvent(QMouseEvent *e)
 {
-    if (event->button() == Qt::LeftButton && sketching) {
-        drawLineTo(event->pos());
+    if (e->button() == Qt::LeftButton && sketching) {
+        drawLineTo(e->pos());
         sketching = false;
     }
 }
 
-void SketchPad::paintEvent(QPaintEvent *event)
+void SketchPad::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
-    QRect dirtyRect = event->rect();
+    QRect dirtyRect = e->rect();
     painter.drawImage(dirtyRect, image, dirtyRect);
 }
 
-void SketchPad::resizeEvent(QResizeEvent *event)
+void SketchPad::resizeEvent(QResizeEvent *e)
 {
     if (width() > image.width() || height() > image.height()) {
         int newWidth = qMax(width() + 128, image.width());
@@ -61,7 +65,7 @@ void SketchPad::resizeEvent(QResizeEvent *event)
         resizeImage(&image, QSize(newWidth, newHeight));
         update();
     }
-    QWidget::resizeEvent(event);
+    QWidget::resizeEvent(e);
 }
 
 void SketchPad::drawLineTo(const QPoint &endPoint)
