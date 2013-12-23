@@ -2,29 +2,29 @@
 
 #include "sketchpad.h"
 
-sketchPad::sketchPad(QWidget *parent) :
+SketchPad::SketchPad(QWidget *parent) :
     QWidget(parent)
 {
 }
 
-void sketchPad::setPenColor(const QColor &newColor)
+void SketchPad::setPenColor(const QColor &newColor)
 {
     myPenColor = newColor;
 }
 
-void sketchPad::setPenWidth(int newWidth)
+void SketchPad::setPenWidth(int newWidth)
 {
     myPenWidth = newWidth;
 }
 
-void sketchPad::clearImage()
+void SketchPad::clearImage()
 {
     image.fill(qRgb(255, 255, 255));
     modified = true;
     update();
 }
 
-void sketchPad::mousePressEvent(QMouseEvent *event)
+void SketchPad::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
@@ -32,13 +32,13 @@ void sketchPad::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void sketchPad::mouseMoveEvent(QMouseEvent *event)
+void SketchPad::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton) && sketching)
         drawLineTo(event->pos());
 }
 
-void sketchPad::mouseReleaseEvent(QMouseEvent *event)
+void SketchPad::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton && sketching) {
         drawLineTo(event->pos());
@@ -46,14 +46,14 @@ void sketchPad::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void sketchPad::paintEvent(QPaintEvent *event)
+void SketchPad::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     painter.drawImage(dirtyRect, image, dirtyRect);
 }
 
-void sketchPad::resizeEvent(QResizeEvent *event)
+void SketchPad::resizeEvent(QResizeEvent *event)
 {
     if (width() > image.width() || height() > image.height()) {
         int newWidth = qMax(width() + 128, image.width());
@@ -64,7 +64,7 @@ void sketchPad::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void sketchPad::drawLineTo(const QPoint &endPoint)
+void SketchPad::drawLineTo(const QPoint &endPoint)
 {
     QPainter painter(&image);
     painter.setPen(QPen(myPenColor, myPenWidth, Qt::SolidLine, Qt::RoundCap,
@@ -78,7 +78,7 @@ void sketchPad::drawLineTo(const QPoint &endPoint)
     lastPoint = endPoint;
 }
 
-void sketchPad::resizeImage(QImage *image, const QSize &newSize)
+void SketchPad::resizeImage(QImage *image, const QSize &newSize)
 {
     if (image->size() == newSize)
         return;

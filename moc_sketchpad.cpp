@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sketchpad.h'
 **
-** Created: Sun Dec 22 10:42:36 2013
+** Created: Sun Dec 22 22:44:50 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_sketchPad[] = {
+static const uint qt_meta_data_SketchPad[] = {
 
  // content:
        6,       // revision
@@ -36,15 +36,15 @@ static const uint qt_meta_data_sketchPad[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_sketchPad[] = {
-    "sketchPad\0\0clearImage()\0"
+static const char qt_meta_stringdata_SketchPad[] = {
+    "SketchPad\0\0clearImage()\0"
 };
 
-void sketchPad::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void SketchPad::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         Q_ASSERT(staticMetaObject.cast(_o));
-        sketchPad *_t = static_cast<sketchPad *>(_o);
+        SketchPad *_t = static_cast<SketchPad *>(_o);
         switch (_id) {
         case 0: _t->clearImage(); break;
         default: ;
@@ -53,33 +53,33 @@ void sketchPad::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     Q_UNUSED(_a);
 }
 
-const QMetaObjectExtraData sketchPad::staticMetaObjectExtraData = {
+const QMetaObjectExtraData SketchPad::staticMetaObjectExtraData = {
     0,  qt_static_metacall 
 };
 
-const QMetaObject sketchPad::staticMetaObject = {
-    { &QWidget::staticMetaObject, qt_meta_stringdata_sketchPad,
-      qt_meta_data_sketchPad, &staticMetaObjectExtraData }
+const QMetaObject SketchPad::staticMetaObject = {
+    { &QWidget::staticMetaObject, qt_meta_stringdata_SketchPad,
+      qt_meta_data_SketchPad, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &sketchPad::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &SketchPad::getStaticMetaObject() { return staticMetaObject; }
 #endif //Q_NO_DATA_RELOCATION
 
-const QMetaObject *sketchPad::metaObject() const
+const QMetaObject *SketchPad::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
-void *sketchPad::qt_metacast(const char *_clname)
+void *SketchPad::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_sketchPad))
-        return static_cast<void*>(const_cast< sketchPad*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_SketchPad))
+        return static_cast<void*>(const_cast< SketchPad*>(this));
     return QWidget::qt_metacast(_clname);
 }
 
-int sketchPad::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int SketchPad::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)

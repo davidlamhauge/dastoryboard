@@ -1,5 +1,8 @@
+#include <QtGui>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "sketchpad.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,6 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
   //  hideStoryPad();
     setupConnects();
+
+
 }
 
 MainWindow::~MainWindow()
@@ -21,7 +26,7 @@ void MainWindow::setupConnects()
 
 void MainWindow::hideStoryPad()
 {
-    ui->gvStoryPad->hide();
+    ui->gvSketchPad->hide();
     ui->labShot->hide();
     ui->labFrames->hide();
     ui->leShot->hide();
@@ -34,7 +39,7 @@ void MainWindow::hideStoryPad()
 
 void MainWindow::showStoryPad()
 {
-    ui->gvStoryPad->show();
+    ui->gvSketchPad->show();
     ui->labShot->show();
     ui->labFrames->show();
     ui->leShot->show();
@@ -43,4 +48,34 @@ void MainWindow::showStoryPad()
     ui->btnApplyShotFrames->show();
     ui->labComments->show();
     ui->leComment->show();
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    e->ignore(); // TODO!!!
+}
+
+void MainWindow::penColor()
+{
+    QColor newColor = QColorDialog::getColor(sketchPad->penColor());
+    if (newColor.isValid())
+        sketchPad->setPenColor(newColor);
+}
+
+void MainWindow::penWidth()
+{
+    bool ok;
+    int newWidth = QInputDialog::getInteger(this, tr("Sketch Pad"),
+                                            tr("Select pen width:"),
+                                            sketchPad->penWidth(),
+                                            1, 50, 1, &ok);
+    if (ok)
+        sketchPad->setPenWidth(newWidth);
+}
+
+void MainWindow::about()
+{
+    QMessageBox::about(this, tr("About dastoryboard"),
+            tr("<p><b>dastoryboard</b> is an Open Source storyboard software "
+               "for your conveniance. Please enjoy!"));
 }

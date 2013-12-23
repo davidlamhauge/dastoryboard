@@ -6,11 +6,11 @@
 #include <QPoint>
 #include <QWidget>
 
-class sketchPad : public QWidget
+class SketchPad : public QWidget
 {
     Q_OBJECT
 public:
-    explicit sketchPad(QWidget *parent = 0);
+    explicit SketchPad(QWidget *parent = 0);
 
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);

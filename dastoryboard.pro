@@ -12,9 +12,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    sketchpad.cpp
+        sketchpad.cpp
 
 HEADERS  += mainwindow.h \
-    sketchpad.h
+        sketchpad.h
 
 FORMS    += mainwindow.ui
