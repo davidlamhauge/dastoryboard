@@ -10,10 +10,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setupConnects();
-    scene = new QGraphicsScene(ui->gvSketchPad);
+    scene = new QGraphicsScene(this);
+    ui->gvSketchPad->setScene(scene);
 
-    disableStoryPad();
-
+    sketchPad = new SketchPad;
+    sketchPad->setFixedSize(640,480);
+    scene->addWidget(sketchPad);
+    scene->addText("Hej!");
+    sketchPad->setFocus();
 }
 
 MainWindow::~MainWindow()

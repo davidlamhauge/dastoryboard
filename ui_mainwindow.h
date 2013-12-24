@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Dec 23 11:28:45 2013
+** Created: Mon Dec 23 23:04:40 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -42,7 +42,7 @@ public:
     QAction *actionE_xit;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
-    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *verticalLayout_4;
     QWidget *imageContainer;
     QFrame *line_3;
     QHBoxLayout *horizontalLayout_4;
@@ -67,7 +67,7 @@ public:
     QPushButton *btnApplyShotFrames;
     QFrame *line_2;
     QSpacerItem *verticalSpacer_2;
-    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
     QMenuBar *menuBar;
@@ -80,7 +80,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(1026, 818);
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
@@ -97,12 +97,12 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         imageContainer = new QWidget(centralWidget);
         imageContainer->setObjectName(QString::fromUtf8("imageContainer"));
-        QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(imageContainer->sizePolicy().hasHeightForWidth());
@@ -110,14 +110,14 @@ public:
         imageContainer->setMinimumSize(QSize(800, 130));
         imageContainer->setMaximumSize(QSize(16777215, 130));
 
-        verticalLayout_3->addWidget(imageContainer);
+        verticalLayout_4->addWidget(imageContainer);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QString::fromUtf8("line_3"));
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
-        verticalLayout_3->addWidget(line_3);
+        verticalLayout_4->addWidget(line_3);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
@@ -243,28 +243,29 @@ public:
 
         horizontalLayout_4->addLayout(verticalLayout);
 
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         gvSketchPad = new QGraphicsView(centralWidget);
         gvSketchPad->setObjectName(QString::fromUtf8("gvSketchPad"));
-        gvSketchPad->setMinimumSize(QSize(640, 480));
-        gvSketchPad->setMaximumSize(QSize(640, 480));
+        gvSketchPad->setMinimumSize(QSize(642, 482));
+        gvSketchPad->setMaximumSize(QSize(642, 482));
+        gvSketchPad->setMouseTracking(true);
 
-        verticalLayout_4->addWidget(gvSketchPad);
+        verticalLayout_3->addWidget(gvSketchPad);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_4->addItem(verticalSpacer);
+        verticalLayout_3->addItem(verticalSpacer);
 
 
-        horizontalLayout_4->addLayout(verticalLayout_4);
+        horizontalLayout_4->addLayout(verticalLayout_3);
 
 
-        verticalLayout_3->addLayout(horizontalLayout_4);
+        verticalLayout_4->addLayout(horizontalLayout_4);
 
 
-        gridLayout_2->addLayout(verticalLayout_3, 0, 0, 1, 1);
+        gridLayout_2->addLayout(verticalLayout_4, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
