@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Dec 24 11:14:33 2013
+** Created: Tue Dec 24 13:10:10 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -40,6 +40,16 @@ public:
     QAction *action_New_Storyboard;
     QAction *action_Save_Storyboard;
     QAction *actionE_xit;
+    QAction *actionSave_Pen_1;
+    QAction *actionSave_Pen_2;
+    QAction *actionSave_Pen_3;
+    QAction *actionSave_Pen_4;
+    QAction *actionLoad_Pen_1;
+    QAction *actionLoad_Pen_2;
+    QAction *actionLoad_Pen_3;
+    QAction *actionLoad_Pen_4;
+    QAction *actionSet_Pen_width;
+    QAction *actionSet_Pen_Color;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout_4;
@@ -72,6 +82,9 @@ public:
     QSpacerItem *verticalSpacer;
     QMenuBar *menuBar;
     QMenu *menu_File;
+    QMenu *menuSettings;
+    QMenu *menuSave_Pen;
+    QMenu *menuLoad_Pen;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -91,6 +104,26 @@ public:
         action_Save_Storyboard->setObjectName(QString::fromUtf8("action_Save_Storyboard"));
         actionE_xit = new QAction(MainWindow);
         actionE_xit->setObjectName(QString::fromUtf8("actionE_xit"));
+        actionSave_Pen_1 = new QAction(MainWindow);
+        actionSave_Pen_1->setObjectName(QString::fromUtf8("actionSave_Pen_1"));
+        actionSave_Pen_2 = new QAction(MainWindow);
+        actionSave_Pen_2->setObjectName(QString::fromUtf8("actionSave_Pen_2"));
+        actionSave_Pen_3 = new QAction(MainWindow);
+        actionSave_Pen_3->setObjectName(QString::fromUtf8("actionSave_Pen_3"));
+        actionSave_Pen_4 = new QAction(MainWindow);
+        actionSave_Pen_4->setObjectName(QString::fromUtf8("actionSave_Pen_4"));
+        actionLoad_Pen_1 = new QAction(MainWindow);
+        actionLoad_Pen_1->setObjectName(QString::fromUtf8("actionLoad_Pen_1"));
+        actionLoad_Pen_2 = new QAction(MainWindow);
+        actionLoad_Pen_2->setObjectName(QString::fromUtf8("actionLoad_Pen_2"));
+        actionLoad_Pen_3 = new QAction(MainWindow);
+        actionLoad_Pen_3->setObjectName(QString::fromUtf8("actionLoad_Pen_3"));
+        actionLoad_Pen_4 = new QAction(MainWindow);
+        actionLoad_Pen_4->setObjectName(QString::fromUtf8("actionLoad_Pen_4"));
+        actionSet_Pen_width = new QAction(MainWindow);
+        actionSet_Pen_width->setObjectName(QString::fromUtf8("actionSet_Pen_width"));
+        actionSet_Pen_Color = new QAction(MainWindow);
+        actionSet_Pen_Color->setObjectName(QString::fromUtf8("actionSet_Pen_Color"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -273,6 +306,12 @@ public:
         menuBar->setGeometry(QRect(0, 0, 1026, 25));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QString::fromUtf8("menu_File"));
+        menuSettings = new QMenu(menuBar);
+        menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
+        menuSave_Pen = new QMenu(menuSettings);
+        menuSave_Pen->setObjectName(QString::fromUtf8("menuSave_Pen"));
+        menuLoad_Pen = new QMenu(menuSettings);
+        menuLoad_Pen->setObjectName(QString::fromUtf8("menuLoad_Pen"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -287,10 +326,23 @@ public:
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menu_File->menuAction());
+        menuBar->addAction(menuSettings->menuAction());
         menu_File->addAction(action_New_Storyboard);
         menu_File->addAction(action_Save_Storyboard);
         menu_File->addSeparator();
         menu_File->addAction(actionE_xit);
+        menuSettings->addAction(menuLoad_Pen->menuAction());
+        menuSettings->addAction(menuSave_Pen->menuAction());
+        menuSettings->addAction(actionSet_Pen_width);
+        menuSettings->addAction(actionSet_Pen_Color);
+        menuSave_Pen->addAction(actionSave_Pen_1);
+        menuSave_Pen->addAction(actionSave_Pen_2);
+        menuSave_Pen->addAction(actionSave_Pen_3);
+        menuSave_Pen->addAction(actionSave_Pen_4);
+        menuLoad_Pen->addAction(actionLoad_Pen_1);
+        menuLoad_Pen->addAction(actionLoad_Pen_2);
+        menuLoad_Pen->addAction(actionLoad_Pen_3);
+        menuLoad_Pen->addAction(actionLoad_Pen_4);
 
         retranslateUi(MainWindow);
 
@@ -306,6 +358,26 @@ public:
         action_Save_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0, QApplication::UnicodeUTF8));
         actionE_xit->setText(QApplication::translate("MainWindow", "E&xit", 0, QApplication::UnicodeUTF8));
         actionE_xit->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_1->setText(QApplication::translate("MainWindow", "Save Pen 1", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_1->setShortcut(QApplication::translate("MainWindow", "Ctrl+F5", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_2->setText(QApplication::translate("MainWindow", "Save Pen 2", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_2->setShortcut(QApplication::translate("MainWindow", "Ctrl+F6", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_3->setText(QApplication::translate("MainWindow", "Save Pen 3", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_3->setShortcut(QApplication::translate("MainWindow", "Ctrl+F7", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_4->setText(QApplication::translate("MainWindow", "Save Pen 4", 0, QApplication::UnicodeUTF8));
+        actionSave_Pen_4->setShortcut(QApplication::translate("MainWindow", "Ctrl+F8", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_1->setText(QApplication::translate("MainWindow", "Load Pen 1", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_1->setShortcut(QApplication::translate("MainWindow", "F5", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_2->setText(QApplication::translate("MainWindow", "Load Pen 2", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_2->setShortcut(QApplication::translate("MainWindow", "F6", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_3->setText(QApplication::translate("MainWindow", "Load Pen 3", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_3->setShortcut(QApplication::translate("MainWindow", "F7", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_4->setText(QApplication::translate("MainWindow", "Load Pen 4", 0, QApplication::UnicodeUTF8));
+        actionLoad_Pen_4->setShortcut(QApplication::translate("MainWindow", "F8", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_width->setText(QApplication::translate("MainWindow", "Set Pen Width", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_width->setShortcut(QApplication::translate("MainWindow", "Alt+W", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_Color->setText(QApplication::translate("MainWindow", "Set Pen Color", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_Color->setShortcut(QApplication::translate("MainWindow", "Alt+C", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         btnApplyComment->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot #", 0, QApplication::UnicodeUTF8));
@@ -313,6 +385,9 @@ public:
         btnCancel->setText(QApplication::translate("MainWindow", "Cancel", 0, QApplication::UnicodeUTF8));
         btnApplyShotFrames->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
+        menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
+        menuSave_Pen->setTitle(QApplication::translate("MainWindow", "Save Pen", 0, QApplication::UnicodeUTF8));
+        menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

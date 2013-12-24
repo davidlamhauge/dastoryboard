@@ -279,7 +279,35 @@
     <addaction name="separator"/>
     <addaction name="actionE_xit"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <widget class="QMenu" name="menuSave_Pen">
+     <property name="title">
+      <string>Save Pen</string>
+     </property>
+     <addaction name="actionSave_Pen_1"/>
+     <addaction name="actionSave_Pen_2"/>
+     <addaction name="actionSave_Pen_3"/>
+     <addaction name="actionSave_Pen_4"/>
+    </widget>
+    <widget class="QMenu" name="menuLoad_Pen">
+     <property name="title">
+      <string>Load Pen</string>
+     </property>
+     <addaction name="actionLoad_Pen_1"/>
+     <addaction name="actionLoad_Pen_2"/>
+     <addaction name="actionLoad_Pen_3"/>
+     <addaction name="actionLoad_Pen_4"/>
+    </widget>
+    <addaction name="menuLoad_Pen"/>
+    <addaction name="menuSave_Pen"/>
+    <addaction name="actionSet_Pen_width"/>
+    <addaction name="actionSet_Pen_Color"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="sizePolicy">
@@ -318,6 +346,86 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionSave_Pen_1">
+   <property name="text">
+    <string>Save Pen 1</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F5</string>
+   </property>
+  </action>
+  <action name="actionSave_Pen_2">
+   <property name="text">
+    <string>Save Pen 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F6</string>
+   </property>
+  </action>
+  <action name="actionSave_Pen_3">
+   <property name="text">
+    <string>Save Pen 3</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F7</string>
+   </property>
+  </action>
+  <action name="actionSave_Pen_4">
+   <property name="text">
+    <string>Save Pen 4</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F8</string>
+   </property>
+  </action>
+  <action name="actionLoad_Pen_1">
+   <property name="text">
+    <string>Load Pen 1</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionLoad_Pen_2">
+   <property name="text">
+    <string>Load Pen 2</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionLoad_Pen_3">
+   <property name="text">
+    <string>Load Pen 3</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
+  </action>
+  <action name="actionLoad_Pen_4">
+   <property name="text">
+    <string>Load Pen 4</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+  </action>
+  <action name="actionSet_Pen_width">
+   <property name="text">
+    <string>Set Pen Width</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+W</string>
+   </property>
+  </action>
+  <action name="actionSet_Pen_Color">
+   <property name="text">
+    <string>Set Pen Color</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+C</string>
    </property>
   </action>
  </widget>

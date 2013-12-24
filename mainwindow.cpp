@@ -27,6 +27,10 @@ MainWindow::~MainWindow()
 void MainWindow::setupConnects()
 {
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
+
+    connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penColor()));
+    connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penWidth()));
+
     connect(ui->btnCancel,SIGNAL(clicked()),this,SLOT(saveTest()));
 }
 

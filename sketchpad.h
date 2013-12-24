@@ -6,6 +6,20 @@
 #include <QPoint>
 #include <QWidget>
 
+struct padInfo{
+    QString comment;
+    bool showComment;
+    QString shot;
+    bool showShot;
+    int frames;
+    bool showFrames;
+};
+
+struct standardPen{     // 4 standardpenne kan gemmes
+    int penWidth;
+    QColor penColor;
+};
+
 class SketchPad : public QWidget
 {
     Q_OBJECT
