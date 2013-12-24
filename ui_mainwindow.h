@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Dec 23 23:04:40 2013
+** Created: Tue Dec 24 11:14:33 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -102,12 +102,12 @@ public:
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         imageContainer = new QWidget(centralWidget);
         imageContainer->setObjectName(QString::fromUtf8("imageContainer"));
-        QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(imageContainer->sizePolicy().hasHeightForWidth());
         imageContainer->setSizePolicy(sizePolicy1);
-        imageContainer->setMinimumSize(QSize(800, 130));
+        imageContainer->setMinimumSize(QSize(0, 130));
         imageContainer->setMaximumSize(QSize(16777215, 130));
 
         verticalLayout_4->addWidget(imageContainer);

@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     sketchPad = new SketchPad;
     sketchPad->setFixedSize(640,480);
     scene->addWidget(sketchPad);
-    scene->addText("Hej!");
     sketchPad->setFocus();
 }
 
@@ -28,6 +27,7 @@ MainWindow::~MainWindow()
 void MainWindow::setupConnects()
 {
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->btnCancel,SIGNAL(clicked()),this,SLOT(saveTest()));
 }
 
 void MainWindow::disableStoryPad()
@@ -86,4 +86,17 @@ void MainWindow::about()
     QMessageBox::about(this, tr("About dastoryboard"),
             tr("<p><b>dastoryboard</b> is an Open Source storyboard software "
                "for your conveniance. Please enjoy!"));
+}
+
+void MainWindow::appendSketchPad()
+{
+}
+
+void MainWindow::insertSketchPad()
+{
+}
+
+void MainWindow::saveTest()
+{
+    sketchPad->image.save("/home/david/test.png");
 }

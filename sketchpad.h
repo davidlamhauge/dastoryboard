@@ -18,6 +18,7 @@ public:
     bool isModified() const { return modified; }
     QColor penColor() const { return myPenColor; }
     int penWidth() const { return myPenWidth; }
+    QImage image;
 
 signals:
     
@@ -39,7 +40,6 @@ private:
     bool sketching;
     int myPenWidth;
     QColor myPenColor;
-    QImage image;
     QPoint lastPoint;
 
 };

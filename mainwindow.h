@@ -30,6 +30,9 @@ private slots:
     void penColor();
     void penWidth();
     void about();
+    void appendSketchPad();     // saves active pad and appends new
+    void insertSketchPad();     // saves active pad and insert new following
+    void saveTest();            // dummy to test image-filesave
 
 private:
     Ui::MainWindow *ui;

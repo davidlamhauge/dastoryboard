@@ -5,6 +5,8 @@
 SketchPad::SketchPad(QWidget *parent) :
     QWidget(parent)
 {
+    QSize sz; sz.setWidth(640); sz.setHeight(480);
+    resizeImage(&image,sz);
     modified = false;
     sketching = false;
     myPenWidth = 3;

@@ -26,14 +26,14 @@
       <item>
        <widget class="QWidget" name="imageContainer" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>800</width>
+          <width>0</width>
           <height>130</height>
          </size>
         </property>
