@@ -26,7 +26,7 @@
       <item>
        <widget class="QWidget" name="imageContainer" native="true">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -301,12 +301,22 @@
      <addaction name="actionLoad_Pen_3"/>
      <addaction name="actionLoad_Pen_4"/>
     </widget>
-    <addaction name="menuLoad_Pen"/>
-    <addaction name="menuSave_Pen"/>
     <addaction name="actionSet_Pen_width"/>
     <addaction name="actionSet_Pen_Color"/>
+    <addaction name="menuLoad_Pen"/>
+    <addaction name="menuSave_Pen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_Settings"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Sketchpads</string>
+    </property>
+    <addaction name="actionAppend_Sketchpad"/>
+    <addaction name="actionInsert_Sketchpad"/>
    </widget>
    <addaction name="menu_File"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -426,6 +436,30 @@
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
+   </property>
+  </action>
+  <action name="actionSave_Settings">
+   <property name="text">
+    <string>Save Settings</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionAppend_Sketchpad">
+   <property name="text">
+    <string>Append Sketchpad</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+A</string>
+   </property>
+  </action>
+  <action name="actionInsert_Sketchpad">
+   <property name="text">
+    <string>Insert Sketchpad</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+I</string>
    </property>
   </action>
  </widget>

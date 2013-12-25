@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Dec 24 12:46:52 2013
+** Created: Wed Dec 25 09:09:31 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -31,22 +31,24 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      12,   11,   11,   11, 0x0a,
-      30,   11,   11,   11, 0x0a,
+      12,   11,   11,   11, 0x08,
+      30,   11,   11,   11, 0x08,
       47,   11,   11,   11, 0x08,
-      58,   11,   11,   11, 0x08,
-      69,   11,   11,   11, 0x08,
-      77,   11,   11,   11, 0x08,
-      95,   11,   11,   11, 0x08,
-     113,   11,   11,   11, 0x08,
+      62,   11,   11,   11, 0x08,
+      73,   11,   11,   11, 0x08,
+      84,   11,   11,   11, 0x08,
+      92,   11,   11,   11, 0x08,
+     110,   11,   11,   11, 0x08,
+     128,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0disableStoryPad()\0"
-    "enableStoryPad()\0penColor()\0penWidth()\0"
-    "about()\0appendSketchPad()\0insertSketchPad()\0"
+    "enableStoryPad()\0saveSettings()\0"
+    "penColor()\0penWidth()\0about()\0"
+    "appendSketchPad()\0insertSketchPad()\0"
     "saveTest()\0"
 };
 
@@ -58,12 +60,13 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->disableStoryPad(); break;
         case 1: _t->enableStoryPad(); break;
-        case 2: _t->penColor(); break;
-        case 3: _t->penWidth(); break;
-        case 4: _t->about(); break;
-        case 5: _t->appendSketchPad(); break;
-        case 6: _t->insertSketchPad(); break;
-        case 7: _t->saveTest(); break;
+        case 2: _t->saveSettings(); break;
+        case 3: _t->penColor(); break;
+        case 4: _t->penWidth(); break;
+        case 5: _t->about(); break;
+        case 6: _t->appendSketchPad(); break;
+        case 7: _t->insertSketchPad(); break;
+        case 8: _t->saveTest(); break;
         default: ;
         }
     }
@@ -102,9 +105,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 9;
     }
     return _id;
 }
