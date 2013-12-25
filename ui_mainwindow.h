@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Dec 24 13:49:55 2013
+** Created: Wed Dec 25 11:11:13 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -53,6 +53,7 @@ public:
     QAction *actionSave_Settings;
     QAction *actionAppend_Sketchpad;
     QAction *actionInsert_Sketchpad;
+    QAction *action_Open_Storyboard;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout_4;
@@ -134,6 +135,8 @@ public:
         actionAppend_Sketchpad->setObjectName(QString::fromUtf8("actionAppend_Sketchpad"));
         actionInsert_Sketchpad = new QAction(MainWindow);
         actionInsert_Sketchpad->setObjectName(QString::fromUtf8("actionInsert_Sketchpad"));
+        action_Open_Storyboard = new QAction(MainWindow);
+        action_Open_Storyboard->setObjectName(QString::fromUtf8("action_Open_Storyboard"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_2 = new QGridLayout(centralWidget);
@@ -338,6 +341,7 @@ public:
         menuBar->addAction(menuEdit->menuAction());
         menuBar->addAction(menuSettings->menuAction());
         menu_File->addAction(action_New_Storyboard);
+        menu_File->addAction(action_Open_Storyboard);
         menu_File->addAction(action_Save_Storyboard);
         menu_File->addSeparator();
         menu_File->addAction(actionE_xit);
@@ -345,8 +349,6 @@ public:
         menuSettings->addAction(actionSet_Pen_Color);
         menuSettings->addAction(menuLoad_Pen->menuAction());
         menuSettings->addAction(menuSave_Pen->menuAction());
-        menuSettings->addSeparator();
-        menuSettings->addAction(actionSave_Settings);
         menuSave_Pen->addAction(actionSave_Pen_1);
         menuSave_Pen->addAction(actionSave_Pen_2);
         menuSave_Pen->addAction(actionSave_Pen_3);
@@ -398,6 +400,8 @@ public:
         actionAppend_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Alt+A", 0, QApplication::UnicodeUTF8));
         actionInsert_Sketchpad->setText(QApplication::translate("MainWindow", "Insert Sketchpad", 0, QApplication::UnicodeUTF8));
         actionInsert_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Alt+I", 0, QApplication::UnicodeUTF8));
+        action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
+        action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         btnApplyComment->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot #", 0, QApplication::UnicodeUTF8));

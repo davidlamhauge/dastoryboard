@@ -8,6 +8,8 @@
 class SketchPad;
 
 struct padInfo{
+    QString filePath;   // full path, including the ending "/"
+    QString fileName;   // the files name, without path
     QString comment;
     bool showComment;
     QString shot;
@@ -41,7 +43,9 @@ protected:
 private slots:
     void disableStoryPad();     // disables storypad + buttons etc
     void enableStoryPad();      // enables storypad + buttons etc
-    void saveSettings();        // saves settings                         ALT+S
+    void newStoryboard();       // new storyboard created and initialised
+    void saveStorybard();       // storyboard is saved to
+    void saveSettings();        // saves settings
     void penColor();            // set new Pen Color from colorpicker
     void penWidth();            // set new Pen Width from 1 to 99 pixels
     void about();
@@ -53,10 +57,18 @@ private:
     Ui::MainWindow *ui;
 
     void setupConnects();       // initiates connects
+    void initStoryboard();      // initiaqtes a new storyboard
+    void initPad(padInfo pad);  // initates pad and its values in struct
     QString loadSettings();     // returns sbFileName or ""
-    QString sbFileName;
-    void writeXML();            // writes .dastorybard info to xml-file
+    QString sbFileName;         // storyboard filename, absolute path
+    QString sbFilePath;         // path to sbFile, incl. last "/"
+    QString getSbFileName();    // gets new storybard filename
+    void writeXML();            // writes .dastoryboard info to xml-file
     void readXML();             // reads .dastoryboard info from xml file
+    QString boolToString(bool b);
+    QString intToString(int i);
+    int strToInt(QString s);
+    bool stringToBool(QString s);
 
     bool maybeSave();
     bool saveFile(const QByteArray &fileFormat);
@@ -64,6 +76,7 @@ private:
     QGraphicsScene *scene;
     SketchPad *sketchPad;
     QList<padInfo> padList;
+    int lastNumber;             // last number given to a sketchpad
 };
 
 #endif // MAINWINDOW_H

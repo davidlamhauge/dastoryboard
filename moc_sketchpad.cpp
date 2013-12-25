@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sketchpad.h'
 **
-** Created: Tue Dec 24 14:03:51 2013
+** Created: Wed Dec 25 10:48:38 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
