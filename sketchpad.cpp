@@ -7,10 +7,6 @@ SketchPad::SketchPad(QWidget *parent) :
 {
     QSize sz; sz.setWidth(640); sz.setHeight(480);
     resizeImage(&image,sz);
-    modified = false;
-    sketching = false;
-    myPenWidth = 3;
-    myPenColor = Qt::gray;
 }
 
 void SketchPad::setPenColor(const QColor &newColor)
@@ -21,6 +17,26 @@ void SketchPad::setPenColor(const QColor &newColor)
 void SketchPad::setPenWidth(int newWidth)
 {
     myPenWidth = newWidth;
+}
+
+void SketchPad::initPad(QString path, int name)
+{
+    myFilePath = path;   // full path, including the ending "/"
+    QString s;
+    s.setNum(name);
+    s += ".png";
+    myFileName = s;   // the files name, without path
+    myComment = "";
+    myShowComment = false;
+    myShot = "";
+    myShowShot = false;
+    myFrames = 50;
+    myShowFrames = false;
+
+    modified = false;
+    sketching = false;
+    myPenWidth = 3;
+    myPenColor = Qt::gray;
 }
 
 void SketchPad::clearImage()

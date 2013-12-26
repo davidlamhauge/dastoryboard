@@ -7,20 +7,10 @@
 
 class SketchPad;
 
-struct padInfo{
-    QString filePath;   // full path, including the ending "/"
-    QString fileName;   // the files name, without path
-    QString comment;
-    bool showComment;
-    QString shot;
-    bool showShot;
-    int frames;
-    bool showFrames;
-};
 
-struct standardPen{     // 4 standardpenne kan gemmes
-    int penWidth;
-    QColor penColor;
+struct standardPen{     // 4 standard pens can be saved in F5 ,F6, F7 og F8
+    int penWidth;       // The pen in F5 is the sketchcolor that can be erased
+    QColor penColor;    // if the artist presses SHIFT + F5
 };
 
 namespace Ui {
@@ -52,13 +42,16 @@ private slots:
     void appendSketchPad();     // saves active pad and appends new       ALT+A
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
     void saveTest();            // dummy to test image-filesave
+    void updateComment();       // udates comment for pad struct
+    void updateShotFrames();    // updates shot and frames for pad struct
+    void cancelShotFrames();    // resets shot and frames info for pad struct
 
 private:
     Ui::MainWindow *ui;
 
     void setupConnects();       // initiates connects
     void initStoryboard();      // initiaqtes a new storyboard
-    void initPad(padInfo pad);  // initates pad and its values in struct
+    void initPadInfo();         // initiates values n padInfo
     QString loadSettings();     // returns sbFileName or ""
     QString sbFileName;         // storyboard filename, absolute path
     QString sbFilePath;         // path to sbFile, incl. last "/"
@@ -75,8 +68,12 @@ private:
 
     QGraphicsScene *scene;
     SketchPad *sketchPad;
-    QList<padInfo> padList;
     int lastNumber;             // last number given to a sketchpad
+    standardPen sPen;
+    QList<QStringList> padList;
+    QStringList padInfo;
+    int activePad;              // pad number in padList
+    QList<standardPen> sPenList;
 };
 
 #endif // MAINWINDOW_H

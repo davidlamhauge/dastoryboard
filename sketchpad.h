@@ -15,10 +15,21 @@ public:
 
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);
+    void initPad(QString path, int name);
 
     bool isModified() const { return modified; }
     QColor penColor() const { return myPenColor; }
     int penWidth() const { return myPenWidth; }
+
+    QString filePath() const {return myFilePath; }
+    QString fileName() const {return myFileName; }
+    QString comment() const {return myComment; }
+    bool showComment() const {return myShowComment; }
+    QString shot() const {return myShot; }
+    bool showShot() const {return myShowShot; }
+    int frames() const {return myFrames; }
+    bool showFrames() const {return myShowFrames; }
+
     QImage image;
 
 signals:
@@ -36,6 +47,15 @@ protected:
 private:
     void drawLineTo(const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
+
+    QString myFilePath;   // full path, including the ending "/"
+    QString myFileName;   // the files name, without path
+    QString myComment;
+    bool myShowComment;
+    QString myShot;
+    bool myShowShot;
+    int myFrames;
+    bool myShowFrames;
 
     bool modified;
     bool sketching;

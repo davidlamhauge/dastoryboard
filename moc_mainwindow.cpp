@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Dec 25 15:33:16 2013
-**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
+** Created: Thu Dec 26 16:13:30 2013
+**      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mainwindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 63
-#error "This file was generated using the moc from 4.8.1. It"
+#error "This file was generated using the moc from 4.8.4. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -42,6 +42,9 @@ static const uint qt_meta_data_MainWindow[] = {
      124,   11,   11,   11, 0x08,
      142,   11,   11,   11, 0x08,
      160,   11,   11,   11, 0x08,
+     171,   11,   11,   11, 0x08,
+     187,   11,   11,   11, 0x08,
+     206,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -52,7 +55,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "saveStorybard()\0saveSettings()\0"
     "penColor()\0penWidth()\0about()\0"
     "appendSketchPad()\0insertSketchPad()\0"
-    "saveTest()\0"
+    "saveTest()\0updateComment()\0"
+    "updateShotFrames()\0cancelShotFrames()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -72,6 +76,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 8: _t->appendSketchPad(); break;
         case 9: _t->insertSketchPad(); break;
         case 10: _t->saveTest(); break;
+        case 11: _t->updateComment(); break;
+        case 12: _t->updateShotFrames(); break;
+        case 13: _t->cancelShotFrames(); break;
         default: ;
         }
     }
@@ -110,9 +117,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 14;
     }
     return _id;
 }

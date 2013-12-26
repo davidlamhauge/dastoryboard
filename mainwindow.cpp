@@ -11,26 +11,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     QMainWindow::showMaximized();
     setupConnects();
-    loadSettings();
+
     scene = new QGraphicsScene(this);
     ui->gvSketchPad->setScene(scene);
 
-    sbFileName = loadSettings();    // gets a fieName if t exists!
+    sbFileName = loadSettings();    // gets a fileName if t exists!
     if (sbFileName.isEmpty()){
         disableStoryPad();
     }else{
-        QFile file(sbFileName);
+        QFile file(sbFileName );
         if (file.exists()){
         }else{
             disableStoryPad();
         }
     }
-/*
-    sketchPad = new SketchPad;
-    sketchPad->setFixedSize(640,480);
-    scene->addWidget(sketchPad);
-    sketchPad->setFocus();
-    */
 }
 
 MainWindow::~MainWindow()
@@ -41,52 +35,54 @@ MainWindow::~MainWindow()
 void MainWindow::setupConnects()
 {
     connect(ui->action_New_Storyboard,SIGNAL(triggered()),this,SLOT(newStoryboard()));
+    connect(ui->action_Save_Storyboard,SIGNAL(triggered()),this,SLOT(saveStorybard()));
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
 
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penColor()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penWidth()));
 
-    connect(ui->btnCancel,SIGNAL(clicked()),this,SLOT(saveTest()));
+    connect(ui->btnApplyComment,SIGNAL(clicked()),this,SLOT(updateComment()));
+    connect(ui->btnCancel,SIGNAL(clicked()),this,SLOT(cancelShotFrames()));
+    connect(ui->btnApplyShotFrames,SIGNAL(clicked()),this,SLOT(updateShotFrames()));
 }
 
 void MainWindow::initStoryboard()
 {
+
     padList.clear();
+    padInfo.clear();
+    sPenList.clear();
     lastNumber = 0;
+    activePad = 0;
     sketchPad = new SketchPad;
     sketchPad->setFixedSize(640,480);
+    sketchPad->initPad(sbFilePath,lastNumber);
+    padList.append(padInfo);
+    initPadInfo();
     scene->addWidget(sketchPad);
     sketchPad->setFocus();
-    padInfo pad;
-    initPad(pad);
-
 }
 
-/*
-struct padInfo{
-    QString filePath;   // full path, including the ending "/"
-    QString fileName;   // the files name, without path
-    QString comment;
-    bool showComment;
-    QString shot;
-    bool showShot;
-    int frames;
-    bool showFrames;
-};*/
-void MainWindow::initPad(padInfo pad)
+void MainWindow::initPadInfo()
 {
-    pad.filePath = sbFilePath;
-    lastNumber += 1;
-    pad.fileName = QString::number(lastNumber) + ".png";
-    ui->leComment->clear();
-    pad.comment = ui->leComment->text();
-    pad.showComment = false;
-    ui->leShot->clear();
-    pad.shot = ui->leShot->text();
-    pad.showShot = false;
-    ui->sbFrames->setValue(50);
-    pad.frames = ui->sbFrames->value();
-    pad.showFrames = false;
+    QStringList sl = padList.at(activePad);
+    sl.append(sbFilePath);
+    sl.append(sbFileName);
+    sl.append("");
+    sl.append("false");
+    sl.append("");
+    sl.append("false");
+    sl.append("50");
+    sl.append("false");
+    padList.replace(activePad,sl);
+}
+
+
+QString MainWindow::getSbFileName()
+{
+    return QFileDialog::getOpenFileName(this,
+        tr("dastoryboard filename"), "",
+        tr("dastoryboard files (*.dastoryboard)"));
 }
 
 QString MainWindow::loadSettings()
@@ -98,13 +94,6 @@ QString MainWindow::loadSettings()
     }
     else
         return "";
-}
-
-QString MainWindow::getSbFileName()
-{
-    return QFileDialog::getOpenFileName(this,
-        tr("dastoryboard filename"), "",
-        tr("dastoryboard files (*.dastoryboard)"));
 }
 
 void MainWindow::saveSettings()
@@ -160,7 +149,9 @@ void MainWindow::newStoryboard()
     if (!sbFileName.isEmpty()){
         if (!sbFileName.endsWith(".dastoryboard"))
             sbFileName += ".dastoryboard";
-        sbFilePath = sbFileName.remove(".dastoryboard",Qt::CaseInsensitive);
+        sbFilePath = sbFileName;
+        sbFileName = sbFileName.right(sbFileName.length() - sbFileName.lastIndexOf("/") - 1);
+        sbFilePath.chop(sbFileName.length() - sbFileName.lastIndexOf("/") - 1);
         enableStoryPad();
         initStoryboard();
     }
@@ -214,6 +205,23 @@ void MainWindow::saveTest()
     sketchPad->image.save("/home/david/test.png");
 }
 
+void MainWindow::updateComment()
+{
+    /*
+    QStringList sl = padList[activePad];
+    sl[2] = ui->leComment->text();
+    padList.replace(activePad,sl);*/
+    padList[activePad][2] = ui->leComment->text();
+}
+
+void MainWindow::updateShotFrames()
+{
+}
+
+void MainWindow::cancelShotFrames()
+{
+}
+
 void MainWindow::writeXML()
 {
     if (sbFileName.isEmpty()){
@@ -229,16 +237,24 @@ void MainWindow::writeXML()
             QXmlStreamWriter xmlwriter(&file);
             xmlwriter.setAutoFormatting(true);
             xmlwriter.writeStartDocument();             // document START
+            xmlwriter.writeStartElement("variables");   // variables START
+            xmlwriter.writeTextElement("filePath",sbFilePath);
+            xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
+
+            xmlwriter.writeEndElement();                // variables STOP
             xmlwriter.writeStartElement("storyboard");  // storyboard START
 
-            for (int i = 0;i < padList.size(); i++){
+            for (int i = 0;i < padList.size() ; i++){ // TODO !!!!!!!!!!!!
+                padInfo = padList[i];
                 xmlwriter.writeStartElement("sketchpad");  // sketchpads START
-                xmlwriter.writeAttribute("comment",padList[i].comment);
-                xmlwriter.writeAttribute("showComment",boolToString(padList[i].showComment));
-                xmlwriter.writeAttribute("shot",padList[i].shot);
-                xmlwriter.writeAttribute("showShot",boolToString(padList[i].showShot));
-                xmlwriter.writeAttribute("frames",intToString(padList[i].frames));
-                xmlwriter.writeAttribute("showFrames",boolToString(padList[i].showFrames));
+                xmlwriter.writeTextElement("filePath",padInfo[0]);
+                xmlwriter.writeTextElement("fileName",padInfo[1]);
+                xmlwriter.writeTextElement("comment",padInfo[2]);
+                xmlwriter.writeTextElement("showComment",padInfo[3]);
+                xmlwriter.writeTextElement("shot",padInfo[4]);
+                xmlwriter.writeTextElement("showShot",padInfo[5]);
+                xmlwriter.writeTextElement("frames",padInfo[6]);
+                xmlwriter.writeTextElement("showFrames",padInfo[7]);
                 xmlwriter.writeEndElement();                // sketchpads STOP
             }
             xmlwriter.writeEndDocument();        // document and storyboard STOP
@@ -255,7 +271,20 @@ void MainWindow::writeXML()
 void MainWindow::readXML()
 {
 }
+/*
+void MainWindow::initStoryboard()
+{
+    padList.clear();
+    lastNumber = 0;
+    sketchPad = new SketchPad;
+    sketchPad->setFixedSize(640,480);
+    scene->addWidget(sketchPad);
+    sketchPad->setFocus();
+    initPad(pad);
 
+}
+
+*/
 QString MainWindow::boolToString(bool b)
 {
     if (b == true)
@@ -281,7 +310,6 @@ bool MainWindow::stringToBool(QString s)
         return true;
     else
         return false;
-
 }
 
 
