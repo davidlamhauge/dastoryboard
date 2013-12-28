@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Dec 25 11:11:13 2013
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Fri Dec 27 19:26:08 2013
+**      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -24,7 +24,6 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
-#include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
@@ -57,16 +56,13 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout_4;
-    QWidget *imageContainer;
+    QGraphicsView *gvStoryboard;
     QFrame *line_3;
     QHBoxLayout *horizontalLayout_4;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *verticalLayout_2;
     QLabel *labComments;
     QLineEdit *leComment;
-    QHBoxLayout *horizontalLayout_2;
-    QSpacerItem *horizontalSpacer;
-    QPushButton *btnApplyComment;
     QFrame *line;
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer_2;
@@ -75,10 +71,6 @@ public:
     QLabel *labFrames;
     QLineEdit *leShot;
     QSpinBox *sbFrames;
-    QHBoxLayout *horizontalLayout;
-    QSpacerItem *horizontalSpacer_4;
-    QPushButton *btnCancel;
-    QPushButton *btnApplyShotFrames;
     QFrame *line_2;
     QSpacerItem *verticalSpacer_2;
     QVBoxLayout *verticalLayout_3;
@@ -146,17 +138,12 @@ public:
         verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setSpacing(6);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        imageContainer = new QWidget(centralWidget);
-        imageContainer->setObjectName(QString::fromUtf8("imageContainer"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(imageContainer->sizePolicy().hasHeightForWidth());
-        imageContainer->setSizePolicy(sizePolicy1);
-        imageContainer->setMinimumSize(QSize(0, 130));
-        imageContainer->setMaximumSize(QSize(16777215, 130));
+        gvStoryboard = new QGraphicsView(centralWidget);
+        gvStoryboard->setObjectName(QString::fromUtf8("gvStoryboard"));
+        gvStoryboard->setMinimumSize(QSize(0, 130));
+        gvStoryboard->setMaximumSize(QSize(16777215, 130));
 
-        verticalLayout_4->addWidget(imageContainer);
+        verticalLayout_4->addWidget(gvStoryboard);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QString::fromUtf8("line_3"));
@@ -184,26 +171,6 @@ public:
         leComment->setMaxLength(100);
 
         verticalLayout_2->addWidget(leComment);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_2->addItem(horizontalSpacer);
-
-        btnApplyComment = new QPushButton(centralWidget);
-        btnApplyComment->setObjectName(QString::fromUtf8("btnApplyComment"));
-        QSizePolicy sizePolicy2(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(btnApplyComment->sizePolicy().hasHeightForWidth());
-        btnApplyComment->setSizePolicy(sizePolicy2);
-
-        horizontalLayout_2->addWidget(btnApplyComment);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_2);
 
 
         verticalLayout->addLayout(verticalLayout_2);
@@ -254,26 +221,6 @@ public:
 
 
         verticalLayout->addLayout(horizontalLayout_3);
-
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout->addItem(horizontalSpacer_4);
-
-        btnCancel = new QPushButton(centralWidget);
-        btnCancel->setObjectName(QString::fromUtf8("btnCancel"));
-
-        horizontalLayout->addWidget(btnCancel);
-
-        btnApplyShotFrames = new QPushButton(centralWidget);
-        btnApplyShotFrames->setObjectName(QString::fromUtf8("btnApplyShotFrames"));
-
-        horizontalLayout->addWidget(btnApplyShotFrames);
-
-
-        verticalLayout->addLayout(horizontalLayout);
 
         line_2 = new QFrame(centralWidget);
         line_2->setObjectName(QString::fromUtf8("line_2"));
@@ -330,6 +277,9 @@ public:
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(mainToolBar->sizePolicy().hasHeightForWidth());
         mainToolBar->setSizePolicy(sizePolicy1);
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
@@ -403,11 +353,8 @@ public:
         action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
-        btnApplyComment->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot #", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
-        btnCancel->setText(QApplication::translate("MainWindow", "Cancel", 0, QApplication::UnicodeUTF8));
-        btnApplyShotFrames->setText(QApplication::translate("MainWindow", "Apply", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
         menuSave_Pen->setTitle(QApplication::translate("MainWindow", "Save Pen", 0, QApplication::UnicodeUTF8));

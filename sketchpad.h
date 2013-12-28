@@ -30,7 +30,8 @@ public:
     int frames() const {return myFrames; }
     bool showFrames() const {return myShowFrames; }
 
-    QImage image;
+    QImage image;           // 640x480 pix storyboard pad
+    QImage imageTumb;       // 160x120 pix of the above
 
 signals:
     

@@ -34,7 +34,7 @@ private slots:
     void disableStoryPad();     // disables storypad + buttons etc
     void enableStoryPad();      // enables storypad + buttons etc
     void newStoryboard();       // new storyboard created and initialised
-    void saveStorybard();       // storyboard is saved to
+    void writeXML();            // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
     void penColor();            // set new Pen Color from colorpicker
     void penWidth();            // set new Pen Width from 1 to 99 pixels
@@ -43,8 +43,9 @@ private slots:
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
     void saveTest();            // dummy to test image-filesave
     void updateComment();       // udates comment for pad struct
-    void updateShotFrames();    // updates shot and frames for pad struct
-    void cancelShotFrames();    // resets shot and frames info for pad struct
+    void updateShot();
+    void updateFrames();    // updates shot and frames for pad struct
+    void updateImages();        // saves activeImage and repaints storyboard
 
 private:
     Ui::MainWindow *ui;
@@ -54,9 +55,8 @@ private:
     void initPadInfo();         // initiates values n padInfo
     QString loadSettings();     // returns sbFileName or ""
     QString sbFileName;         // storyboard filename, absolute path
-    QString sbFilePath;         // path to sbFile, incl. last "/"
+    QString sbFilePath;         // filepath, including the last '/'
     QString getSbFileName();    // gets new storybard filename
-    void writeXML();            // writes .dastoryboard info to xml-file
     void readXML();             // reads .dastoryboard info from xml file
     QString boolToString(bool b);
     QString intToString(int i);
@@ -64,15 +64,17 @@ private:
     bool stringToBool(QString s);
 
     bool maybeSave();
-    bool saveFile(const QByteArray &fileFormat);
+    QTimer *timer;
 
-    QGraphicsScene *scene;
+    QGraphicsScene *board;      // scene with minimized images
+    QGraphicsScene *scene;      // scene with active image
     SketchPad *sketchPad;
+    QStringList padInfo;        // fileName, comment, shot name etc
+    QList<QStringList> padInfoList; // list of stringlists with padInfo
+    QList<QImage> padThumbList; // list of resized storyboardimages 160x120
+    int activePad;              // pad number in padInfoList
     int lastNumber;             // last number given to a sketchpad
     standardPen sPen;
-    QList<QStringList> padList;
-    QStringList padInfo;
-    int activePad;              // pad number in padList
     QList<standardPen> sPenList;
 };
 
