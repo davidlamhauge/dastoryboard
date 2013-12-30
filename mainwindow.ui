@@ -20,11 +20,17 @@
    <string>daStoryBoard</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
        <widget class="QGraphicsView" name="gvStoryboard">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -40,16 +46,9 @@
        </widget>
       </item>
       <item>
-       <widget class="Line" name="line_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
@@ -76,7 +75,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
@@ -91,29 +90,47 @@
              </spacer>
             </item>
             <item>
-             <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QLabel" name="labScene">
+                <property name="text">
+                 <string>Scene</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="leScene"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
                <widget class="QLabel" name="labShot">
                 <property name="text">
-                 <string>Shot #</string>
+                 <string>Shot</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="labFrames">
-                <property name="text">
-                 <string>Frames:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
+              <item>
                <widget class="QLineEdit" name="leShot">
                 <property name="maxLength">
                  <number>10</number>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <widget class="QLabel" name="labFrames">
+                <property name="text">
+                 <string>Frames:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QSpinBox" name="sbFrames">
                 <property name="minimum">
                  <number>1</number>
@@ -129,13 +146,6 @@
              </layout>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
           </item>
           <item>
            <spacer name="verticalSpacer_2">
@@ -191,6 +201,13 @@
        </layout>
       </item>
      </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

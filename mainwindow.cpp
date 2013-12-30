@@ -12,8 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow::showMaximized();
     setupConnects();
 
+    updateInterval = 10000;     // millisecs. to be set as preference TODO
     scene = new QGraphicsScene(this);
     ui->gvSketchPad->setScene(scene);
+    board = new QGraphicsScene(this);
+    ui->gvStoryboard->setScene(board);
+    ui->gvStoryboard->show();
 
     sbFileName = loadSettings();    // gets a fileName if it exists!
     if (sbFileName.isEmpty()){
@@ -21,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }else{
         QFile file(sbFileName );
         if (file.exists()){
+            initStoryboard();
+            readXML();
         }else{
             disableStoryPad();
         }
@@ -48,9 +54,15 @@ void MainWindow::setupConnects()
     connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
 }
 
+void MainWindow::startUpdateImageTimer(int i)
+{
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()),this,SLOT(updateImages()));
+    timer->start(i);
+}
+
 void MainWindow::initStoryboard()
 {
-
     padInfoList.clear();
     padInfo.clear();
     sPenList.clear();
@@ -62,10 +74,8 @@ void MainWindow::initStoryboard()
     padInfoList.append(padInfo);
     initPadInfo();
     scene->addWidget(sketchPad);
+    update();
     sketchPad->setFocus();
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(updateImages()));
-    timer->start(10000);
 }
 
 void MainWindow::initPadInfo() /* sketchPad info as strings */
@@ -82,6 +92,10 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     padInfo.append("50");
     padInfo.append("false");
     padInfoList.replace(activePad,padInfo);
+    sketchPad->clearImage();
+    imageThumb = QPixmap::fromImage(sketchPad->image);
+    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+    board->addPixmap(imageThumb);
 }
 
 QString MainWindow::getSbFileName()
@@ -149,6 +163,7 @@ void MainWindow::newStoryboard()
         sbFilePath = sbFileName.left(sbFileName.lastIndexOf("/") + 1);
         enableStoryPad();
         initStoryboard();
+        startUpdateImageTimer(updateInterval);
     }
 }
 
@@ -182,35 +197,6 @@ void MainWindow::about()
                "for your conveniance. Please enjoy!"));
 }
 
-void MainWindow::appendSketchPad()
-{
-    sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
-    padInfoList.append(padInfo);
-    lastNumber += 1;
-    activePad = padInfoList.size() - 1;
-    initPadInfo();
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(updateImages()));
-    timer->start(10000);
-}
-
-void MainWindow::insertSketchPad()
-{
-    sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
-    padInfoList.insert(activePad+1,padInfo);
-    lastNumber += 1;
-    activePad += 1;
-    initPadInfo();
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(updateImages()));
-    timer->start(10000);
-}
-
-void MainWindow::saveTest()
-{
-    sketchPad->image.save("/home/david/test.png");
-}
-
 void MainWindow::updateComment()
 {
     padInfoList[activePad][1] = ui->leComment->text();
@@ -229,8 +215,31 @@ void MainWindow::updateFrames()
 void MainWindow::updateImages()
 {
     sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
-
+    imageThumb = QPixmap::fromImage(sketchPad->image);
+    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+    board->update();
 }
+
+void MainWindow::appendSketchPad()
+{
+    sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
+    padInfoList.append(padInfo);
+    lastNumber += 1;
+    activePad = padInfoList.size() - 1;
+    initPadInfo();
+    startUpdateImageTimer(updateInterval);
+}
+
+void MainWindow::insertSketchPad()
+{
+    sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
+    padInfoList.insert(activePad+1,padInfo);
+    lastNumber += 1;
+    activePad += 1;
+    initPadInfo();
+    startUpdateImageTimer(updateInterval);
+}
+
 
 void MainWindow::writeXML()
 {
@@ -241,23 +250,25 @@ void MainWindow::writeXML()
     }
 
     if (!sbFileName.isEmpty()){
+        updateImages();         // saves activeimages
         QFile file(sbFileName);
         if (file.open(QFile::ReadWrite)){
             saveSettings();
             QXmlStreamWriter xmlwriter(&file);
             xmlwriter.setAutoFormatting(true);
             xmlwriter.writeStartDocument();             // document START
+            xmlwriter.writeStartElement("storyboard");  // storyboard START
             xmlwriter.writeStartElement("variables");   // variables START
-            xmlwriter.writeTextElement("fileName",sbFileName);
+            xmlwriter.writeTextElement("sbFileName",sbFileName);
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
 
             xmlwriter.writeEndElement();                // variables STOP
-            xmlwriter.writeStartElement("storyboard");  // storyboard START
+            xmlwriter.writeStartElement("sketchpads");  // sketchpads START
 
             for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
                 padInfo = padInfoList[i];
-                xmlwriter.writeStartElement("sketchpad");  // sketchpads START
+                xmlwriter.writeStartElement("sketchpad");  // sketchpad START
                 xmlwriter.writeTextElement("fileName",padInfo[0]);
                 xmlwriter.writeTextElement("comment",padInfo[1]);
                 xmlwriter.writeTextElement("showComment",padInfo[2]);
@@ -265,8 +276,9 @@ void MainWindow::writeXML()
                 xmlwriter.writeTextElement("showShot",padInfo[4]);
                 xmlwriter.writeTextElement("frames",padInfo[5]);
                 xmlwriter.writeTextElement("showFrames",padInfo[6]);
-                xmlwriter.writeEndElement();                // sketchpads STOP
+                xmlwriter.writeEndElement();                // sketchpad STOP
             }
+            xmlwriter.writeEndElement();         // sketchpads STOP
             xmlwriter.writeEndDocument();        // document and storyboard STOP
         }
 
@@ -277,81 +289,63 @@ void MainWindow::writeXML()
         msgBox.exec();
     }
 }
-/*
-void MainWindow::readXMLfile()
-{
-    framePhonemeList.clear();
-    mouthList.clear();
-    phonemeList.clear();
-    tcList.clear();
-    QFile audioFil(audioFileName);      // with the extension '.dalipsync'
-    if (audioFil.open(QIODevice::ReadOnly)){
 
-        QSettings settings("dalanima/dalipsync","dalipsync");
-        settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
-        settings.setValue("audioFileName", audioFileName);
-
-        QXmlStreamReader xmlreader(&audioFil);
-        while(!xmlreader.atEnd()){
-            xmlreader.readNext();
-            if (xmlreader.isStartElement() && xmlreader.name() == "audioFileName")
-                audioFileName = xmlreader.readElementText();
-
-            else if (xmlreader.isStartElement() && xmlreader.name() == "phoneme")
-                framePhonemeList.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
-                commentList.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "timecode")
-                tcList.append(xmlreader.readElementText().toInt());
-
-            else if (xmlreader.isStartElement() && xmlreader.name() == "mouthFileName")
-                mouthFileName = xmlreader.readElementText();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "mouthFileNamePath")
-                mouthFileNamePath = xmlreader.readElementText();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "fps")
-                fps = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "bitsPerSample")
-                bitsPerSample = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "channels")
-                channels = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "sampleRate")
-                sampleRate = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "samplesPerFrame")
-                samplesPerFrame = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "framesTotal")
-                framesTotal = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "audioCodec")
-                audioCodec = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "blockAlign")
-                blockAlign = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "byteRate")
-                byteRate = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "dataOffset")
-                dataOffset = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "framesToPlay")
-                framesToPlay = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "searchPreRoll")
-                searchPreRoll = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "activeFrame")
-                activeFrame = xmlreader.readElementText().toInt();
-        }
-        samplesPerFrame = (int) sampleRate / fps;
-        samplesTotal = samplesPerFrame * framesTotal;
-    }
-}
-*/
 void MainWindow::readXML()
 {
-    QFile file(sbFileName);
-
-    saveSettings();
-    if (file.open(QIODevice::ReadOnly)){
-        QXmlStreamReader xmlreader(&file);
+    QFile sbFile(sbFileName);
+//    saveSettings();
+    if (sbFile.open(QIODevice::ReadOnly)){
+        padInfoList.clear();            // clear list for reading file
+        padInfo.clear();
+        padThumbList.clear();
+        QXmlStreamReader xmlreader(&sbFile);
         while(!xmlreader.atEnd()){
             xmlreader.readNext();
+            if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
+                sbFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
+                lastNumber = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
+                activePad = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showComment")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showShot")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "frames")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames"){
+                padInfo.append(xmlreader.readElementText());
+                sbFilePath = sbFileName.left(sbFileName.lastIndexOf("/") + 1);
+                sketchPad->image.load(sbFilePath + padInfo[0]);
+                imageThumb = QPixmap::fromImage(sketchPad->image);
+                imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+                padThumbList.append(imageThumb);
+                QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+                board->addItem(pixItem);
+                pixItem->setPos(5 + (padThumbList.size()*170),3);
+                board->addPixmap(imageThumb);
+                update();
+
+                padInfoList.append(padInfo);
+                padInfo.clear();
+            }
         }
+        padInfo = padInfoList.at(activePad);
+        ui->leComment->setText(padInfo[1]);
+        ui->leShot->setText(padInfo[3]);
+        ui->sbFrames->setValue(padInfo[5].toInt());
+        startUpdateImageTimer(updateInterval);
     }else{
-        // TODO something went wrong
+        QMessageBox msgBox;
+        msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.exec();
     }
 }
 

@@ -41,7 +41,6 @@ private slots:
     void about();
     void appendSketchPad();     // saves active pad and appends new       ALT+A
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
-    void saveTest();            // dummy to test image-filesave
     void updateComment();       // udates comment for pad struct
     void updateShot();
     void updateFrames();    // updates shot and frames for pad struct
@@ -51,6 +50,7 @@ private:
     Ui::MainWindow *ui;
 
     void setupConnects();       // initiates connects
+    void startUpdateImageTimer(int i); // starts timer for 'i' millisecs
     void initStoryboard();      // initiaqtes a new storyboard
     void initPadInfo();         // initiates values n padInfo
     QString loadSettings();     // returns sbFileName or ""
@@ -71,9 +71,11 @@ private:
     SketchPad *sketchPad;
     QStringList padInfo;        // fileName, comment, shot name etc
     QList<QStringList> padInfoList; // list of stringlists with padInfo
-    QList<QImage> padThumbList; // list of resized storyboardimages 160x120
+    QPixmap imageThumb;         // 160x120 pixmap of the active image
+    QList<QPixmap> padThumbList;// list of all resized images as 160x120 pixmaps
     int activePad;              // pad number in padInfoList
     int lastNumber;             // last number given to a sketchpad
+    int updateInterval;         // interval for updateImageTimer
     standardPen sPen;
     QList<standardPen> sPenList;
 };
