@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Dec 29 15:35:58 2013
+** Created: Mon Dec 30 17:23:18 2013
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -92,7 +92,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1026, 818);
+        MainWindow->resize(1058, 818);
         QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -148,8 +148,8 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(gvStoryboard->sizePolicy().hasHeightForWidth());
         gvStoryboard->setSizePolicy(sizePolicy1);
-        gvStoryboard->setMinimumSize(QSize(0, 130));
-        gvStoryboard->setMaximumSize(QSize(16777215, 130));
+        gvStoryboard->setMinimumSize(QSize(0, 140));
+        gvStoryboard->setMaximumSize(QSize(16777215, 140));
 
         verticalLayout_7->addWidget(gvStoryboard);
 
@@ -286,7 +286,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1026, 25));
+        menuBar->setGeometry(QRect(0, 0, 1058, 25));
         menu_File = new QMenu(menuBar);
         menu_File->setObjectName(QString::fromUtf8("menu_File"));
         menuSettings = new QMenu(menuBar);

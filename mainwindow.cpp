@@ -12,10 +12,13 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow::showMaximized();
     setupConnects();
 
-    updateInterval = 10000;     // millisecs. to be set as preference TODO
+    updateInterval = 2015;      // millisecs. to be set as preference TODO
+    saveInterval = 5000;       // millisecs. to be set as preference TODO
     scene = new QGraphicsScene(this);
     ui->gvSketchPad->setScene(scene);
     board = new QGraphicsScene(this);
+    QBrush grayBrush(Qt::gray);
+    board->setBackgroundBrush(grayBrush);
     ui->gvStoryboard->setScene(board);
     ui->gvStoryboard->show();
 
@@ -27,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :
         if (file.exists()){
             initStoryboard();
             readXML();
+            updateTimer = new QTimer(this);
+            connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
+            updateTimer->start(5015);
         }else{
             disableStoryPad();
         }
@@ -54,11 +60,18 @@ void MainWindow::setupConnects()
     connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
 }
 
-void MainWindow::startUpdateImageTimer(int i)
+void MainWindow::startSaveImageTimer(int i)
 {
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(updateImages()));
+    connect(timer, SIGNAL(timeout()),this,SLOT(updateSaveImages()));
     timer->start(i);
+}
+
+void MainWindow::startUpdateImageTimer(int i)
+{
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateSaveImages()));
+    updateTimer->start(i);
 }
 
 void MainWindow::initStoryboard()
@@ -93,9 +106,14 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     padInfo.append("false");
     padInfoList.replace(activePad,padInfo);
     sketchPad->clearImage();
+
     imageThumb = QPixmap::fromImage(sketchPad->image);
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-    board->addPixmap(imageThumb);
+    padThumbList.append(imageThumb);    // append pixmap to List...
+    QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+    board->addItem(pixItem);        //...and add it to storyboard as an Item..!
+    pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+
 }
 
 QString MainWindow::getSbFileName()
@@ -163,7 +181,7 @@ void MainWindow::newStoryboard()
         sbFilePath = sbFileName.left(sbFileName.lastIndexOf("/") + 1);
         enableStoryPad();
         initStoryboard();
-        startUpdateImageTimer(updateInterval);
+        startSaveImageTimer(saveInterval);
     }
 }
 
@@ -212,11 +230,26 @@ void MainWindow::updateFrames()
     padInfoList[activePad][5] = QString::number(ui->sbFrames->value());
 }
 
-void MainWindow::updateImages()
+void MainWindow::updateSaveImages()
 {
     sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
+    QImage img = sketchPad->image;
+    img.scaled(160,120,Qt::KeepAspectRatio,Qt::FastTransformation);
+    img.save(sbFilePath + "t" + padInfoList[activePad][0]);
+    QFile f(sbFilePath + "t" + padInfoList[activePad][0]);
+    if (!f.exists()){
+        QMessageBox::information(this, tr("File does no exist!"),
+                tr("It was not possible to save the storyboard image."
+                   "Do you have write access to the directory?"));
+    }
+}
+
+void MainWindow::updateImages()
+{
     imageThumb = QPixmap::fromImage(sketchPad->image);
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+    QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+    pixItem->setPos(- 165 + (padThumbList.size()*170),3);
     board->update();
 }
 
@@ -227,7 +260,7 @@ void MainWindow::appendSketchPad()
     lastNumber += 1;
     activePad = padInfoList.size() - 1;
     initPadInfo();
-    startUpdateImageTimer(updateInterval);
+    startSaveImageTimer(saveInterval);
 }
 
 void MainWindow::insertSketchPad()
@@ -237,7 +270,7 @@ void MainWindow::insertSketchPad()
     lastNumber += 1;
     activePad += 1;
     initPadInfo();
-    startUpdateImageTimer(updateInterval);
+    startSaveImageTimer(saveInterval);
 }
 
 
@@ -250,7 +283,7 @@ void MainWindow::writeXML()
     }
 
     if (!sbFileName.isEmpty()){
-        updateImages();         // saves activeimages
+        updateSaveImages();         // saves activeimages
         QFile file(sbFileName);
         if (file.open(QFile::ReadWrite)){
             saveSettings();
@@ -328,8 +361,7 @@ void MainWindow::readXML()
                 padThumbList.append(imageThumb);
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);
-                pixItem->setPos(5 + (padThumbList.size()*170),3);
-                board->addPixmap(imageThumb);
+                pixItem->setPos(- 165 + (padThumbList.size()*170),3);
                 update();
 
                 padInfoList.append(padInfo);
@@ -340,7 +372,7 @@ void MainWindow::readXML()
         ui->leComment->setText(padInfo[1]);
         ui->leShot->setText(padInfo[3]);
         ui->sbFrames->setValue(padInfo[5].toInt());
-        startUpdateImageTimer(updateInterval);
+        startSaveImageTimer(saveInterval);
     }else{
         QMessageBox msgBox;
         msgBox.setText(tr("File: %1 not found!").arg(sbFileName));

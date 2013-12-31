@@ -43,13 +43,15 @@ private slots:
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
     void updateComment();       // udates comment for pad struct
     void updateShot();
-    void updateFrames();    // updates shot and frames for pad struct
-    void updateImages();        // saves activeImage and repaints storyboard
+    void updateFrames();        // updates shot and frames for pad struct
+    void updateSaveImages();    // saves activeImage + thumbnail
+    void updateImages();        // repaints storyboard
 
 private:
     Ui::MainWindow *ui;
 
     void setupConnects();       // initiates connects
+    void startSaveImageTimer(int i); // starts timer for 'i' millisecs
     void startUpdateImageTimer(int i); // starts timer for 'i' millisecs
     void initStoryboard();      // initiaqtes a new storyboard
     void initPadInfo();         // initiates values n padInfo
@@ -65,6 +67,7 @@ private:
 
     bool maybeSave();
     QTimer *timer;
+    QTimer *updateTimer;
 
     QGraphicsScene *board;      // scene with minimized images
     QGraphicsScene *scene;      // scene with active image
@@ -76,6 +79,7 @@ private:
     int activePad;              // pad number in padInfoList
     int lastNumber;             // last number given to a sketchpad
     int updateInterval;         // interval for updateImageTimer
+    int saveInterval;
     standardPen sPen;
     QList<standardPen> sPenList;
 };
