@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow::showMaximized();
     setupConnects();
 
-    updateInterval = 2015;      // millisecs. to be set as preference TODO
-    saveInterval = 5000;       // millisecs. to be set as preference TODO
+    updateInterval = 4015;      // millisecs. to be set as preference TODO
+    saveInterval = 10000;       // millisecs. to be set as preference TODO
     scene = new QGraphicsScene(this);
     ui->gvSketchPad->setScene(scene);
     board = new QGraphicsScene(this);
@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
             readXML();
             updateTimer = new QTimer(this);
             connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
-            updateTimer->start(5015);
+            updateTimer->start(updateInterval);
         }else{
             disableStoryPad();
         }
@@ -234,7 +234,7 @@ void MainWindow::updateSaveImages()
 {
     sketchPad->image.save(sbFilePath + padInfoList[activePad][0]);
     QImage img = sketchPad->image;
-    img.scaled(160,120,Qt::KeepAspectRatio,Qt::FastTransformation);
+    img = img.scaled(160,120,Qt::KeepAspectRatio,Qt::FastTransformation);
     img.save(sbFilePath + "t" + padInfoList[activePad][0]);
     QFile f(sbFilePath + "t" + padInfoList[activePad][0]);
     if (!f.exists()){
@@ -244,13 +244,15 @@ void MainWindow::updateSaveImages()
     }
 }
 
-void MainWindow::updateImages()
+void MainWindow::updateImages() // updates storyboard thumbnails
 {
     imageThumb = QPixmap::fromImage(sketchPad->image);
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
     QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
-    pixItem->setPos(- 165 + (padThumbList.size()*170),3);
-    board->update();
+    board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
+    board->addItem(pixItem);
+    pixItem->setPos(((activePad + 1)*170) - 165 , 3);
+    update();
 }
 
 void MainWindow::appendSketchPad()
@@ -361,7 +363,8 @@ void MainWindow::readXML()
                 padThumbList.append(imageThumb);
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);
-                pixItem->setPos(- 165 + (padThumbList.size()*170),3);
+                pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+                pixItem->setFocus();
                 update();
 
                 padInfoList.append(padInfo);
