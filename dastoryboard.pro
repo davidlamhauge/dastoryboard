@@ -19,8 +19,5 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-TRANSLATIONS   \
-    translations/dastoryboard_da.ts \
 
-RESOURCES += \
-    translations.qrc
+RESOURCES +=

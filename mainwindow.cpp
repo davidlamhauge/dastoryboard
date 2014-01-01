@@ -112,6 +112,11 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
     board->addItem(pixItem);        //...and add it to storyboard as an Item..!
     pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+    pixItem->setToolTip(padInfoList[activePad][0]);
+
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
+    updateTimer->start(updateInterval);
 
 }
 
@@ -251,6 +256,9 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
     board->addItem(pixItem);
     pixItem->setPos(((activePad + 1)*170) - 165 , 3);
+    pixItem->setToolTip(tr("scene %1, shot %2")
+                        .arg(padInfo[1])
+                        .arg(padInfo[3]));
     update();
 }
 
@@ -363,9 +371,11 @@ void MainWindow::readXML()
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);
                 pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+                pixItem->setToolTip(tr("scene %1, shot %2")
+                                    .arg(padInfo[1])
+                                    .arg(padInfo[3]));
                 pixItem->setFocus();
                 update();
-
                 padInfoList.append(padInfo);
                 padInfo.clear();
             }
