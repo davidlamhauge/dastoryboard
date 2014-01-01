@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QMainWindow::showMaximized();
     setupConnects();
 
     updateInterval = 4015;      // millisecs. to be set as preference TODO

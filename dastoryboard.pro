@@ -18,3 +18,9 @@ HEADERS  += mainwindow.h \
         sketchpad.h
 
 FORMS    += mainwindow.ui
+
+TRANSLATIONS   \
+    translations/dastoryboard_da.ts \
+
+RESOURCES += \
+    translations.qrc
