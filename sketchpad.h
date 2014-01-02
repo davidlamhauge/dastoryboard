@@ -25,6 +25,8 @@ public:
     QString fileName() const {return myFileName; }
     QString comment() const {return myComment; }
     bool showComment() const {return myShowComment; }
+    QString scene() const {return myScene; }
+    bool showScene() const {return myShowScene; }
     QString shot() const {return myShot; }
     bool showShot() const {return myShowShot; }
     int frames() const {return myFrames; }
@@ -52,6 +54,8 @@ private:
     QString myFileName;   // the files name, without path
     QString myComment;
     bool myShowComment;
+    QString myScene;
+    bool myShowScene;
     QString myShot;
     bool myShowShot;
     int myFrames;

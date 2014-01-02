@@ -28,6 +28,8 @@ void SketchPad::initPad(QString path, int name)
     myFileName = s;   // the files name, without path
     myComment = "";
     myShowComment = false;
+    myScene = "";
+    myShowScene = false;
     myShot = "";
     myShowShot = false;
     myFrames = 50;
@@ -35,7 +37,7 @@ void SketchPad::initPad(QString path, int name)
 
     modified = false;
     sketching = false;
-    myPenWidth = 3;
+    myPenWidth = 4;
     myPenColor = Qt::gray;
 }
 
