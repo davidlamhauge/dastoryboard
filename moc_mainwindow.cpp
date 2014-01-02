@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Jan 1 14:20:05 2014
+** Created: Thu Jan 2 11:39:31 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,17 +35,19 @@ static const uint qt_meta_data_MainWindow[] = {
       30,   11,   11,   11, 0x08,
       47,   11,   11,   11, 0x08,
       63,   11,   11,   11, 0x08,
-      74,   11,   11,   11, 0x08,
-      89,   11,   11,   11, 0x08,
-     100,   11,   11,   11, 0x08,
-     111,   11,   11,   11, 0x08,
-     119,   11,   11,   11, 0x08,
-     137,   11,   11,   11, 0x08,
-     155,   11,   11,   11, 0x08,
-     171,   11,   11,   11, 0x08,
-     184,   11,   11,   11, 0x08,
-     199,   11,   11,   11, 0x08,
-     218,   11,   11,   11, 0x08,
+      80,   11,   11,   11, 0x08,
+      91,   11,   11,   11, 0x08,
+     106,   11,   11,   11, 0x08,
+     117,   11,   11,   11, 0x08,
+     128,   11,   11,   11, 0x08,
+     136,   11,   11,   11, 0x08,
+     154,   11,   11,   11, 0x08,
+     172,   11,   11,   11, 0x08,
+     188,   11,   11,   11, 0x08,
+     202,   11,   11,   11, 0x08,
+     215,   11,   11,   11, 0x08,
+     230,   11,   11,   11, 0x08,
+     249,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -53,9 +55,10 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0disableStoryPad()\0"
     "enableStoryPad()\0newStoryboard()\0"
-    "writeXML()\0saveSettings()\0penColor()\0"
-    "penWidth()\0about()\0appendSketchPad()\0"
-    "insertSketchPad()\0updateComment()\0"
+    "openStoryboard()\0writeXML()\0saveSettings()\0"
+    "penColor()\0penWidth()\0about()\0"
+    "appendSketchPad()\0insertSketchPad()\0"
+    "updateComment()\0updateScene()\0"
     "updateShot()\0updateFrames()\0"
     "updateSaveImages()\0updateImages()\0"
 };
@@ -69,18 +72,20 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->disableStoryPad(); break;
         case 1: _t->enableStoryPad(); break;
         case 2: _t->newStoryboard(); break;
-        case 3: _t->writeXML(); break;
-        case 4: _t->saveSettings(); break;
-        case 5: _t->penColor(); break;
-        case 6: _t->penWidth(); break;
-        case 7: _t->about(); break;
-        case 8: _t->appendSketchPad(); break;
-        case 9: _t->insertSketchPad(); break;
-        case 10: _t->updateComment(); break;
-        case 11: _t->updateShot(); break;
-        case 12: _t->updateFrames(); break;
-        case 13: _t->updateSaveImages(); break;
-        case 14: _t->updateImages(); break;
+        case 3: _t->openStoryboard(); break;
+        case 4: _t->writeXML(); break;
+        case 5: _t->saveSettings(); break;
+        case 6: _t->penColor(); break;
+        case 7: _t->penWidth(); break;
+        case 8: _t->about(); break;
+        case 9: _t->appendSketchPad(); break;
+        case 10: _t->insertSketchPad(); break;
+        case 11: _t->updateComment(); break;
+        case 12: _t->updateScene(); break;
+        case 13: _t->updateShot(); break;
+        case 14: _t->updateFrames(); break;
+        case 15: _t->updateSaveImages(); break;
+        case 16: _t->updateImages(); break;
         default: ;
         }
     }
@@ -119,9 +124,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 15)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 15;
+        _id -= 17;
     }
     return _id;
 }

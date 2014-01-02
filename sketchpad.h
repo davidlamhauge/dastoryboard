@@ -62,6 +62,9 @@ private:
     int myPenWidth;
     QColor myPenColor;
     QPoint lastPoint;
+    QPoint del1;
+    QPoint del2;
+    QRect deleteRect;   // rectangle that is to be deleted
 
 };
 

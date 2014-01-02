@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Jan 1 14:19:44 2014
+** Created: Thu Jan 2 11:38:52 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -53,6 +53,7 @@ public:
     QAction *actionAppend_Sketchpad;
     QAction *actionInsert_Sketchpad;
     QAction *action_Open_Storyboard;
+    QAction *action_About;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_7;
@@ -85,6 +86,7 @@ public:
     QMenu *menuSave_Pen;
     QMenu *menuLoad_Pen;
     QMenu *menuEdit;
+    QMenu *menu_Help;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -132,6 +134,8 @@ public:
         actionInsert_Sketchpad->setObjectName(QString::fromUtf8("actionInsert_Sketchpad"));
         action_Open_Storyboard = new QAction(MainWindow);
         action_Open_Storyboard->setObjectName(QString::fromUtf8("action_Open_Storyboard"));
+        action_About = new QAction(MainWindow);
+        action_About->setObjectName(QString::fromUtf8("action_About"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -200,6 +204,7 @@ public:
 
         leScene = new QLineEdit(centralWidget);
         leScene->setObjectName(QString::fromUtf8("leScene"));
+        leScene->setMaxLength(10);
 
         verticalLayout_5->addWidget(leScene);
 
@@ -297,6 +302,8 @@ public:
         menuLoad_Pen->setObjectName(QString::fromUtf8("menuLoad_Pen"));
         menuEdit = new QMenu(menuBar);
         menuEdit->setObjectName(QString::fromUtf8("menuEdit"));
+        menu_Help = new QMenu(menuBar);
+        menu_Help->setObjectName(QString::fromUtf8("menu_Help"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -313,6 +320,7 @@ public:
         menuBar->addAction(menu_File->menuAction());
         menuBar->addAction(menuEdit->menuAction());
         menuBar->addAction(menuSettings->menuAction());
+        menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_New_Storyboard);
         menu_File->addAction(action_Open_Storyboard);
         menu_File->addAction(action_Save_Storyboard);
@@ -332,6 +340,7 @@ public:
         menuLoad_Pen->addAction(actionLoad_Pen_4);
         menuEdit->addAction(actionAppend_Sketchpad);
         menuEdit->addAction(actionInsert_Sketchpad);
+        menu_Help->addAction(action_About);
 
         retranslateUi(MainWindow);
 
@@ -375,6 +384,7 @@ public:
         actionInsert_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Alt+I", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
+        action_About->setText(QApplication::translate("MainWindow", "&About", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
@@ -384,6 +394,7 @@ public:
         menuSave_Pen->setTitle(QApplication::translate("MainWindow", "Save Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Sketchpads", 0, QApplication::UnicodeUTF8));
+        menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

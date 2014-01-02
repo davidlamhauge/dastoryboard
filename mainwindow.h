@@ -24,6 +24,17 @@ class MainWindow : public QMainWindow
 public:
      explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    enum padInfoLabels {
+        fileName    = 0,
+        comment     = 1,
+        showComment = 2,
+        scene       = 3,
+        showScene   = 4,
+        shot        = 5,
+        showShot    = 6,
+        frames      = 7,
+        showFrames  = 8
+    };
 
 public slots:
 
@@ -34,6 +45,7 @@ private slots:
     void disableStoryPad();     // disables storypad + buttons etc
     void enableStoryPad();      // enables storypad + buttons etc
     void newStoryboard();       // new storyboard created and initialised
+    void openStoryboard();      // opens existing storyboard, and reads xml-file
     void writeXML();            // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
     void penColor();            // set new Pen Color from colorpicker
@@ -41,8 +53,9 @@ private slots:
     void about();
     void appendSketchPad();     // saves active pad and appends new       ALT+A
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
-    void updateComment();       // udates comment for pad struct
-    void updateShot();
+    void updateComment();       // udates comment for pad
+    void updateScene();         // updates scene info
+    void updateShot();          // updates shot info
     void updateFrames();        // updates shot and frames for pad struct
     void updateSaveImages();    // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
@@ -70,12 +83,13 @@ private:
     QTimer *updateTimer;
 
     QGraphicsScene *board;      // scene with minimized images
-    QGraphicsScene *scene;      // scene with active image
+    QGraphicsScene *pad;      // scene with active image
     SketchPad *sketchPad;
     QStringList padInfo;        // fileName, comment, shot name etc
     QList<QStringList> padInfoList; // list of stringlists with padInfo
     QPixmap imageThumb;         // 160x120 pixmap of the active image
     QList<QPixmap> padThumbList;// list of all resized images as 160x120 pixmaps
+    QGraphicsPixmapItem *pixItem;
     int activePad;              // pad number in padInfoList
     int lastNumber;             // last number given to a sketchpad
     int updateInterval;         // interval for updateImageTimer

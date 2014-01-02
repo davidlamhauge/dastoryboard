@@ -52,6 +52,9 @@ void SketchPad::mousePressEvent(QMouseEvent *e)
         lastPoint = e->pos();
         sketching = true;
     }
+    if (e->button() == Qt::RightButton){
+        del1 = e->pos();
+    }
 }
 
 void SketchPad::mouseMoveEvent(QMouseEvent *e)
@@ -65,6 +68,15 @@ void SketchPad::mouseReleaseEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton && sketching) {
         drawLineTo(e->pos());
         sketching = false;
+    }
+    if (e->button() == Qt::RightButton){
+        del2 = e->pos();
+        if (del1.x() < del2.x() && del1.y() < del2.y()){
+            for (int i = del1.x(); i < del2.x();i++)
+                for (int j = del1.y();j < del2.y();j++)
+                    image.setPixel(i,j,qRgb(255,255,255));
+        }
+        update();
     }
 }
 

@@ -99,7 +99,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="leScene"/>
+               <widget class="QLineEdit" name="leScene">
+                <property name="maxLength">
+                 <number>10</number>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -264,9 +268,16 @@
     <addaction name="actionAppend_Sketchpad"/>
     <addaction name="actionInsert_Sketchpad"/>
    </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menuEdit"/>
    <addaction name="menuSettings"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="sizePolicy">
@@ -417,6 +428,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About</string>
    </property>
   </action>
  </widget>
