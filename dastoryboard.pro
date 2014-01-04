@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT   += core gui xml
 
 TARGET = dastoryboard
 TEMPLATE = app
@@ -12,10 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        sketchpad.cpp
+        sketchpad.cpp \
+    penchooser.cpp
 
 HEADERS  += mainwindow.h \
-        sketchpad.h
+        sketchpad.h \
+    penchooser.h
 
 FORMS    += mainwindow.ui
 

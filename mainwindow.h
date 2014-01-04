@@ -1,12 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "penchooser.h"
+
 #include <QList>
 #include <QtGui>
 #include <QMainWindow>
 
 class SketchPad;
-
 
 struct standardPen{     // 4 standard pens can be saved in F5 ,F6, F7 og F8
     int penWidth;       // The pen in F5 is the sketchcolor that can be erased
@@ -24,6 +25,7 @@ class MainWindow : public QMainWindow
 public:
      explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
     enum padInfoLabels {
         fileName    = 0,
         comment     = 1,
@@ -48,8 +50,9 @@ private slots:
     void openStoryboard();      // opens existing storyboard, and reads xml-file
     void writeXML();            // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
-    void penColor();            // set new Pen Color from colorpicker
-    void penWidth();            // set new Pen Width from 1 to 99 pixels
+    void penPick();             // set new Pen Color, width and type from penChooser
+    void okPenPick();           // if 'OK' is pressed in penChooser
+    void cancelPenPick();       // if 'cancel' is pressed in penChooser
     void about();
     void appendSketchPad();     // saves active pad and appends new       ALT+A
     void insertSketchPad();     // saves active pad and inserts new       ALT+I
@@ -91,11 +94,14 @@ private:
     QList<QPixmap> padThumbList;// list of all resized images as 160x120 pixmaps
     QGraphicsPixmapItem *pixItem;
     int activePad;              // pad number in padInfoList
+    int activePen;              // pen number in sPenList (from 0 to 4)
     int lastNumber;             // last number given to a sketchpad
     int updateInterval;         // interval for updateImageTimer
     int saveInterval;
     standardPen sPen;
     QList<standardPen> sPenList;
+
+    penChooser *pc;
 };
 
 #endif // MAINWINDOW_H

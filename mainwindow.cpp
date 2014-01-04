@@ -56,8 +56,8 @@ void MainWindow::setupConnects()
 
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     // set pen width and color
-    connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penColor()));
-    connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penWidth()));
+    connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
+    connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
     // update text and values in padInfo, when changes are made
     connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
     connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
@@ -84,8 +84,15 @@ void MainWindow::initStoryboard()
     padInfoList.clear();
     padInfo.clear();
     sPenList.clear();
+    for (int i = 0;i<5;i++)
+    {
+        sPen.penWidth = 6;
+        sPen.penColor = QColor(80,80,80);
+        sPenList.append(sPen);
+    }
     lastNumber = 0;
     activePad = 0;
+    activePen = 0;
     sketchPad = new SketchPad;
     sketchPad->setFixedSize(640,480);
     sketchPad->initPad(sbFileName,lastNumber);
@@ -223,22 +230,28 @@ void MainWindow::closeEvent(QCloseEvent *e)
     e->accept(); // TODO!!!
 }
 
-void MainWindow::penColor()
+void MainWindow::penPick()
 {
-    QColor newColor = QColorDialog::getColor(sketchPad->penColor());
-    if (newColor.isValid())
-        sketchPad->setPenColor(newColor);
+    pc = new penChooser();
+    pc->colordialog->setCurrentColor(sketchPad->penColor());
+    pc->sbWidth->setValue(sketchPad->penWidth());
+    pc->setModal(true);
+    pc->show();
+    connect(pc->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
+    connect(pc->btnOk,SIGNAL(clicked()),this,SLOT(okPenPick()));
 }
 
-void MainWindow::penWidth()
+void MainWindow::okPenPick()
 {
-    bool ok;
-    int newWidth = QInputDialog::getInteger(this, tr("Sketch Pad"),
-                                            tr("Select pen width:"),
-                                            sketchPad->penWidth(),
-                                            1, 50, 1, &ok);
-    if (ok)
-        sketchPad->setPenWidth(newWidth);
+    QColor c = pc->colordialog->currentColor();
+    sketchPad->setPenColor(c);
+    sketchPad->setPenWidth(pc->sbWidth->value());
+    pc->close();
+}
+
+void MainWindow::cancelPenPick()
+{
+    pc->close();
 }
 
 void MainWindow::about()
@@ -338,8 +351,20 @@ void MainWindow::writeXML()
             xmlwriter.writeTextElement("sbFileName",sbFileName);
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
+            xmlwriter.writeTextElement("activePen",QString::number(activePen));
 
             xmlwriter.writeEndElement();                // variables STOP
+            xmlwriter.writeStartElement("penlist");     // penlist START
+            for (int i = 0; i < sPenList.size();i++)
+            {
+                xmlwriter.writeStartElement("pen");     // pen START
+                xmlwriter.writeTextElement("width",QString::number(sPenList[i].penWidth));
+                xmlwriter.writeTextElement("red",QString::number(sPenList[i].penColor.red()));
+                xmlwriter.writeTextElement("green",QString::number(sPenList[i].penColor.green()));
+                xmlwriter.writeTextElement("blue",QString::number(sPenList[i].penColor.blue()));
+                xmlwriter.writeEndElement();            // pen STOP
+            }
+            xmlwriter.writeEndElement();                // penlist STOP
             xmlwriter.writeStartElement("sketchpads");  // sketchpads START
 
             for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
@@ -376,6 +401,7 @@ void MainWindow::readXML()
         padInfoList.clear();            // clear list for reading file
         padInfo.clear();
         padThumbList.clear();
+        sPenList.clear();
         QXmlStreamReader xmlreader(&sbFile);
         while(!xmlreader.atEnd()){
             xmlreader.readNext();
@@ -385,8 +411,20 @@ void MainWindow::readXML()
                 lastNumber = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
                 activePad = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "activePen")
+                activePen = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
                 padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "width")
+                sPen.penWidth = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "red")
+                sPen.penColor.setRed(xmlreader.readElementText().toInt());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "green")
+                sPen.penColor.setGreen(xmlreader.readElementText().toInt());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "blue"){
+                sPen.penColor.setBlue(xmlreader.readElementText().toInt());
+                sPenList.append(sPen);
+            }
             else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
                 padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "showComment")
@@ -405,6 +443,8 @@ void MainWindow::readXML()
                 padInfo.append(xmlreader.readElementText());
                 sbFilePath = sbFileName.left(sbFileName.lastIndexOf("/") + 1);
                 sketchPad->image.load(sbFilePath + padInfo[fileName]);
+                sketchPad->setPenColor(sPenList[activePen].penColor);
+                sketchPad->setPenWidth(sPenList[activePen].penWidth);
                 imageThumb = QPixmap::fromImage(sketchPad->image);
                 imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
                 padThumbList.append(imageThumb);
