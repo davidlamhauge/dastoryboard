@@ -238,15 +238,6 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <widget class="QMenu" name="menuSave_Pen">
-     <property name="title">
-      <string>Save Pen</string>
-     </property>
-     <addaction name="actionSave_Pen_1"/>
-     <addaction name="actionSave_Pen_2"/>
-     <addaction name="actionSave_Pen_3"/>
-     <addaction name="actionSave_Pen_4"/>
-    </widget>
     <widget class="QMenu" name="menuLoad_Pen">
      <property name="title">
       <string>Load Pen</string>
@@ -256,10 +247,8 @@
      <addaction name="actionLoad_Pen_3"/>
      <addaction name="actionLoad_Pen_4"/>
     </widget>
-    <addaction name="actionSet_Pen_width"/>
     <addaction name="actionSet_Pen_Color"/>
     <addaction name="menuLoad_Pen"/>
-    <addaction name="menuSave_Pen"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -274,9 +263,17 @@
     </property>
     <addaction name="action_About"/>
    </widget>
+   <widget class="QMenu" name="menuEdit_2">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionErase_All"/>
+    <addaction name="actionErase_Sketch_Pen"/>
+   </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuEdit"/>
+   <addaction name="menuEdit_2"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuEdit"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -392,10 +389,10 @@
   </action>
   <action name="actionSet_Pen_Color">
    <property name="text">
-    <string>Set Pen Color</string>
+    <string>Set Pen Color and Width</string>
    </property>
    <property name="shortcut">
-    <string>Alt+C</string>
+    <string>F4</string>
    </property>
   </action>
   <action name="actionSave_Settings">
@@ -433,6 +430,22 @@
   <action name="action_About">
    <property name="text">
     <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="actionErase_All">
+   <property name="text">
+    <string>Erase All</string>
+   </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
+  </action>
+  <action name="actionErase_Sketch_Pen">
+   <property name="text">
+    <string>Erase Sketch Pen</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F5</string>
    </property>
   </action>
  </widget>

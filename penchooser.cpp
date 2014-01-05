@@ -16,7 +16,8 @@ penChooser::penChooser(QDialog *parent) :
 
     cbPen = new QComboBox(this);
     QStringList sl;
-    sl << tr("Standard") << tr("F5 sketching") << tr("F6") << tr("F7") << tr("F8");
+    sl << tr("Standard") << tr("F5 sketching") << tr("F6 User defined")
+       << tr("F7 User defined") << tr("F8 User defined");
     cbPen->addItems(sl);
 
     btnCancel = new QPushButton(tr("Cancel"),this);

@@ -38,6 +38,7 @@ signals:
     
 public slots:
     void clearImage();
+    void eraseSketchPen(int r, int g, int b); // erases lines from pen F5 (current color!)
 
 protected:
     void mousePressEvent(QMouseEvent *e);

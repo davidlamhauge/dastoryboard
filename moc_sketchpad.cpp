@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sketchpad.h'
 **
-** Created: Thu Jan 2 22:41:07 2014
+** Created: Sat Jan 4 18:32:35 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SketchPad[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,12 +32,14 @@ static const uint qt_meta_data_SketchPad[] = {
 
  // slots: signature, parameters, type, tag, flags
       11,   10,   10,   10, 0x0a,
+      30,   24,   10,   10, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_SketchPad[] = {
-    "SketchPad\0\0clearImage()\0"
+    "SketchPad\0\0clearImage()\0r,g,b\0"
+    "eraseSketchPen(int,int,int)\0"
 };
 
 void SketchPad::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -47,10 +49,10 @@ void SketchPad::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         SketchPad *_t = static_cast<SketchPad *>(_o);
         switch (_id) {
         case 0: _t->clearImage(); break;
+        case 1: _t->eraseSketchPen((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData SketchPad::staticMetaObjectExtraData = {
@@ -85,9 +87,9 @@ int SketchPad::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

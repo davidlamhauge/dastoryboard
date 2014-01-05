@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Jan 2 22:40:55 2014
+** Created: Sat Jan 4 20:09:10 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -54,6 +54,8 @@ public:
     QAction *actionInsert_Sketchpad;
     QAction *action_Open_Storyboard;
     QAction *action_About;
+    QAction *actionErase_All;
+    QAction *actionErase_Sketch_Pen;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_7;
@@ -83,10 +85,10 @@ public:
     QMenuBar *menuBar;
     QMenu *menu_File;
     QMenu *menuSettings;
-    QMenu *menuSave_Pen;
     QMenu *menuLoad_Pen;
     QMenu *menuEdit;
     QMenu *menu_Help;
+    QMenu *menuEdit_2;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -136,6 +138,10 @@ public:
         action_Open_Storyboard->setObjectName(QString::fromUtf8("action_Open_Storyboard"));
         action_About = new QAction(MainWindow);
         action_About->setObjectName(QString::fromUtf8("action_About"));
+        actionErase_All = new QAction(MainWindow);
+        actionErase_All->setObjectName(QString::fromUtf8("actionErase_All"));
+        actionErase_Sketch_Pen = new QAction(MainWindow);
+        actionErase_Sketch_Pen->setObjectName(QString::fromUtf8("actionErase_Sketch_Pen"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -296,14 +302,14 @@ public:
         menu_File->setObjectName(QString::fromUtf8("menu_File"));
         menuSettings = new QMenu(menuBar);
         menuSettings->setObjectName(QString::fromUtf8("menuSettings"));
-        menuSave_Pen = new QMenu(menuSettings);
-        menuSave_Pen->setObjectName(QString::fromUtf8("menuSave_Pen"));
         menuLoad_Pen = new QMenu(menuSettings);
         menuLoad_Pen->setObjectName(QString::fromUtf8("menuLoad_Pen"));
         menuEdit = new QMenu(menuBar);
         menuEdit->setObjectName(QString::fromUtf8("menuEdit"));
         menu_Help = new QMenu(menuBar);
         menu_Help->setObjectName(QString::fromUtf8("menu_Help"));
+        menuEdit_2 = new QMenu(menuBar);
+        menuEdit_2->setObjectName(QString::fromUtf8("menuEdit_2"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -318,22 +324,17 @@ public:
         MainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menu_File->menuAction());
-        menuBar->addAction(menuEdit->menuAction());
+        menuBar->addAction(menuEdit_2->menuAction());
         menuBar->addAction(menuSettings->menuAction());
+        menuBar->addAction(menuEdit->menuAction());
         menuBar->addAction(menu_Help->menuAction());
         menu_File->addAction(action_New_Storyboard);
         menu_File->addAction(action_Open_Storyboard);
         menu_File->addAction(action_Save_Storyboard);
         menu_File->addSeparator();
         menu_File->addAction(actionE_xit);
-        menuSettings->addAction(actionSet_Pen_width);
         menuSettings->addAction(actionSet_Pen_Color);
         menuSettings->addAction(menuLoad_Pen->menuAction());
-        menuSettings->addAction(menuSave_Pen->menuAction());
-        menuSave_Pen->addAction(actionSave_Pen_1);
-        menuSave_Pen->addAction(actionSave_Pen_2);
-        menuSave_Pen->addAction(actionSave_Pen_3);
-        menuSave_Pen->addAction(actionSave_Pen_4);
         menuLoad_Pen->addAction(actionLoad_Pen_1);
         menuLoad_Pen->addAction(actionLoad_Pen_2);
         menuLoad_Pen->addAction(actionLoad_Pen_3);
@@ -341,6 +342,8 @@ public:
         menuEdit->addAction(actionAppend_Sketchpad);
         menuEdit->addAction(actionInsert_Sketchpad);
         menu_Help->addAction(action_About);
+        menuEdit_2->addAction(actionErase_All);
+        menuEdit_2->addAction(actionErase_Sketch_Pen);
 
         retranslateUi(MainWindow);
 
@@ -374,8 +377,8 @@ public:
         actionLoad_Pen_4->setShortcut(QApplication::translate("MainWindow", "F8", 0, QApplication::UnicodeUTF8));
         actionSet_Pen_width->setText(QApplication::translate("MainWindow", "Set Pen Width", 0, QApplication::UnicodeUTF8));
         actionSet_Pen_width->setShortcut(QApplication::translate("MainWindow", "Alt+W", 0, QApplication::UnicodeUTF8));
-        actionSet_Pen_Color->setText(QApplication::translate("MainWindow", "Set Pen Color", 0, QApplication::UnicodeUTF8));
-        actionSet_Pen_Color->setShortcut(QApplication::translate("MainWindow", "Alt+C", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_Color->setText(QApplication::translate("MainWindow", "Set Pen Color and Width", 0, QApplication::UnicodeUTF8));
+        actionSet_Pen_Color->setShortcut(QApplication::translate("MainWindow", "F4", 0, QApplication::UnicodeUTF8));
         actionSave_Settings->setText(QApplication::translate("MainWindow", "Save Settings", 0, QApplication::UnicodeUTF8));
         actionSave_Settings->setShortcut(QApplication::translate("MainWindow", "Alt+S", 0, QApplication::UnicodeUTF8));
         actionAppend_Sketchpad->setText(QApplication::translate("MainWindow", "Append Sketchpad", 0, QApplication::UnicodeUTF8));
@@ -385,16 +388,20 @@ public:
         action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "&About", 0, QApplication::UnicodeUTF8));
+        actionErase_All->setText(QApplication::translate("MainWindow", "Erase All", 0, QApplication::UnicodeUTF8));
+        actionErase_All->setShortcut(QApplication::translate("MainWindow", "F9", 0, QApplication::UnicodeUTF8));
+        actionErase_Sketch_Pen->setText(QApplication::translate("MainWindow", "Erase Sketch Pen", 0, QApplication::UnicodeUTF8));
+        actionErase_Sketch_Pen->setShortcut(QApplication::translate("MainWindow", "Shift+F5", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
-        menuSave_Pen->setTitle(QApplication::translate("MainWindow", "Save Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("MainWindow", "Sketchpads", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
+        menuEdit_2->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

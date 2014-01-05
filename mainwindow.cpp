@@ -55,6 +55,13 @@ void MainWindow::setupConnects()
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
 
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
+    connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
+    connect(ui->actionErase_Sketch_Pen,SIGNAL(triggered()),this,SLOT(eraseF5()));
+    connect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
+    connect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
+    connect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
+
+    connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -235,17 +242,50 @@ void MainWindow::penPick()
     pc = new penChooser();
     pc->colordialog->setCurrentColor(sketchPad->penColor());
     pc->sbWidth->setValue(sketchPad->penWidth());
+    pc->cbPen->setCurrentIndex(activePen);
     pc->setModal(true);
     pc->show();
     connect(pc->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
     connect(pc->btnOk,SIGNAL(clicked()),this,SLOT(okPenPick()));
 }
 
+void MainWindow::penF5()
+{
+    sPen = sPenList[1];
+    sketchPad->setPenColor(sPen.penColor);
+    sketchPad->setPenWidth(sPen.penWidth);
+}
+
+void MainWindow::penF6()
+{
+    sPen = sPenList[2];
+    sketchPad->setPenColor(sPen.penColor);
+    sketchPad->setPenWidth(sPen.penWidth);
+}
+
+void MainWindow::penF7()
+{
+    sPen = sPenList[3];
+    sketchPad->setPenColor(sPen.penColor);
+    sketchPad->setPenWidth(sPen.penWidth);
+}
+
+void MainWindow::penF8()
+{
+    sPen = sPenList[4];
+    sketchPad->setPenColor(sPen.penColor);
+    sketchPad->setPenWidth(sPen.penWidth);
+}
+
 void MainWindow::okPenPick()
 {
-    QColor c = pc->colordialog->currentColor();
-    sketchPad->setPenColor(c);
-    sketchPad->setPenWidth(pc->sbWidth->value());
+    activePen = pc->cbPen->currentIndex();
+    sPen = sPenList[activePen];
+    sPen.penColor = pc->colordialog->currentColor();
+    sketchPad->setPenColor(sPen.penColor);
+    sPen.penWidth = pc->sbWidth->value();
+    sketchPad->setPenWidth(sPen.penWidth);
+    sPenList.replace(activePen,sPen);
     pc->close();
 }
 
@@ -253,6 +293,34 @@ void MainWindow::cancelPenPick()
 {
     pc->close();
 }
+
+void MainWindow::eraseF5()
+{
+    sketchPad->eraseSketchPen(sPenList[1].penColor.red(),
+            sPenList[1].penColor.green(),sPenList[1].penColor.blue());
+}
+
+void MainWindow::eraseAll()
+{
+    int ret = QMessageBox::warning(this, tr("Erase drawing"),
+                                    tr("Do you want to erase the drawing?\n"
+                                       "It can NOT be undone!\n"                                       ),
+                                    QMessageBox::Ok | QMessageBox::Cancel,
+                                    QMessageBox::Cancel);
+    switch (ret)
+    {
+       case QMessageBox::Ok:
+        sketchPad->clearImage();
+           break;
+       case QMessageBox::Cancel:
+           // Cancel was clicked
+           break;
+       default:
+           // should never be reached
+           break;
+     }
+}
+
 
 void MainWindow::about()
 {
@@ -352,8 +420,8 @@ void MainWindow::writeXML()
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
             xmlwriter.writeTextElement("activePen",QString::number(activePen));
-
             xmlwriter.writeEndElement();                // variables STOP
+
             xmlwriter.writeStartElement("penlist");     // penlist START
             for (int i = 0; i < sPenList.size();i++)
             {
@@ -365,8 +433,8 @@ void MainWindow::writeXML()
                 xmlwriter.writeEndElement();            // pen STOP
             }
             xmlwriter.writeEndElement();                // penlist STOP
-            xmlwriter.writeStartElement("sketchpads");  // sketchpads START
 
+            xmlwriter.writeStartElement("sketchpads");  // sketchpads START
             for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
                 padInfo = padInfoList[i];
                 xmlwriter.writeStartElement("sketchpad");  // sketchpad START
@@ -443,8 +511,6 @@ void MainWindow::readXML()
                 padInfo.append(xmlreader.readElementText());
                 sbFilePath = sbFileName.left(sbFileName.lastIndexOf("/") + 1);
                 sketchPad->image.load(sbFilePath + padInfo[fileName]);
-                sketchPad->setPenColor(sPenList[activePen].penColor);
-                sketchPad->setPenWidth(sPenList[activePen].penWidth);
                 imageThumb = QPixmap::fromImage(sketchPad->image);
                 imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
                 padThumbList.append(imageThumb);
@@ -460,6 +526,9 @@ void MainWindow::readXML()
                 padInfo.clear();
             }
         }
+        sPen = sPenList[activePen];
+        sketchPad->setPenColor(sPen.penColor);
+        sketchPad->setPenWidth(sPen.penWidth);
         padInfo = padInfoList.at(activePad);
         ui->leComment->setText(padInfo[comment]);
         ui->leScene->setText(padInfo[scene]);

@@ -48,6 +48,15 @@ void SketchPad::clearImage()
     update();
 }
 
+void SketchPad::eraseSketchPen(int r, int g, int b)
+{
+    for (int i=0;i < image.width();i++)
+        for (int j = 0; j < image.height();j++)
+            if (image.pixel(i,j) == qRgb(r,g,b))
+                image.setPixel(i,j,qRgb(255,255,255));
+    update();
+}
+
 void SketchPad::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {

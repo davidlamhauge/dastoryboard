@@ -50,12 +50,18 @@ private slots:
     void openStoryboard();      // opens existing storyboard, and reads xml-file
     void writeXML();            // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
+    void penF5();               // select sPen F5                           F5
+    void penF6();               // select sPen F6                           F6
+    void penF7();               // select sPen F7                           F7
+    void penF8();               // select sPen F8                           F8
     void penPick();             // set new Pen Color, width and type from penChooser
     void okPenPick();           // if 'OK' is pressed in penChooser
     void cancelPenPick();       // if 'cancel' is pressed in penChooser
+    void eraseF5();             // erases lines with sketchpen-color        Shift-F5
+    void eraseAll();            // erases entire picture                    F9
     void about();
-    void appendSketchPad();     // saves active pad and appends new       ALT+A
-    void insertSketchPad();     // saves active pad and inserts new       ALT+I
+    void appendSketchPad();     // saves active pad and appends new         ALT+A
+    void insertSketchPad();     // saves active pad and inserts new         ALT+I
     void updateComment();       // udates comment for pad
     void updateScene();         // updates scene info
     void updateShot();          // updates shot info
