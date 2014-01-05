@@ -68,6 +68,7 @@ private slots:
     void updateFrames();        // updates shot and frames for pad struct
     void updateSaveImages();    // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
+    void changeImage();
 
 private:
     Ui::MainWindow *ui;
@@ -91,6 +92,7 @@ private:
     QTimer *timer;
     QTimer *updateTimer;
 
+    QGraphicsItem *item;
     QGraphicsScene *board;      // scene with minimized images
     QGraphicsScene *pad;      // scene with active image
     SketchPad *sketchPad;

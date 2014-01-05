@@ -9,7 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setupConnects();
 
     updateInterval = 4015;      // millisecs. to be set as preference TODO
     saveInterval = 10000;       // millisecs. to be set as preference TODO
@@ -20,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     board->setBackgroundBrush(grayBrush);
     ui->gvStoryboard->setScene(board);
     ui->gvStoryboard->show();
+    setupConnects();
 
     sbFileName = loadSettings();    // gets a fileName if it exists!
     if (sbFileName.isEmpty()){
@@ -29,9 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
         if (file.exists()){
             initStoryboard();
             readXML();
-            updateTimer = new QTimer(this);
-            connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
-            updateTimer->start(updateInterval);
         }else{
             disableStoryPad();
             QMessageBox msgBox;
@@ -69,6 +66,8 @@ void MainWindow::setupConnects()
     connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
     connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
     connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+
+    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 
 }
 
@@ -374,7 +373,34 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     pixItem->setToolTip(tr("scene %1, shot %2")
                         .arg(padInfo[scene])
                         .arg(padInfo[shot]));
+    pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
     update();
+    sketchPad->update();
+}
+/*
+                sketchPad->image.load(sbFilePath + padInfo[fileName]);
+                imageThumb = QPixmap::fromImage(sketchPad->image);
+                imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+                padThumbList.append(imageThumb);
+                pixItem = new QGraphicsPixmapItem(imageThumb);
+                board->addItem(pixItem);
+                pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+                pixItem->setToolTip(tr("scene %1, shot %2")
+                                    .arg(padInfo[scene])
+                                    .arg(padInfo[shot]));
+                pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+                update();
+*/
+void MainWindow::changeImage()
+{
+    if (!board->selectedItems().isEmpty()){
+        item = board->selectedItems().at(0);
+        int i = item->pos().x();        // find x-value
+        activePad = (i-5) / 170;
+        padInfo = padInfoList.at(activePad);
+        sketchPad->image.load(sbFilePath + padInfo[fileName]);
+        updateImages();
+    }
 }
 
 void MainWindow::appendSketchPad()
@@ -464,7 +490,6 @@ void MainWindow::writeXML()
 void MainWindow::readXML()
 {
     QFile sbFile(sbFileName);
-//    saveSettings();
     if (sbFile.open(QIODevice::ReadOnly)){
         padInfoList.clear();            // clear list for reading file
         padInfo.clear();
@@ -530,6 +555,8 @@ void MainWindow::readXML()
         sketchPad->setPenColor(sPen.penColor);
         sketchPad->setPenWidth(sPen.penWidth);
         padInfo = padInfoList.at(activePad);
+        sketchPad->image.load(sbFilePath + padInfo[fileName]);
+        updateImages();
         ui->leComment->setText(padInfo[comment]);
         ui->leScene->setText(padInfo[scene]);
         ui->leShot->setText(padInfo[shot]);

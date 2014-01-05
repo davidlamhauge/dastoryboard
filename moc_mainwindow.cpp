@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sat Jan 4 21:03:50 2014
+** Created: Sun Jan 5 17:01:50 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      25,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -55,6 +55,7 @@ static const uint qt_meta_data_MainWindow[] = {
      284,   11,   11,   11, 0x08,
      299,   11,   11,   11, 0x08,
      318,   11,   11,   11, 0x08,
+     333,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -70,6 +71,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "updateComment()\0updateScene()\0"
     "updateShot()\0updateFrames()\0"
     "updateSaveImages()\0updateImages()\0"
+    "changeImage()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -102,6 +104,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 21: _t->updateFrames(); break;
         case 22: _t->updateSaveImages(); break;
         case 23: _t->updateImages(); break;
+        case 24: _t->changeImage(); break;
         default: ;
         }
     }
@@ -140,9 +143,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 25)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 25;
     }
     return _id;
 }

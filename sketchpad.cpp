@@ -52,7 +52,7 @@ void SketchPad::eraseSketchPen(int r, int g, int b)
 {
     for (int i=0;i < image.width();i++)
         for (int j = 0; j < image.height();j++)
-            if (image.pixel(i,j) == qRgb(r,g,b))
+            if (image.pixel(i,j) == qRgb(r,g,b) && image.rect().contains(i,j))
                 image.setPixel(i,j,qRgb(255,255,255));
     update();
 }
