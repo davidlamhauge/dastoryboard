@@ -64,6 +64,7 @@ void MainWindow::setupConnects()
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
     // update text and values in padInfo, when changes are made
     connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
     connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
     connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
 
@@ -312,10 +313,7 @@ void MainWindow::eraseAll()
         sketchPad->clearImage();
            break;
        case QMessageBox::Cancel:
-           // Cancel was clicked
-           break;
        default:
-           // should never be reached
            break;
      }
 }
@@ -361,6 +359,18 @@ void MainWindow::updateSaveImages()
                    "Do you have write access to the directory?"));
     }
 }
+/*! Adds labels to all thumbnails */
+void MainWindow::addThumbLabels()
+{
+    for (int i = 0;i<padInfoList.size();i++){
+        txt = new QGraphicsTextItem();
+        txt->setHtml("<div style=\'background-color:#ddffdd;\'>"
+                     + padInfoList[i][scene] + " , "
+                     + padInfoList[i][shot] + "</div>");
+        board->addItem(txt);
+        txt->setPos(((i + 1)*170) - 165 , 3);
+    }
+}
 
 void MainWindow::updateImages() // updates storyboard thumbnails
 {
@@ -374,23 +384,17 @@ void MainWindow::updateImages() // updates storyboard thumbnails
                         .arg(padInfo[scene])
                         .arg(padInfo[shot]));
     pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+    ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
+                                  .arg(padInfo[scene]).arg(padInfo[shot]));
+    addThumbLabels();
     update();
+    ui->leComment->setText(padInfoList[activePad][comment]);
+    ui->leScene->setText(padInfoList[activePad][scene]);
+    ui->leShot->setText(padInfoList[activePad][shot]);
+    ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
     sketchPad->update();
 }
-/*
-                sketchPad->image.load(sbFilePath + padInfo[fileName]);
-                imageThumb = QPixmap::fromImage(sketchPad->image);
-                imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-                padThumbList.append(imageThumb);
-                pixItem = new QGraphicsPixmapItem(imageThumb);
-                board->addItem(pixItem);
-                pixItem->setPos((padThumbList.size()*170) - 165 , 3);
-                pixItem->setToolTip(tr("scene %1, shot %2")
-                                    .arg(padInfo[scene])
-                                    .arg(padInfo[shot]));
-                pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-                update();
-*/
+
 void MainWindow::changeImage()
 {
     if (!board->selectedItems().isEmpty()){

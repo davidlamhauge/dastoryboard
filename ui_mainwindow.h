@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jan 4 20:09:10 2014
+** Created: Sun Jan 5 17:55:58 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -60,7 +60,7 @@ public:
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_7;
     QGraphicsView *gvStoryboard;
-    QHBoxLayout *horizontalLayout_2;
+    QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayout_6;
     QVBoxLayout *verticalLayout_2;
     QLabel *labComments;
@@ -80,6 +80,10 @@ public:
     QSpacerItem *verticalSpacer_2;
     QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *labActivePad;
+    QLabel *labActivePadInfo;
+    QSpacerItem *horizontalSpacer;
     QSpacerItem *verticalSpacer;
     QFrame *line_3;
     QMenuBar *menuBar;
@@ -163,9 +167,9 @@ public:
 
         verticalLayout_7->addWidget(gvStoryboard);
 
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         verticalLayout_6 = new QVBoxLayout();
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
@@ -261,7 +265,7 @@ public:
         verticalLayout_6->addItem(verticalSpacer_2);
 
 
-        horizontalLayout_2->addLayout(verticalLayout_6);
+        horizontalLayout_3->addLayout(verticalLayout_6);
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(6);
@@ -274,15 +278,35 @@ public:
 
         verticalLayout_3->addWidget(gvSketchPad);
 
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        labActivePad = new QLabel(centralWidget);
+        labActivePad->setObjectName(QString::fromUtf8("labActivePad"));
+
+        horizontalLayout_2->addWidget(labActivePad);
+
+        labActivePadInfo = new QLabel(centralWidget);
+        labActivePadInfo->setObjectName(QString::fromUtf8("labActivePadInfo"));
+
+        horizontalLayout_2->addWidget(labActivePadInfo);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_2);
+
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_3->addItem(verticalSpacer);
 
 
-        horizontalLayout_2->addLayout(verticalLayout_3);
+        horizontalLayout_3->addLayout(verticalLayout_3);
 
 
-        verticalLayout_7->addLayout(horizontalLayout_2);
+        verticalLayout_7->addLayout(horizontalLayout_3);
 
 
         gridLayout->addLayout(verticalLayout_7, 0, 0, 1, 1);
@@ -396,6 +420,8 @@ public:
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
+        labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
+        labActivePadInfo->setText(QApplication::translate("MainWindow", "info...", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));

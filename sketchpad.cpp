@@ -82,6 +82,10 @@ void SketchPad::mouseReleaseEvent(QMouseEvent *e)
     }
     if (e->button() == Qt::RightButton){
         del2 = e->pos();
+        if (del2.x() > 639)
+            del2.setX(639);
+        if (del2.y() > 479)
+            del2.setY(479);
         if (del1.x() < del2.x() && del1.y() < del2.y()){
             for (int i = del1.x(); i < del2.x();i++)
                 for (int j = del1.y();j < del2.y();j++)

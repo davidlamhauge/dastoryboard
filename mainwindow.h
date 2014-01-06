@@ -78,6 +78,7 @@ private:
     void startUpdateImageTimer(int i); // starts timer for 'i' millisecs
     void initStoryboard();      // initiaqtes a new storyboard
     void initPadInfo();         // initiates values n padInfo
+    void addThumbLabels();      // adds labels on thumbs with (scene,shot)
     QString loadSettings();     // returns sbFileName or ""
     QString sbFileName;         // storyboard filename, absolute path
     QString sbFilePath;         // filepath, including the last '/'
@@ -93,6 +94,7 @@ private:
     QTimer *updateTimer;
 
     QGraphicsItem *item;
+    QGraphicsTextItem *txt;
     QGraphicsScene *board;      // scene with minimized images
     QGraphicsScene *pad;      // scene with active image
     SketchPad *sketchPad;
