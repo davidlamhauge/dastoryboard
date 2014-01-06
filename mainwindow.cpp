@@ -364,9 +364,9 @@ void MainWindow::addThumbLabels()
 {
     for (int i = 0;i<padInfoList.size();i++){
         txt = new QGraphicsTextItem();
-        txt->setHtml("<div style=\'background-color:#ddffdd;\'>"
+        txt->setHtml("<div style=\'background-color:#ffffff;\'> "
                      + padInfoList[i][scene] + " , "
-                     + padInfoList[i][shot] + "</div>");
+                     + padInfoList[i][shot] + " </div>");
         board->addItem(txt);
         txt->setPos(((i + 1)*170) - 165 , 3);
     }
@@ -386,6 +386,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
     ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
                                   .arg(padInfo[scene]).arg(padInfo[shot]));
+    pixItem->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),1,1);
     addThumbLabels();
     update();
     ui->leComment->setText(padInfoList[activePad][comment]);
@@ -393,6 +394,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     ui->leShot->setText(padInfoList[activePad][shot]);
     ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
     sketchPad->update();
+
 }
 
 void MainWindow::changeImage()

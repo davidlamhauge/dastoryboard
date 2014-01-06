@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         sketchpad.cpp \
-    penchooser.cpp
+    penchooser.cpp \
+    prefdialog.cpp
 
 HEADERS  += mainwindow.h \
         sketchpad.h \
-    penchooser.h
+    penchooser.h \
+    prefdialog.h
 
 FORMS    += mainwindow.ui
 

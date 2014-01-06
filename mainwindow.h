@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "penchooser.h"
+#include "prefdialog.h"
 
 #include <QList>
 #include <QtGui>
