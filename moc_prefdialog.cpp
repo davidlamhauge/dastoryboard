@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'prefdialog.h'
 **
-** Created: Sun Jan 5 23:10:13 2014
+** Created: Mon Jan 6 22:29:39 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

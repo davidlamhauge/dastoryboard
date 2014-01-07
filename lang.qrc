@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/lang/dastoryboard_">
+        <file alias="Danish">lang/dastoryboard_da.ts</file>
+    </qresource>
+</RCC>

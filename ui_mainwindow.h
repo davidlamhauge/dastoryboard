@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Jan 5 17:55:58 2014
+** Created: Mon Jan 6 22:45:47 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -56,6 +56,8 @@ public:
     QAction *action_About;
     QAction *actionErase_All;
     QAction *actionErase_Sketch_Pen;
+    QAction *actionPreferences;
+    QAction *actionCenter_Storyboard;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout_7;
@@ -146,6 +148,10 @@ public:
         actionErase_All->setObjectName(QString::fromUtf8("actionErase_All"));
         actionErase_Sketch_Pen = new QAction(MainWindow);
         actionErase_Sketch_Pen->setObjectName(QString::fromUtf8("actionErase_Sketch_Pen"));
+        actionPreferences = new QAction(MainWindow);
+        actionPreferences->setObjectName(QString::fromUtf8("actionPreferences"));
+        actionCenter_Storyboard = new QAction(MainWindow);
+        actionCenter_Storyboard->setObjectName(QString::fromUtf8("actionCenter_Storyboard"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -272,8 +278,8 @@ public:
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         gvSketchPad = new QGraphicsView(centralWidget);
         gvSketchPad->setObjectName(QString::fromUtf8("gvSketchPad"));
-        gvSketchPad->setMinimumSize(QSize(642, 482));
-        gvSketchPad->setMaximumSize(QSize(642, 482));
+        gvSketchPad->setMinimumSize(QSize(0, 0));
+        gvSketchPad->setMaximumSize(QSize(10000, 10000));
         gvSketchPad->setMouseTracking(true);
 
         verticalLayout_3->addWidget(gvSketchPad);
@@ -356,6 +362,8 @@ public:
         menu_File->addAction(action_Open_Storyboard);
         menu_File->addAction(action_Save_Storyboard);
         menu_File->addSeparator();
+        menu_File->addAction(actionPreferences);
+        menu_File->addSeparator();
         menu_File->addAction(actionE_xit);
         menuSettings->addAction(actionSet_Pen_Color);
         menuSettings->addAction(menuLoad_Pen->menuAction());
@@ -365,6 +373,7 @@ public:
         menuLoad_Pen->addAction(actionLoad_Pen_4);
         menuEdit->addAction(actionAppend_Sketchpad);
         menuEdit->addAction(actionInsert_Sketchpad);
+        menuEdit->addAction(actionCenter_Storyboard);
         menu_Help->addAction(action_About);
         menuEdit_2->addAction(actionErase_All);
         menuEdit_2->addAction(actionErase_Sketch_Pen);
@@ -412,10 +421,14 @@ public:
         action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "&About", 0, QApplication::UnicodeUTF8));
-        actionErase_All->setText(QApplication::translate("MainWindow", "Erase All", 0, QApplication::UnicodeUTF8));
+        actionErase_All->setText(QApplication::translate("MainWindow", "Erase drawing", 0, QApplication::UnicodeUTF8));
         actionErase_All->setShortcut(QApplication::translate("MainWindow", "F9", 0, QApplication::UnicodeUTF8));
         actionErase_Sketch_Pen->setText(QApplication::translate("MainWindow", "Erase Sketch Pen", 0, QApplication::UnicodeUTF8));
         actionErase_Sketch_Pen->setShortcut(QApplication::translate("MainWindow", "Shift+F5", 0, QApplication::UnicodeUTF8));
+        actionPreferences->setText(QApplication::translate("MainWindow", "Preferences", 0, QApplication::UnicodeUTF8));
+        actionPreferences->setShortcut(QApplication::translate("MainWindow", "F12", 0, QApplication::UnicodeUTF8));
+        actionCenter_Storyboard->setText(QApplication::translate("MainWindow", "Center Storyboard", 0, QApplication::UnicodeUTF8));
+        actionCenter_Storyboard->setShortcut(QApplication::translate("MainWindow", "Alt+C", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
@@ -423,9 +436,9 @@ public:
         labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
         labActivePadInfo->setText(QApplication::translate("MainWindow", "info...", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
-        menuSettings->setTitle(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
+        menuSettings->setTitle(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
-        menuEdit->setTitle(QApplication::translate("MainWindow", "Sketchpads", 0, QApplication::UnicodeUTF8));
+        menuEdit->setTitle(QApplication::translate("MainWindow", "Sketchpad", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
         menuEdit_2->setTitle(QApplication::translate("MainWindow", "Edit", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

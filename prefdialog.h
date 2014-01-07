@@ -14,9 +14,6 @@ class PrefDialog : public QDialog
 public:
     explicit PrefDialog(QDialog *parent = 0);
 
-    QLabel *labPadSize;
-    QComboBox *cbPadSize;
-
     QLabel *labFps;
     QComboBox *cbFps;
 
@@ -25,6 +22,12 @@ public:
 
     QLabel *labAutoNumber;
     QComboBox *cbAutoNumber;
+
+    QPushButton *btnCancel;
+    QPushButton *btnOk;
+    QGridLayout *buttonLayout;
+    QVBoxLayout *layout;
+
 
 signals:
     

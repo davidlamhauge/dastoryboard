@@ -23,5 +23,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-
-RESOURCES +=
+TRANSLATIONS += \
+    lang/dastoryboard_da.ts
+RESOURCES += \
+    lang.qrc

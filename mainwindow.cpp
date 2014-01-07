@@ -10,9 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    updateInterval = 4015;      // millisecs. to be set as preference TODO
+    updateInterval = 1000;      // millisecs. to be set as preference TODO
     saveInterval = 10000;       // millisecs. to be set as preference TODO
+    padW = 640;
+    padH = 480;
+    fps = 25;
+    seqSc.clear();
+    seqSc << "Scene" << "Shot";
+    autoNumber = true;
     pad = new QGraphicsScene(this);
+    ui->gvSketchPad->setFixedSize(642,482);
     ui->gvSketchPad->setScene(pad);
     board = new QGraphicsScene(this);
     QBrush grayBrush(Qt::gray);
@@ -21,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gvStoryboard->show();
     setupConnects();
 
-    sbFileName = loadSettings();    // gets a fileName if it exists!
+    sbFileName = loadSettings();    // gets the fileName if sbFileName exists!
     if (sbFileName.isEmpty()){
         disableStoryPad();
     }else{
@@ -49,6 +56,7 @@ void MainWindow::setupConnects()
     connect(ui->action_New_Storyboard,SIGNAL(triggered()),this,SLOT(newStoryboard()));
     connect(ui->action_Open_Storyboard,SIGNAL(triggered()),this,SLOT(openStoryboard()));
     connect(ui->action_Save_Storyboard,SIGNAL(triggered()),this,SLOT(writeXML()));
+    connect(ui->actionPreferences,SIGNAL(triggered()),this,SLOT(setPrefs()));
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
 
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
@@ -57,18 +65,12 @@ void MainWindow::setupConnects()
     connect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
     connect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
     connect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
+    connect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
     connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
-    // update text and values in padInfo, when changes are made
-    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
-    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-
-    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 
 }
 
@@ -86,11 +88,17 @@ void MainWindow::startUpdateImageTimer(int i)
     updateTimer->start(i);
 }
 
+void MainWindow::setPadSize(int w, int h)
+{
+    ui->gvSketchPad->setFixedSize(w,h);
+}
+
 void MainWindow::initStoryboard()
 {
     padInfoList.clear();
     padInfo.clear();
     sPenList.clear();
+    board->clear();
     for (int i = 0;i<5;i++)
     {
         sPen.penWidth = 6;
@@ -100,7 +108,7 @@ void MainWindow::initStoryboard()
     lastNumber = 0;
     activePad = 0;
     activePen = 0;
-    sketchPad = new SketchPad;
+    sketchPad = new SketchPad();
     sketchPad->setFixedSize(640,480);
     sketchPad->initPad(sbFileName,lastNumber);
     padInfoList.append(padInfo);
@@ -114,20 +122,32 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
 {
     padInfo.clear();
     padInfo.append(QString::number(lastNumber) + ".png");  // image filename!
-    ui->leComment->clear();
     padInfo.append("");
     padInfo.append("false");
-    ui->leScene->clear();
     padInfo.append("");
     padInfo.append("false");
-    ui->leShot->clear();
     padInfo.append("");
     padInfo.append("false");
-    ui->sbFrames->setValue(50);
     padInfo.append("50");
     padInfo.append("false");
     padInfoList.replace(activePad,padInfo);
     sketchPad->clearImage();
+
+    // update text and values in padInfo, when changes are made
+    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
+    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
+    ui->leComment->clear();
+    ui->leScene->clear();
+    ui->leShot->clear();
+    ui->sbFrames->setValue(50);
+    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
+    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 
     imageThumb = QPixmap::fromImage(sketchPad->image);
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
@@ -135,14 +155,10 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     pixItem = new QGraphicsPixmapItem(imageThumb);
     board->addItem(pixItem);        //...and add it to storyboard as an Item..!
     pixItem->setPos((padThumbList.size()*170) - 165 , 3);
-    pixItem->setToolTip(tr("scene %1, shot %2")
-                        .arg(padInfo[scene])
-                        .arg(padInfo[shot]));
 
     updateTimer = new QTimer(this);
     connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
     updateTimer->start(updateInterval);
-
 }
 
 QString MainWindow::getSbFileName()
@@ -168,6 +184,40 @@ void MainWindow::saveSettings()
     QSettings settings("dalanima/dastoryboard","dastoryboard");
     settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
     settings.setValue("sbFileName", sbFileName);
+    settings.setValue("Fps",fps);
+    settings.setValue("Scene",seqSc[0]);
+    settings.setValue("Shot",seqSc[1]);
+    settings.setValue("autoNumber",autoNumber);
+}
+
+void MainWindow::setPrefs()
+{
+    prefs = new PrefDialog();
+    prefs->setModal(true);
+    prefs->show();
+    connect(prefs->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPrefs()));
+    connect(prefs->btnOk,SIGNAL(clicked()),this,SLOT(okPrefs()));
+}
+
+void MainWindow::okPrefs()
+{
+    if (prefs->cbFps->currentIndex() == 0) fps = 24;
+    else if (prefs->cbFps->currentIndex() == 1) fps = 25;
+    else fps = 30;
+
+    seqSc.clear();
+    if (prefs->cbSeqSc->currentIndex() == 0) seqSc << tr("Sequence") << tr("Scene");
+    else seqSc << tr("Scene") << tr("Shot");
+
+    if (prefs->cbAutoNumber->currentIndex() == 0) autoNumber = false;
+    else autoNumber = true;
+    saveSettings();
+    prefs->close();
+}
+
+void MainWindow::cancelPrefs()
+{
+    prefs->close();
 }
 
 void MainWindow::disableStoryPad()
@@ -204,6 +254,7 @@ void MainWindow::enableStoryPad()
 
 void MainWindow::newStoryboard()
 {
+    writeXML();
     sbFileName = QFileDialog::getSaveFileName(this,
         tr("dastoryboard filename"), "",
         tr("dastoryboard files (*.dastoryboard)"));
@@ -220,6 +271,7 @@ void MainWindow::newStoryboard()
 
 void MainWindow::openStoryboard()
 {
+    writeXML();
     sbFileName = QFileDialog::getOpenFileName(this,
         tr("dastoryboard filename"), "",
         tr("dastoryboard files (*.dastoryboard)"));
@@ -249,6 +301,23 @@ void MainWindow::penPick()
     connect(pc->btnOk,SIGNAL(clicked()),this,SLOT(okPenPick()));
 }
 
+void MainWindow::okPenPick()
+{
+    activePen = pc->cbPen->currentIndex();
+    sPen = sPenList[activePen];
+    sPen.penColor = pc->colordialog->currentColor();
+    sketchPad->setPenColor(sPen.penColor);
+    sPen.penWidth = pc->sbWidth->value();
+    sketchPad->setPenWidth(sPen.penWidth);
+    sPenList.replace(activePen,sPen);
+    pc->close();
+}
+
+void MainWindow::cancelPenPick()
+{
+    pc->close();
+}
+
 void MainWindow::penF5()
 {
     sPen = sPenList[1];
@@ -275,23 +344,6 @@ void MainWindow::penF8()
     sPen = sPenList[4];
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
-}
-
-void MainWindow::okPenPick()
-{
-    activePen = pc->cbPen->currentIndex();
-    sPen = sPenList[activePen];
-    sPen.penColor = pc->colordialog->currentColor();
-    sketchPad->setPenColor(sPen.penColor);
-    sPen.penWidth = pc->sbWidth->value();
-    sketchPad->setPenWidth(sPen.penWidth);
-    sPenList.replace(activePen,sPen);
-    pc->close();
-}
-
-void MainWindow::cancelPenPick()
-{
-    pc->close();
 }
 
 void MainWindow::eraseF5()
@@ -380,13 +432,9 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
     board->addItem(pixItem);
     pixItem->setPos(((activePad + 1)*170) - 165 , 3);
-    pixItem->setToolTip(tr("scene %1, shot %2")
-                        .arg(padInfo[scene])
-                        .arg(padInfo[shot]));
     pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
     ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
                                   .arg(padInfo[scene]).arg(padInfo[shot]));
-    pixItem->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),1,1);
     addThumbLabels();
     update();
     ui->leComment->setText(padInfoList[activePad][comment]);
@@ -395,6 +443,11 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
     sketchPad->update();
 
+}
+
+void MainWindow::centerStoryboard()
+{
+    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),800,0);
 }
 
 void MainWindow::changeImage()
@@ -548,9 +601,6 @@ void MainWindow::readXML()
                 pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);
                 pixItem->setPos((padThumbList.size()*170) - 165 , 3);
-                pixItem->setToolTip(tr("scene %1, shot %2")
-                                    .arg(padInfo[scene])
-                                    .arg(padInfo[shot]));
                 pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 update();
                 padInfoList.append(padInfo);

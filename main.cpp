@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     a.installTranslator(&qtTranslator);
     // a TRANSLATOR for the text in the program
     QTranslator appTranslator;
-    appTranslator.load("translations/dastoryboard_" + QLocale::system().name());
+    appTranslator.load("lang/dastoryboard_" + QLocale::system().name());
     a.installTranslator(&appTranslator);
 
     MainWindow w;
@@ -24,21 +24,3 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-/*
-
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
-    a.setApplicationName("dalipsync");
-
-    // a TRANSLATOR for the QT strings
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    a.installTranslator(&qtTranslator);
-    // a TRANSLATOR for the text in the program
-    QTranslator appTranslator;
-    appTranslator.load("translations/dalipsync_" + QLocale::system().name());
-    a.installTranslator(&appTranslator);
-
-*/
