@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon Jan 6 23:18:08 2014
+** Created: Thu Jan 9 21:55:53 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      29,   14, // methods
+      30,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,47 +32,48 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
-      30,   11,   11,   11, 0x08,
-      47,   11,   11,   11, 0x08,
-      63,   11,   11,   11, 0x08,
-      80,   11,   11,   11, 0x08,
-      91,   11,   11,   11, 0x08,
-     106,   11,   11,   11, 0x08,
-     117,   11,   11,   11, 0x08,
-     127,   11,   11,   11, 0x08,
-     141,   11,   11,   11, 0x08,
-     149,   11,   11,   11, 0x08,
-     157,   11,   11,   11, 0x08,
-     165,   11,   11,   11, 0x08,
-     173,   11,   11,   11, 0x08,
-     183,   11,   11,   11, 0x08,
-     195,   11,   11,   11, 0x08,
-     211,   11,   11,   11, 0x08,
-     221,   11,   11,   11, 0x08,
-     232,   11,   11,   11, 0x08,
-     240,   11,   11,   11, 0x08,
-     258,   11,   11,   11, 0x08,
-     276,   11,   11,   11, 0x08,
-     292,   11,   11,   11, 0x08,
-     306,   11,   11,   11, 0x08,
+      28,   11,   11,   11, 0x08,
+      45,   11,   11,   11, 0x08,
+      56,   11,   11,   11, 0x08,
+      68,   11,   11,   11, 0x08,
+      83,   11,   11,   11, 0x08,
+     104,   11,   11,   11, 0x08,
+     119,   11,   11,   11, 0x08,
+     130,   11,   11,   11, 0x08,
+     140,   11,   11,   11, 0x08,
+     154,   11,   11,   11, 0x08,
+     162,   11,   11,   11, 0x08,
+     170,   11,   11,   11, 0x08,
+     178,   11,   11,   11, 0x08,
+     186,   11,   11,   11, 0x08,
+     196,   11,   11,   11, 0x08,
+     208,   11,   11,   11, 0x08,
+     224,   11,   11,   11, 0x08,
+     234,   11,   11,   11, 0x08,
+     245,   11,   11,   11, 0x08,
+     253,   11,   11,   11, 0x08,
+     271,   11,   11,   11, 0x08,
+     289,   11,   11,   11, 0x08,
+     305,   11,   11,   11, 0x08,
      319,   11,   11,   11, 0x08,
-     334,   11,   11,   11, 0x08,
-     353,   11,   11,   11, 0x08,
-     368,   11,   11,   11, 0x08,
-     387,   11,   11,   11, 0x08,
+     332,   11,   11,   11, 0x08,
+     347,   11,   11,   11, 0x08,
+     366,   11,   11,   11, 0x08,
+     381,   11,   11,   11, 0x08,
+     400,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0disableStoryPad()\0"
-    "enableStoryPad()\0newStoryboard()\0"
-    "openStoryboard()\0writeXML()\0saveSettings()\0"
-    "setPrefs()\0okPrefs()\0cancelPrefs()\0"
-    "penF5()\0penF6()\0penF7()\0penF8()\0"
-    "penPick()\0okPenPick()\0cancelPenPick()\0"
-    "eraseF5()\0eraseAll()\0about()\0"
-    "appendSketchPad()\0insertSketchPad()\0"
+    "MainWindow\0\0newStoryboard()\0"
+    "openStoryboard()\0newScene()\0openScene()\0"
+    "writeProjXML()\0writeStoryboardXML()\0"
+    "saveSettings()\0setPrefs()\0okPrefs()\0"
+    "cancelPrefs()\0penF5()\0penF6()\0penF7()\0"
+    "penF8()\0penPick()\0okPenPick()\0"
+    "cancelPenPick()\0eraseF5()\0eraseAll()\0"
+    "about()\0appendSketchPad()\0insertSketchPad()\0"
     "updateComment()\0updateScene()\0"
     "updateShot()\0updateFrames()\0"
     "updateSaveImages()\0updateImages()\0"
@@ -85,35 +86,36 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_ASSERT(staticMetaObject.cast(_o));
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->disableStoryPad(); break;
-        case 1: _t->enableStoryPad(); break;
-        case 2: _t->newStoryboard(); break;
-        case 3: _t->openStoryboard(); break;
-        case 4: _t->writeXML(); break;
-        case 5: _t->saveSettings(); break;
-        case 6: _t->setPrefs(); break;
-        case 7: _t->okPrefs(); break;
-        case 8: _t->cancelPrefs(); break;
-        case 9: _t->penF5(); break;
-        case 10: _t->penF6(); break;
-        case 11: _t->penF7(); break;
-        case 12: _t->penF8(); break;
-        case 13: _t->penPick(); break;
-        case 14: _t->okPenPick(); break;
-        case 15: _t->cancelPenPick(); break;
-        case 16: _t->eraseF5(); break;
-        case 17: _t->eraseAll(); break;
-        case 18: _t->about(); break;
-        case 19: _t->appendSketchPad(); break;
-        case 20: _t->insertSketchPad(); break;
-        case 21: _t->updateComment(); break;
-        case 22: _t->updateScene(); break;
-        case 23: _t->updateShot(); break;
-        case 24: _t->updateFrames(); break;
-        case 25: _t->updateSaveImages(); break;
-        case 26: _t->updateImages(); break;
-        case 27: _t->centerStoryboard(); break;
-        case 28: _t->changeImage(); break;
+        case 0: _t->newStoryboard(); break;
+        case 1: _t->openStoryboard(); break;
+        case 2: _t->newScene(); break;
+        case 3: _t->openScene(); break;
+        case 4: _t->writeProjXML(); break;
+        case 5: _t->writeStoryboardXML(); break;
+        case 6: _t->saveSettings(); break;
+        case 7: _t->setPrefs(); break;
+        case 8: _t->okPrefs(); break;
+        case 9: _t->cancelPrefs(); break;
+        case 10: _t->penF5(); break;
+        case 11: _t->penF6(); break;
+        case 12: _t->penF7(); break;
+        case 13: _t->penF8(); break;
+        case 14: _t->penPick(); break;
+        case 15: _t->okPenPick(); break;
+        case 16: _t->cancelPenPick(); break;
+        case 17: _t->eraseF5(); break;
+        case 18: _t->eraseAll(); break;
+        case 19: _t->about(); break;
+        case 20: _t->appendSketchPad(); break;
+        case 21: _t->insertSketchPad(); break;
+        case 22: _t->updateComment(); break;
+        case 23: _t->updateScene(); break;
+        case 24: _t->updateShot(); break;
+        case 25: _t->updateFrames(); break;
+        case 26: _t->updateSaveImages(); break;
+        case 27: _t->updateImages(); break;
+        case 28: _t->centerStoryboard(); break;
+        case 29: _t->changeImage(); break;
         default: ;
         }
     }
@@ -152,9 +154,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 29)
+        if (_id < 30)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 29;
+        _id -= 30;
     }
     return _id;
 }

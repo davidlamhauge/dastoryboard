@@ -45,11 +45,12 @@ protected:
     void closeEvent(QCloseEvent *e);
 
 private slots:
-    void disableStoryPad();     // disables storypad + buttons etc
-    void enableStoryPad();      // enables storypad + buttons etc
     void newStoryboard();       // new storyboard created and initialised
     void openStoryboard();      // opens existing storyboard, and reads xml-file
-    void writeXML();            // writes .dastoryboard info to xml-file
+    void newScene();            // new scene created and initialised
+    void openScene();           // opens existing scene, and reads xml-file
+    void writeProjXML();        // writes .projdastoryboard info to xml-file
+    void writeStoryboardXML();  // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
     void setPrefs();            // set preferences via PrefDialog
     void okPrefs();
@@ -79,13 +80,18 @@ private:
     Ui::MainWindow *ui;
 
     void setupConnects();               // initiates connects
+    void disableStoryPad();             // disables storypad + buttons etc
+    void enableStoryPad();              // enables storypad + buttons etc
+    void disableScene();
+    void enableScene();
     void startSaveImageTimer(int i);    // starts timer for 'i' millisecs
     void startUpdateImageTimer(int i);  // starts timer for 'i' millisecs
     void setPadSize(int w, int h);      // sets size to (w x h) pixels
     void initStoryboard();              // initiaqtes a new storyboard
     void initPadInfo();                 // initiates values n padInfo
     void addThumbLabels();              // adds labels on thumbs with (scene,shot)
-    void readXML();                     // reads .dastoryboard info from xml file
+    void readProjXML();                 // reads .projdastoryboard info from xml file
+    void readStoryboardXML();                     // reads .dastoryboard info from xml file
 
     QString loadSettings();             // returns sbFileName or ""
     QString getSbFileName();            // gets new storybard filename
@@ -101,17 +107,17 @@ private:
     int lastNumber;                     // last number given to a sketchpad
     int updateInterval;                 // interval for updateImageTimer
     int saveInterval;
-    int padW;                           // sketchpad WIDTH in pixels
-    int padH;                           // sketchpad HEIGHT in pixels
 
     bool autoNumber;
     QTimer *timer;
     QTimer *updateTimer;
 
+    QString projFileName;               // project filename, absolute path
+    QString projFilePath;               // filepath, including the last '/'
     QString sbFileName;                 // storyboard filename, absolute path
-    QString sbFilePath;                 // filepath, including the last '/'
-
-    QStringList seqSc;
+    QString scenePath;                  // path to scenes images + thumbs
+    QStringList scenePaths;             // List with scene paths to sub-dirs
+    QStringList sceneList;                  // List with scenes in project
     QStringList padInfo;                // fileName, comment, shot name etc
 
     QList<QStringList> padInfoList;     // list of stringlists with padInfo

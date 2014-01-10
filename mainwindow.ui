@@ -20,7 +20,7 @@
    <string>daStoryBoard</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_7">
       <item>
@@ -48,7 +48,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
@@ -66,13 +66,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
@@ -152,6 +145,90 @@
            </layout>
           </item>
           <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="labActivePad">
+                <property name="text">
+                 <string>Active pad:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="labActivePadInfo">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="labSceneCount">
+                <property name="text">
+                 <string>Scenes:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLabel" name="labSceneCountValue">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="labFrameCount">
+                <property name="text">
+                 <string>Frames total:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLabel" name="labFramesCountValue">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="labPadCount">
+                <property name="text">
+                 <string>Pads in current scene:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLabel" name="labPadCountValue">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -167,7 +244,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <widget class="QGraphicsView" name="gvSketchPad">
             <property name="minimumSize">
@@ -186,37 +263,6 @@
              <bool>true</bool>
             </property>
            </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="labActivePad">
-              <property name="text">
-               <string>Active pad:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="labActivePadInfo">
-              <property name="text">
-               <string>info...</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
           </item>
           <item>
            <spacer name="verticalSpacer">
@@ -257,7 +303,7 @@
    </property>
    <widget class="QMenu" name="menu_File">
     <property name="title">
-     <string>&amp;File</string>
+     <string>&amp;File/Storyboard</string>
     </property>
     <addaction name="action_New_Storyboard"/>
     <addaction name="action_Open_Storyboard"/>
@@ -283,13 +329,15 @@
     <addaction name="actionSet_Pen_Color"/>
     <addaction name="menuLoad_Pen"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
+   <widget class="QMenu" name="menuSketchpad">
     <property name="title">
      <string>Sketchpad</string>
     </property>
     <addaction name="actionAppend_Sketchpad"/>
     <addaction name="actionInsert_Sketchpad"/>
     <addaction name="actionCenter_Storyboard"/>
+    <addaction name="actionErase_All"/>
+    <addaction name="actionErase_Sketch_Pen"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -297,17 +345,17 @@
     </property>
     <addaction name="action_About"/>
    </widget>
-   <widget class="QMenu" name="menuEdit_2">
+   <widget class="QMenu" name="menuScene">
     <property name="title">
-     <string>Edit</string>
+     <string>S&amp;cene</string>
     </property>
-    <addaction name="actionErase_All"/>
-    <addaction name="actionErase_Sketch_Pen"/>
+    <addaction name="action_New_Scene"/>
+    <addaction name="action_Open_Scene"/>
    </widget>
    <addaction name="menu_File"/>
-   <addaction name="menuEdit_2"/>
+   <addaction name="menuScene"/>
    <addaction name="menuSettings"/>
-   <addaction name="menuEdit"/>
+   <addaction name="menuSketchpad"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -496,6 +544,22 @@
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
+   </property>
+  </action>
+  <action name="action_New_Scene">
+   <property name="text">
+    <string>&amp;New Scene</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+N</string>
+   </property>
+  </action>
+  <action name="action_Open_Scene">
+   <property name="text">
+    <string>&amp;Open Scene</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+O</string>
    </property>
   </action>
  </widget>
