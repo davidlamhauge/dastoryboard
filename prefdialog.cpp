@@ -11,13 +11,6 @@ PrefDialog::PrefDialog(QDialog *parent) :
     cbFps->addItems(sl);
     cbFps->setCurrentIndex(1);
 
-    labSeqSc = new QLabel(tr("Seq/sc or Sc/shot?"));
-    cbSeqSc = new QComboBox(this);
-    sl.clear();
-    sl << tr("Sequence and Scene")  << tr("Scene and Shot");
-    cbSeqSc->addItems(sl);
-    cbSeqSc->setCurrentIndex(1);
-
     labAutoNumber = new QLabel(tr("Autonumber Seq/sc/shot?"));
     cbAutoNumber = new QComboBox(this);
     sl.clear();
@@ -31,8 +24,6 @@ PrefDialog::PrefDialog(QDialog *parent) :
     buttonLayout = new QGridLayout();
     buttonLayout->addWidget(labFps,0,0);
     buttonLayout->addWidget(cbFps,0,1);
-    buttonLayout->addWidget(labSeqSc,1,0);
-    buttonLayout->addWidget(cbSeqSc,1,1);
     buttonLayout->addWidget(labAutoNumber,2,0);
     buttonLayout->addWidget(cbAutoNumber,2,1);
     buttonLayout->addWidget(btnCancel,3,0);

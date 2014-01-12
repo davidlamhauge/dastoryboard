@@ -6,6 +6,8 @@
 
 QT   += core gui xml
 
+CONFIG += debug
+
 TARGET = dastoryboard
 TEMPLATE = app
 

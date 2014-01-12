@@ -92,9 +92,53 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="leScene">
-                <property name="maxLength">
-                 <number>10</number>
+               <widget class="QLabel" name="labSceneInfo">
+                <property name="palette">
+                 <palette>
+                  <active>
+                   <colorrole role="Text">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="255">
+                      <red>0</red>
+                      <green>85</green>
+                      <blue>255</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                  </active>
+                  <inactive>
+                   <colorrole role="Text">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="255">
+                      <red>60</red>
+                      <green>60</green>
+                      <blue>60</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                  </inactive>
+                  <disabled>
+                   <colorrole role="Text">
+                    <brush brushstyle="SolidPattern">
+                     <color alpha="255">
+                      <red>159</red>
+                      <green>158</green>
+                      <blue>158</blue>
+                     </color>
+                    </brush>
+                   </colorrole>
+                  </disabled>
+                 </palette>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -347,7 +391,7 @@
    </widget>
    <widget class="QMenu" name="menuScene">
     <property name="title">
-     <string>S&amp;cene</string>
+     <string>Scene</string>
     </property>
     <addaction name="action_New_Scene"/>
     <addaction name="action_Open_Scene"/>

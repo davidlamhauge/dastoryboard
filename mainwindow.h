@@ -71,7 +71,7 @@ private slots:
     void updateScene();         // updates scene info
     void updateShot();          // updates shot info
     void updateFrames();        // updates shot and frames for pad struct
-    void updateSaveImages();    // saves activeImage + thumbnail
+    void saveImages();          // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb
     void changeImage();
@@ -88,8 +88,10 @@ private:
     void startUpdateImageTimer(int i);  // starts timer for 'i' millisecs
     void setPadSize(int w, int h);      // sets size to (w x h) pixels
     void initStoryboard();              // initiaqtes a new storyboard
+    void initPad();                     // initiates the new pad
     void initPadInfo();                 // initiates values n padInfo
     void addThumbLabels();              // adds labels on thumbs with (scene,shot)
+    void updateInfoLabels();            // updates labels for frames total etc
     void readProjXML();                 // reads .projdastoryboard info from xml file
     void readStoryboardXML();                     // reads .dastoryboard info from xml file
 
@@ -103,6 +105,7 @@ private:
 
     int fps;
     int activePad;                      // pad number in padInfoList
+    int activeScene;
     int activePen;                      // pen number in sPenList (from 0 to 4)
     int lastNumber;                     // last number given to a sketchpad
     int updateInterval;                 // interval for updateImageTimer
@@ -116,20 +119,18 @@ private:
     QString projFilePath;               // filepath, including the last '/'
     QString sbFileName;                 // storyboard filename, absolute path
     QString scenePath;                  // path to scenes images + thumbs
+    QString sceneDir;                   // name of directory of scene
+
     QStringList scenePaths;             // List with scene paths to sub-dirs
-    QStringList sceneList;                  // List with scenes in project
+    QStringList sceneList;              // List with scenes in project
     QStringList padInfo;                // fileName, comment, shot name etc
 
     QList<QStringList> padInfoList;     // list of stringlists with padInfo
     QList<QPixmap> padThumbList;        // list of all resized images as 160x120 pixmaps
     QList<standardPen> sPenList;
 
-    QGraphicsItem *item;
-    QGraphicsPixmapItem *pixItem;
-    QGraphicsTextItem *txt;
     QGraphicsScene *board;              // scene with minimized images
     QGraphicsScene *pad;                // scene with active image
-    QPixmap imageThumb;                 // 160x120 pixmap of the active image
 
     SketchPad *sketchPad;
     standardPen sPen;

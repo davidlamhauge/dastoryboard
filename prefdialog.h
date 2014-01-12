@@ -17,9 +17,6 @@ public:
     QLabel *labFps;
     QComboBox *cbFps;
 
-    QLabel *labSeqSc;
-    QComboBox *cbSeqSc;
-
     QLabel *labAutoNumber;
     QComboBox *cbAutoNumber;
 

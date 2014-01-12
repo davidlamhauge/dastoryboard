@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Jan 7 22:34:53 2014
+** Created: Sat Jan 11 04:31:06 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -73,7 +73,7 @@ public:
     QSpacerItem *horizontalSpacer_2;
     QVBoxLayout *verticalLayout_5;
     QLabel *labScene;
-    QLineEdit *leScene;
+    QLabel *labSceneInfo;
     QVBoxLayout *verticalLayout_4;
     QLabel *labShot;
     QLineEdit *leShot;
@@ -224,11 +224,26 @@ public:
 
         verticalLayout_5->addWidget(labScene);
 
-        leScene = new QLineEdit(centralWidget);
-        leScene->setObjectName(QString::fromUtf8("leScene"));
-        leScene->setMaxLength(10);
+        labSceneInfo = new QLabel(centralWidget);
+        labSceneInfo->setObjectName(QString::fromUtf8("labSceneInfo"));
+        QPalette palette;
+        QBrush brush(QColor(0, 85, 255, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Active, QPalette::Text, brush);
+        QBrush brush1(QColor(60, 60, 60, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Inactive, QPalette::Text, brush1);
+        QBrush brush2(QColor(159, 158, 158, 255));
+        brush2.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        labSceneInfo->setPalette(palette);
+        QFont font;
+        font.setPointSize(12);
+        font.setBold(true);
+        font.setWeight(75);
+        labSceneInfo->setFont(font);
 
-        verticalLayout_5->addWidget(leScene);
+        verticalLayout_5->addWidget(labSceneInfo);
 
 
         horizontalLayout->addLayout(verticalLayout_5);
@@ -486,6 +501,7 @@ public:
         action_Open_Scene->setShortcut(QApplication::translate("MainWindow", "Alt+O", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
+        labSceneInfo->setText(QString());
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
         labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
@@ -501,7 +517,7 @@ public:
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
         menuSketchpad->setTitle(QApplication::translate("MainWindow", "Sketchpad", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
-        menuScene->setTitle(QApplication::translate("MainWindow", "S&cene", 0, QApplication::UnicodeUTF8));
+        menuScene->setTitle(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

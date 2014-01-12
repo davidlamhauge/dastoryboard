@@ -10,13 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    updateInterval = 1000;      // millisecs. to be set as preference TODO
+    updateInterval = 2000;      // millisecs. to be set as preference TODO
     saveInterval = 10000;       // millisecs. to be set as preference TODO
     fps = 25;
     scenePath = "";
     scenePaths.clear();
     sceneList.clear();
-    sceneList << "Scene" << "Shot";
     autoNumber = true;
     pad = new QGraphicsScene(this);
     ui->gvSketchPad->setFixedSize(642,482);
@@ -37,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
             initStoryboard();
             readProjXML();
             readStoryboardXML();
+            updateInfoLabels();
         }else{
             disableStoryPad();
             disableScene();
@@ -64,6 +64,7 @@ void MainWindow::setupConnects()
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
 
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
+    connect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
     connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
     connect(ui->actionErase_Sketch_Pen,SIGNAL(triggered()),this,SLOT(eraseF5()));
     connect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
@@ -81,14 +82,14 @@ void MainWindow::setupConnects()
 void MainWindow::startSaveImageTimer(int i)
 {
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(updateSaveImages()));
+    connect(timer, SIGNAL(timeout()),this,SLOT(saveImages()));
     timer->start(i);
 }
 
 void MainWindow::startUpdateImageTimer(int i)
 {
     updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateSaveImages()));
+    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
     updateTimer->start(i);
 }
 
@@ -100,6 +101,7 @@ void MainWindow::setPadSize(int w, int h)
 void MainWindow::initStoryboard()
 {
     padInfoList.clear();
+    padThumbList.clear();
     padInfo.clear();
     sPenList.clear();
     board->clear();
@@ -115,12 +117,42 @@ void MainWindow::initStoryboard()
     sketchPad = new SketchPad();
     sketchPad->setFixedSize(640,480);
     sketchPad->initPad(scenePath,lastNumber);
-//    sketchPad->initPad(sbFileName,lastNumber);
     padInfoList.append(padInfo);
     initPadInfo();
+    initPad();
     pad->addWidget(sketchPad);
     update();
     sketchPad->setFocus();
+}
+
+void MainWindow::initPad()
+{
+    sketchPad->clearImage();
+
+    // update text and values in padInfo, when changes are made
+    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
+    ui->leComment->clear();
+    ui->leShot->clear();
+    ui->sbFrames->setValue(50);
+    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
+
+    QPixmap imageThumb;
+    imageThumb = QPixmap::fromImage(sketchPad->image);
+    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+    padThumbList.append(imageThumb);    // append pixmap to List...
+    QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+    board->addItem(pixItem);        //...and add it to storyboard as an Item..!
+    pixItem->setPos(((activePad+1) *170) - 165 , 3); // place pixItem in storyboard
+
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
+    updateTimer->start(updateInterval);
 }
 
 void MainWindow::initPadInfo() /* sketchPad info as strings */
@@ -129,42 +161,13 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     padInfo.append(QString::number(lastNumber) + ".png");  // image filename!
     padInfo.append("");
     padInfo.append("false");
-    padInfo.append("");
+    padInfo.append(sceneDir);
     padInfo.append("false");
     padInfo.append("");
     padInfo.append("false");
     padInfo.append("50");
     padInfo.append("false");
     padInfoList.replace(activePad,padInfo);
-    sketchPad->clearImage();
-
-    // update text and values in padInfo, when changes are made
-    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
-    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-    ui->leComment->clear();
-    ui->leScene->clear();
-    ui->leShot->clear();
-    ui->sbFrames->setValue(50);
-    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leScene,SIGNAL(textChanged(QString)),this,SLOT(updateScene()));
-    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-
-    imageThumb = QPixmap::fromImage(sketchPad->image);
-    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-    padThumbList.append(imageThumb);    // append pixmap to List...
-    pixItem = new QGraphicsPixmapItem(imageThumb);
-    board->addItem(pixItem);        //...and add it to storyboard as an Item..!
-    pixItem->setPos(((activePad+1) *170) - 165 , 3); // place pixItem in storyboard
-//    pixItem->setPos((padThumbList.size()*170) - 165 , 3); // place pixItem in storyboard
-
-    updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
-    updateTimer->start(updateInterval);
 }
 
 QString MainWindow::getSbFileName()
@@ -180,10 +183,9 @@ QString MainWindow::loadSettings()
     settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
     if (settings.contains("projFileName")){
         scenePath = settings.value("scenePath").toString();
+        sceneDir = settings.value("sceneDir").toString();
         projFilePath = settings.value("projFilePath").toString();
         fps = settings.value("Fps").toInt();
-        sceneList[0] = settings.value("Scene").toString();
-        sceneList[1] = settings.value("Shot").toString();
         autoNumber = settings.value("autoNumber").toBool();
         return settings.value("projFileName").toString();
     }
@@ -199,9 +201,8 @@ void MainWindow::saveSettings()
     settings.setValue("projFileName", projFileName);
     settings.setValue("projFilePath",projFilePath);
     settings.setValue("scenePath",scenePath);
+    settings.setValue("sceneDir",sceneDir);
     settings.setValue("Fps",fps);
-    settings.setValue("Scene",sceneList[0]);
-    settings.setValue("Shot",sceneList[1]);
     settings.setValue("autoNumber",autoNumber);
 }
 
@@ -220,10 +221,6 @@ void MainWindow::okPrefs()
     else if (prefs->cbFps->currentIndex() == 1) fps = 25;
     else fps = 30;
 
-    sceneList.clear();
-    if (prefs->cbSeqSc->currentIndex() == 0) sceneList << tr("Sequence") << tr("Scene");
-    else sceneList << tr("Scene") << tr("Shot");
-
     if (prefs->cbAutoNumber->currentIndex() == 0) autoNumber = false;
     else autoNumber = true;
     saveSettings();
@@ -233,50 +230,6 @@ void MainWindow::okPrefs()
 void MainWindow::cancelPrefs()
 {
     prefs->close();
-}
-
-void MainWindow::disableStoryPad()
-{
-    ui->gvSketchPad->setEnabled(false);
-    ui->labScene->setEnabled(false);
-    ui->leScene->setEnabled(false);
-    ui->labShot->setEnabled(false);
-    ui->leShot->setEnabled(false);
-    ui->labFrames->setEnabled(false);
-    ui->sbFrames->setEnabled(false);
-    ui->labComments->setEnabled(false);
-    ui->leComment->setEnabled(false);
-    ui->menuLoad_Pen->setEnabled(false);
-    ui->menuSettings->setEnabled(false);
-    ui->menuSketchpad->setEnabled(false);
-    ui->action_Save_Storyboard->setEnabled(false);
-}
-
-void MainWindow::enableStoryPad()
-{
-    ui->gvSketchPad->setEnabled(true);
-    ui->labScene->setEnabled(true);
-    ui->leScene->setEnabled(true);
-    ui->labShot->setEnabled(true);
-    ui->leShot->setEnabled(true);
-    ui->labFrames->setEnabled(true);
-    ui->sbFrames->setEnabled(true);
-    ui->labComments->setEnabled(true);
-    ui->leComment->setEnabled(true);
-    ui->menuLoad_Pen->setEnabled(true);
-    ui->menuSketchpad->setEnabled(true);
-    ui->menuSettings->setEnabled(true);
-    ui->action_Save_Storyboard->setEnabled(true);
-}
-
-void MainWindow::disableScene()
-{
-    ui->menuScene->setEnabled(false);
-}
-
-void MainWindow::enableScene()
-{
-    ui->menuScene->setEnabled(true);
 }
 
 void MainWindow::newStoryboard()
@@ -317,11 +270,13 @@ void MainWindow::newScene()
                                       tr("Scene name: (maximum 6 char.)"),
                                       QLineEdit::Normal,"", &ok);
     if (ok && !scenePath.isEmpty()){
+        sceneDir = scenePath;
         QDir dir = QDir(projFilePath);
         dir.mkdir(projFilePath + scenePath);
         sbFileName = projFilePath + scenePath + "/" + scenePath + ".dastoryboard";
         scenePath = projFilePath + scenePath + "/";
         sceneList.append(sbFileName);
+        scenePaths.append(scenePath);
         saveSettings();
 
         enableStoryPad();
@@ -333,6 +288,7 @@ void MainWindow::newScene()
 
 void MainWindow::openScene()
 {
+//    emit writeStoryboardXML();  //********************************
     QStringList dirs;
     QDir dir = QDir(projFilePath);
     dirs = dir.entryList(QStringList("*"),QDir::AllDirs);
@@ -349,25 +305,368 @@ void MainWindow::openScene()
     }else{
         bool ok;
         QString sc = QInputDialog::getItem(this, tr("Scene"),
-                                           tr("Choose Scene to open:"), dirs, 0, false, &ok);
+                                           tr("Choose Scene to open:"), dirs,0, false, &ok);
         if (ok && !sc.isEmpty()){
             sbFileName = projFilePath + sc + "/" + sc + ".dastoryboard";
             scenePath = projFilePath + sc + "/";
+            sceneDir = sc;                                  // sceneDir = sc
         }
     }
     if (!sbFileName.isEmpty()){     // if storyboard-file has been chosen
         enableStoryPad();
         if (!sceneList.contains(sbFileName))
             sceneList.append(sbFileName);
+        if (!scenePaths.contains(scenePath))
+            scenePaths.append(scenePath);
         writeProjXML();
         readStoryboardXML();
         startSaveImageTimer(saveInterval);
     }
 }
 
+void MainWindow::saveImages()
+{
+    sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
+    QImage img = sketchPad->image;
+    img = img.scaled(160,120,Qt::KeepAspectRatio,Qt::FastTransformation);
+    if (!img.save(scenePath + "t" + padInfoList[activePad][fileName])){
+        QMessageBox::information(this, tr("File does no exist!"),
+                                 tr("It was not possible to save the storyboard image."
+                                    "Do you have write access to the directory?"));
+    }
+}
+
+void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
+{
+    for (int i = 0;i<padInfoList.size();i++){
+        QGraphicsTextItem *txt = new QGraphicsTextItem();
+        txt->setHtml("<div style=\'background-color:#ffffff;\'> "
+                     + padInfoList[i][scene] + " , "
+                     + padInfoList[i][shot] + " </div>");
+        board->addItem(txt);
+        txt->setPos(((i + 1)*170) - 165 , 3);
+    }
+    ui->gvStoryboard->update();
+}
+
+void MainWindow::updateInfoLabels()
+{
+    int fr = 0;
+    for (int i = 0; i < padInfoList.size();i++){
+        fr += padInfoList[i][frames].toInt();
+    }
+    QStringList sl = projFileName.split('/');
+    QString s = sl.last();
+    s.chop(17);
+    MainWindow::setWindowTitle(tr("dastoryboard:     Project: %1     Scene: ").arg(s) + sceneDir);
+    //MainWindow::setWindowFlags(Qt::);
+    ui->labSceneInfo->setText(sceneDir);
+    ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
+                                  .arg(padInfo[scene]).arg(padInfo[shot]));
+    ui->labFramesCountValue->setText(QString::number(fr));
+    ui->labSceneCountValue->setText(QString::number(scenePaths.size()));
+    ui->labPadCountValue->setText(QString::number(padInfoList.size()));
+}
+
+void MainWindow::updateImages() // updates storyboard thumbnails
+{
+    if (autoNumber){                         // autonumber the Shot
+        for (int i = 0; i < padInfoList.size();i++){
+            padInfoList[i][shot] = QString::number(i+1);
+        }
+    }
+    QPixmap imageThumb;
+    imageThumb = QPixmap::fromImage(sketchPad->image);
+    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+    padThumbList.replace(activePad,imageThumb); // update padThumbList
+    QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+    board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
+    board->addItem(pixItem);
+    pixItem->setPos(((activePad + 1)*170) - 165 , 3);
+    pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+    ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
+                                  .arg(padInfo[scene]).arg(padInfo[shot]));
+    addThumbLabels();
+//    ui->gvStoryboard->update();
+    ui->leComment->setText(padInfoList[activePad][comment]);
+    ui->labSceneInfo->setText(padInfoList[activePad][scene]);
+    ui->leShot->setText(padInfoList[activePad][shot]);
+    ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
+    sketchPad->update();
+}
+
+void MainWindow::centerStoryboard()
+{
+    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),800,0);
+}
+
+void MainWindow::changeImage()
+{
+    if (!board->selectedItems().isEmpty()){
+        updateImages();
+        saveImages();
+        QGraphicsItem *item;
+        item = board->selectedItems().at(0);
+        int i = item->pos().x();        // find x-value
+        activePad = (i-5) / 170;
+        padInfo = padInfoList.at(activePad);
+        sketchPad->image.load(scenePath + padInfo[fileName]);
+        updateImages();
+    }
+}
+
+void MainWindow::appendSketchPad()
+{
+    updateImages();
+    saveImages();
+ //   sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
+    padInfoList.append(padInfo);
+    lastNumber += 1;
+    activePad = padInfoList.size() - 1;
+//    padInfo[scene] = padInfoList[activePad-1][scene];
+    initPadInfo();
+    padInfo[scene] = sceneDir;
+    ui->leShot->setText(padInfo[shot]);
+    initPad();
+/*    if (autoNumber){                         // autonumber the Shot
+        for (int i = 0; i < padInfoList.size();i++){
+            padInfoList[i][shot] = QString::number(i+1);
+        }
+    } */
+    updateImages();
+    emit writeStoryboardXML();
+    startSaveImageTimer(saveInterval);
+}
+
+void MainWindow::insertSketchPad()
+{
+    if (board->selectedItems().size() == 1 &&
+            board->selectedItems().at(0)->x() < ((activePad+1) * 170) - 160){
+        updateImages();
+        saveImages();
+        QPixmap imageThumb;
+        imageThumb = QPixmap::fromImage(sketchPad->image);
+        imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+        padThumbList.insert(activePad+1, imageThumb);    // append pixmap to List...
+        padInfoList.insert(activePad+1, padInfo);
+        board->clear();
+        for (int i = 0;i < padThumbList.size();i++){
+            imageThumb = padThumbList.at(i);
+            QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+            board->addItem(pixItem);
+            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+        }
+        lastNumber += 1;
+        activePad += 1;
+        initPadInfo();
+        padInfo[scene] = sceneDir;
+        ui->leShot->setText(padInfo[shot]);
+//        initPad();
+        sketchPad->clearImage();
+        updateImages();
+        ui->gvStoryboard->update();
+        emit writeStoryboardXML();
+        startSaveImageTimer(saveInterval);
+    }
+}
+
+void MainWindow::writeProjXML()
+{
+    if (!projFileName.isEmpty()){
+        QFile file(projFileName);
+        if (file.open(QFile::ReadWrite)){
+            saveSettings();
+            QXmlStreamWriter xmlwriter(&file);
+            xmlwriter.setAutoFormatting(true);
+            xmlwriter.writeStartDocument();                 // document START
+            xmlwriter.writeStartElement("projstoryboard");  // storyboard START
+
+            xmlwriter.writeStartElement("variables");       // variables START
+            xmlwriter.writeTextElement("projFileName",projFileName);
+            xmlwriter.writeTextElement("sbFileName",sbFileName);
+            xmlwriter.writeTextElement("Fps",QString::number(fps));
+            xmlwriter.writeTextElement("autoNumber",boolToString(autoNumber));
+            xmlwriter.writeEndElement();                    // variables STOP
+            if (scenePaths.size() > 0){
+                xmlwriter.writeStartElement("scenes");          // scenes START
+                for (int i = 0; i < scenePaths.size(); i++){
+                    xmlwriter.writeTextElement("scenePaths",scenePaths[i]);
+                }
+                xmlwriter.writeEndElement();                    // scenes STOP
+            }
+            xmlwriter.writeEndDocument();               // document and storyboard STOP
+        }
+    }
+}
+
+void MainWindow::readProjXML()
+{
+    QFile sbFile(projFileName);
+    if (sbFile.open(QIODevice::ReadOnly)){
+        sceneList.clear();
+        scenePaths.clear();
+        QXmlStreamReader xmlreader(&sbFile);
+        while(!xmlreader.atEnd()){
+            xmlreader.readNext();
+            if (xmlreader.isStartElement() && xmlreader.name() == "projFileName")
+                projFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
+                sbFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "Fps")
+                fps = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "autoNumber")
+                autoNumber = stringToBool(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "scenePaths")
+                scenePaths.append(xmlreader.readElementText());
+        }
+    }
+}
+
+void MainWindow::writeStoryboardXML()
+{
+    if (!sbFileName.isEmpty()){
+        saveImages();         // saves activeimages
+        QFile file(sbFileName);
+        if (file.open(QFile::ReadWrite)){
+            saveSettings();
+            QXmlStreamWriter xmlwriter(&file);
+            xmlwriter.setAutoFormatting(true);
+            xmlwriter.writeStartDocument();             // document START
+            xmlwriter.writeStartElement("storyboard");  // storyboard START
+            xmlwriter.writeStartElement("variables");   // variables START
+            xmlwriter.writeTextElement("sbFileName",sbFileName);
+            xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
+            xmlwriter.writeTextElement("activePad",QString::number(activePad));
+            xmlwriter.writeTextElement("activePen",QString::number(activePen));
+            xmlwriter.writeEndElement();                // variables STOP
+
+            xmlwriter.writeStartElement("penlist");     // penlist START
+            for (int i = 0; i < sPenList.size();i++)
+            {
+                xmlwriter.writeStartElement("pen");     // pen START
+                xmlwriter.writeTextElement("width",QString::number(sPenList[i].penWidth));
+                xmlwriter.writeTextElement("red",QString::number(sPenList[i].penColor.red()));
+                xmlwriter.writeTextElement("green",QString::number(sPenList[i].penColor.green()));
+                xmlwriter.writeTextElement("blue",QString::number(sPenList[i].penColor.blue()));
+                xmlwriter.writeEndElement();            // pen STOP
+            }
+            xmlwriter.writeEndElement();                // penlist STOP
+
+            xmlwriter.writeStartElement("sketchpads");  // sketchpads START
+            for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
+                padInfo = padInfoList[i];
+                xmlwriter.writeStartElement("sketchpad");  // sketchpad START
+                xmlwriter.writeTextElement("fileName",padInfo[fileName]);
+                xmlwriter.writeTextElement("comment",padInfo[comment]);
+                xmlwriter.writeTextElement("showComment",padInfo[showComment]);
+                xmlwriter.writeTextElement("scene",padInfo[scene]);
+                xmlwriter.writeTextElement("showScene",padInfo[showScene]);
+                xmlwriter.writeTextElement("shot",padInfo[shot]);
+                xmlwriter.writeTextElement("showShot",padInfo[showShot]);
+                xmlwriter.writeTextElement("frames",padInfo[frames]);
+                xmlwriter.writeTextElement("showFrames",padInfo[showFrames]);
+                xmlwriter.writeEndElement();                // sketchpad STOP
+            }
+            padInfo = padInfoList[activePad];
+            xmlwriter.writeEndElement();         // sketchpads STOP
+            xmlwriter.writeEndDocument();        // document and storyboard STOP
+        }
+        updateInfoLabels();
+    }else{
+        QMessageBox msgBox;
+        msgBox.setText(tr("No filename chosen!"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.exec();
+    }
+}
+
+void MainWindow::readStoryboardXML()
+{
+    QFile sbFile(sbFileName);           // open the storyboard file
+    if (sbFile.open(QIODevice::ReadOnly)){
+        padInfoList.clear();            // clear list for reading file
+        padInfo.clear();
+        padThumbList.clear();
+        sPenList.clear();
+        board->clear();
+        QXmlStreamReader xmlreader(&sbFile);
+        while(!xmlreader.atEnd()){
+            xmlreader.readNext();
+            if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
+                sbFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
+                lastNumber = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
+                activePad = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "activePen")
+                activePen = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "width")
+                sPen.penWidth = xmlreader.readElementText().toInt();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "red")
+                sPen.penColor.setRed(xmlreader.readElementText().toInt());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "green")
+                sPen.penColor.setGreen(xmlreader.readElementText().toInt());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "blue"){
+                sPen.penColor.setBlue(xmlreader.readElementText().toInt());
+                sPenList.append(sPen);
+            }
+            else if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showComment")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "scene")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showScene")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showShot")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "frames")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames"){
+                padInfo.append(xmlreader.readElementText());
+                sketchPad->image.load(scenePath + padInfo[fileName]);
+                QPixmap imageThumb;
+                imageThumb = QPixmap::fromImage(sketchPad->image);
+                imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+                padThumbList.append(imageThumb);
+                QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+                board->addItem(pixItem);                // place pixItem in storyboard
+                pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+                pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+                update();
+                padInfoList.append(padInfo);
+                padInfo.clear();
+            }
+        }
+        ui->gvStoryboard->resize(padThumbList.size()*170,130);
+        sPen = sPenList[activePen];
+        sketchPad->setPenColor(sPen.penColor);
+        sketchPad->setPenWidth(sPen.penWidth);
+        padInfo = padInfoList.at(activePad);            // load active padinfo
+        sketchPad->image.load(scenePath + padInfo[fileName]);
+        ui->leComment->setText(padInfo[comment]);
+        ui->labSceneInfo->setText(padInfo[scene]);
+        ui->leShot->setText(padInfo[shot]);
+        ui->sbFrames->setValue(padInfo[frames].toInt());
+        updateImages();
+        addThumbLabels();
+        startSaveImageTimer(saveInterval);
+    }else{
+        QMessageBox msgBox;
+        msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.exec();
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    updateSaveImages();
+    saveImages();
     e->accept(); // TODO!!!
 }
 
@@ -467,7 +766,7 @@ void MainWindow::updateComment()
 
 void MainWindow::updateScene()
 {
-   padInfoList[activePad][scene] = ui->leScene->text();
+   padInfoList[activePad][scene] = ui->labSceneInfo->text();
 }
 
 void MainWindow::updateShot()
@@ -478,290 +777,7 @@ void MainWindow::updateShot()
 void MainWindow::updateFrames()
 {
     padInfoList[activePad][frames] = QString::number(ui->sbFrames->value());
-}
-
-void MainWindow::updateSaveImages()
-{
-    sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
-    QImage img = sketchPad->image;
-    img = img.scaled(160,120,Qt::KeepAspectRatio,Qt::FastTransformation);
-    img.save(scenePath + "t" + padInfoList[activePad][fileName]);
-    QFile f(scenePath + "t" + padInfoList[activePad][fileName]);
-    if (!f.exists()){
-        QMessageBox::information(this, tr("File does no exist!"),
-                tr("It was not possible to save the storyboard image."
-                   "Do you have write access to the directory?"));
-    }
-}
-
-void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
-{
-    for (int i = 0;i<padInfoList.size();i++){
-        txt = new QGraphicsTextItem();
-        txt->setHtml("<div style=\'background-color:#ffffff;\'> "
-                     + padInfoList[i][scene] + " , "
-                     + padInfoList[i][shot] + " </div>");
-        board->addItem(txt);
-        txt->setPos(((i + 1)*170) - 165 , 3);
-    }
-}
-
-void MainWindow::updateImages() // updates storyboard thumbnails
-{
-    imageThumb = QPixmap::fromImage(sketchPad->image);
-    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-    pixItem = new QGraphicsPixmapItem(imageThumb);
-    board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
-    board->addItem(pixItem);
-    pixItem->setPos(((activePad + 1)*170) - 165 , 3);
-    pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-    ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
-                                  .arg(padInfo[scene]).arg(padInfo[shot]));
-    addThumbLabels();
-    update();
-    ui->leComment->setText(padInfoList[activePad][comment]);
-    ui->leScene->setText(padInfoList[activePad][scene]);
-    ui->leShot->setText(padInfoList[activePad][shot]);
-    ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
-    sketchPad->update();
-
-}
-
-void MainWindow::centerStoryboard()
-{
-    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),800,0);
-}
-
-void MainWindow::changeImage()
-{
-    if (!board->selectedItems().isEmpty()){
-        item = board->selectedItems().at(0);
-        int i = item->pos().x();        // find x-value
-        activePad = (i-5) / 170;
-        padInfo = padInfoList.at(activePad);
-        sketchPad->image.load(scenePath + padInfo[fileName]);
-        updateImages();
-    }
-}
-
-void MainWindow::appendSketchPad()
-{
-    updateSaveImages();
- //   sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
-    padInfoList.append(padInfo);
-    lastNumber += 1;
-    activePad = padInfoList.size() - 1;
-    initPadInfo();
-    writeStoryboardXML();  // ****************************************
-    startSaveImageTimer(saveInterval);
-}
-
-void MainWindow::insertSketchPad()
-{
-    sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
-    padInfoList.insert(activePad+1,padInfo);
-    lastNumber += 1;
-    activePad += 1;
-    initPadInfo();
-    startSaveImageTimer(saveInterval);
-}
-
-void MainWindow::writeProjXML()
-{
-    if (!projFileName.isEmpty()){
-        QFile file(projFileName);
-        if (file.open(QFile::ReadWrite)){
-            saveSettings();
-            QXmlStreamWriter xmlwriter(&file);
-            xmlwriter.setAutoFormatting(true);
-            xmlwriter.writeStartDocument();                 // document START
-            xmlwriter.writeStartElement("projstoryboard");  // storyboard START
-
-            xmlwriter.writeStartElement("variables");       // variables START
-            xmlwriter.writeTextElement("projFileName",projFileName);
-            xmlwriter.writeTextElement("sbFileName",sbFileName);
-            xmlwriter.writeTextElement("Fps",QString::number(fps));
-            xmlwriter.writeTextElement("Scene",sceneList[0]);
-            xmlwriter.writeTextElement("Shot",sceneList[1]);
-            xmlwriter.writeTextElement("autoNumber",boolToString(autoNumber));
-            xmlwriter.writeEndElement();                    // variables STOP
-            if (scenePaths.size() > 0){
-                xmlwriter.writeStartElement("scenes");          // scenes START
-                for (int i = 0; i < scenePaths.size(); i++){
-                    xmlwriter.writeTextElement("scenePaths",scenePaths[i]);
-                }
-                xmlwriter.writeEndElement();                    // scenes STOP
-            }
-            xmlwriter.writeEndDocument();               // document and storyboard STOP
-        }
-    }
-}
-
-void MainWindow::readProjXML()
-{
-    QFile sbFile(projFileName);
-    if (sbFile.open(QIODevice::ReadOnly)){
-        sceneList.clear();
-        scenePaths.clear();
-        QXmlStreamReader xmlreader(&sbFile);
-        while(!xmlreader.atEnd()){
-            xmlreader.readNext();
-            if (xmlreader.isStartElement() && xmlreader.name() == "projFileName")
-                projFileName = xmlreader.readElementText();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
-                sbFileName = xmlreader.readElementText();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "Fps")
-                fps = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "Scene")
-                sceneList.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "Shot")
-                sceneList.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "autoNumber")
-                autoNumber = stringToBool(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "scenePaths")
-                scenePaths.append(xmlreader.readElementText());
-        }
-    }
-}
-
-void MainWindow::writeStoryboardXML()
-{
-    if (!sbFileName.isEmpty()){
-        updateSaveImages();         // saves activeimages
-        QFile file(sbFileName);
-        if (file.open(QFile::ReadWrite)){
-            saveSettings();
-            QXmlStreamWriter xmlwriter(&file);
-            xmlwriter.setAutoFormatting(true);
-            xmlwriter.writeStartDocument();             // document START
-            xmlwriter.writeStartElement("storyboard");  // storyboard START
-            xmlwriter.writeStartElement("variables");   // variables START
-            xmlwriter.writeTextElement("sbFileName",sbFileName);
-            xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
-            xmlwriter.writeTextElement("activePad",QString::number(activePad));
-            xmlwriter.writeTextElement("activePen",QString::number(activePen));
-            xmlwriter.writeEndElement();                // variables STOP
-
-            xmlwriter.writeStartElement("penlist");     // penlist START
-            for (int i = 0; i < sPenList.size();i++)
-            {
-                xmlwriter.writeStartElement("pen");     // pen START
-                xmlwriter.writeTextElement("width",QString::number(sPenList[i].penWidth));
-                xmlwriter.writeTextElement("red",QString::number(sPenList[i].penColor.red()));
-                xmlwriter.writeTextElement("green",QString::number(sPenList[i].penColor.green()));
-                xmlwriter.writeTextElement("blue",QString::number(sPenList[i].penColor.blue()));
-                xmlwriter.writeEndElement();            // pen STOP
-            }
-            xmlwriter.writeEndElement();                // penlist STOP
-
-            xmlwriter.writeStartElement("sketchpads");  // sketchpads START
-            for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
-                padInfo = padInfoList[i];
-                xmlwriter.writeStartElement("sketchpad");  // sketchpad START
-                xmlwriter.writeTextElement("fileName",padInfo[fileName]);
-                xmlwriter.writeTextElement("comment",padInfo[comment]);
-                xmlwriter.writeTextElement("showComment",padInfo[showComment]);
-                xmlwriter.writeTextElement("scene",padInfo[scene]);
-                xmlwriter.writeTextElement("showScene",padInfo[showScene]);
-                xmlwriter.writeTextElement("shot",padInfo[shot]);
-                xmlwriter.writeTextElement("showShot",padInfo[showShot]);
-                xmlwriter.writeTextElement("frames",padInfo[frames]);
-                xmlwriter.writeTextElement("showFrames",padInfo[showFrames]);
-                xmlwriter.writeEndElement();                // sketchpad STOP
-            }
-            xmlwriter.writeEndElement();         // sketchpads STOP
-            xmlwriter.writeEndDocument();        // document and storyboard STOP
-        }
-
-    }else{
-        QMessageBox msgBox;
-        msgBox.setText(tr("No filename chosen!"));
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.exec();
-    }
-}
-
-void MainWindow::readStoryboardXML()
-{
-    QFile sbFile(sbFileName);           // open the storyboard file
-    if (sbFile.open(QIODevice::ReadOnly)){
-//        writeStoryboardXML();
-        padInfoList.clear();            // clear list for reading file
-        padInfo.clear();
-        padThumbList.clear();
-        sPenList.clear();
-        board->clear();
-//        update();
-        QXmlStreamReader xmlreader(&sbFile);
-        while(!xmlreader.atEnd()){
-            xmlreader.readNext();
-            if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
-                sbFileName = xmlreader.readElementText();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
-                lastNumber = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
-                activePad = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "activePen")
-                activePen = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "width")
-                sPen.penWidth = xmlreader.readElementText().toInt();
-            else if (xmlreader.isStartElement() && xmlreader.name() == "red")
-                sPen.penColor.setRed(xmlreader.readElementText().toInt());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "green")
-                sPen.penColor.setGreen(xmlreader.readElementText().toInt());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "blue"){
-                sPen.penColor.setBlue(xmlreader.readElementText().toInt());
-                sPenList.append(sPen);
-            }
-            else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showComment")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "scene")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showScene")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showShot")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "frames")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames"){
-                padInfo.append(xmlreader.readElementText());
-                sketchPad->image.load(scenePath + padInfo[fileName]);
-                imageThumb = QPixmap::fromImage(sketchPad->image);
-                imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-                padThumbList.append(imageThumb);
-                pixItem = new QGraphicsPixmapItem(imageThumb);
-                board->addItem(pixItem);
-                pixItem->setPos((padThumbList.size()*170) - 165 , 3); // place pixItem in storyboard
-                pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-                update();
-                padInfoList.append(padInfo);
-                padInfo.clear();
-            }
-        }
-        sPen = sPenList[activePen];
-        sketchPad->setPenColor(sPen.penColor);
-        sketchPad->setPenWidth(sPen.penWidth);
-        padInfo = padInfoList.at(activePad);
-        sketchPad->image.load(scenePath + padInfo[fileName]);
-        updateImages();
-        addThumbLabels();
-        ui->leComment->setText(padInfo[comment]);
-        ui->leScene->setText(padInfo[scene]);
-        ui->leShot->setText(padInfo[shot]);
-        ui->sbFrames->setValue(padInfo[frames].toInt());
-        startSaveImageTimer(saveInterval);
-    }else{
-        QMessageBox msgBox;
-        msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
-        msgBox.setIcon(QMessageBox::Information);
-        msgBox.exec();
-    }
+    updateInfoLabels();
 }
 
 QString MainWindow::boolToString(bool b)
@@ -789,5 +805,47 @@ bool MainWindow::stringToBool(QString s)
         return true;
     else
         return false;
+}
+
+void MainWindow::disableStoryPad()
+{
+    ui->gvSketchPad->setEnabled(false);
+    ui->labScene->setEnabled(false);
+    ui->labShot->setEnabled(false);
+    ui->leShot->setEnabled(false);
+    ui->labFrames->setEnabled(false);
+    ui->sbFrames->setEnabled(false);
+    ui->labComments->setEnabled(false);
+    ui->leComment->setEnabled(false);
+    ui->menuLoad_Pen->setEnabled(false);
+    ui->menuSettings->setEnabled(false);
+    ui->menuSketchpad->setEnabled(false);
+    ui->action_Save_Storyboard->setEnabled(false);
+}
+
+void MainWindow::enableStoryPad()
+{
+    ui->gvSketchPad->setEnabled(true);
+    ui->labScene->setEnabled(true);
+    ui->labShot->setEnabled(true);
+    ui->leShot->setEnabled(true);
+    ui->labFrames->setEnabled(true);
+    ui->sbFrames->setEnabled(true);
+    ui->labComments->setEnabled(true);
+    ui->leComment->setEnabled(true);
+    ui->menuLoad_Pen->setEnabled(true);
+    ui->menuSketchpad->setEnabled(true);
+    ui->menuSettings->setEnabled(true);
+    ui->action_Save_Storyboard->setEnabled(true);
+}
+
+void MainWindow::disableScene()
+{
+    ui->menuScene->setEnabled(false);
+}
+
+void MainWindow::enableScene()
+{
+    ui->menuScene->setEnabled(true);
 }
 

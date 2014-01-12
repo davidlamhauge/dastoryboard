@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Jan 9 21:55:53 2014
+** Created: Sun Jan 12 09:43:20 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -58,9 +58,9 @@ static const uint qt_meta_data_MainWindow[] = {
      319,   11,   11,   11, 0x08,
      332,   11,   11,   11, 0x08,
      347,   11,   11,   11, 0x08,
-     366,   11,   11,   11, 0x08,
-     381,   11,   11,   11, 0x08,
-     400,   11,   11,   11, 0x08,
+     360,   11,   11,   11, 0x08,
+     375,   11,   11,   11, 0x08,
+     394,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -75,9 +75,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "cancelPenPick()\0eraseF5()\0eraseAll()\0"
     "about()\0appendSketchPad()\0insertSketchPad()\0"
     "updateComment()\0updateScene()\0"
-    "updateShot()\0updateFrames()\0"
-    "updateSaveImages()\0updateImages()\0"
-    "centerStoryboard()\0changeImage()\0"
+    "updateShot()\0updateFrames()\0saveImages()\0"
+    "updateImages()\0centerStoryboard()\0"
+    "changeImage()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -112,7 +112,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 23: _t->updateScene(); break;
         case 24: _t->updateShot(); break;
         case 25: _t->updateFrames(); break;
-        case 26: _t->updateSaveImages(); break;
+        case 26: _t->saveImages(); break;
         case 27: _t->updateImages(); break;
         case 28: _t->centerStoryboard(); break;
         case 29: _t->changeImage(); break;
