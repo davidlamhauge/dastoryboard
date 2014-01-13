@@ -364,7 +364,7 @@ void MainWindow::updateInfoLabels()
     ui->labActivePadInfo->setText(tr("Scene %1, Shot %2")
                                   .arg(padInfo[scene]).arg(padInfo[shot]));
     ui->labFramesCountValue->setText(QString::number(fr));
-    ui->labSceneCountValue->setText(QString::number(scenePaths.size()));
+//    ui->labSceneCountValue->setText(QString::number(scenePaths.size()));
     ui->labPadCountValue->setText(QString::number(padInfoList.size()));
 }
 

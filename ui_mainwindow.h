@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jan 11 04:31:06 2014
+** Created: Mon Jan 13 13:19:32 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
 #include <QtGui/QFrame>
 #include <QtGui/QGraphicsView>
 #include <QtGui/QGridLayout>
@@ -24,6 +25,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QStatusBar>
@@ -61,11 +63,13 @@ public:
     QAction *action_New_Scene;
     QAction *action_Open_Scene;
     QWidget *centralWidget;
-    QGridLayout *gridLayout_2;
-    QVBoxLayout *verticalLayout_7;
+    QGridLayout *gridLayout_3;
+    QVBoxLayout *verticalLayout_8;
     QGraphicsView *gvStoryboard;
+    QHBoxLayout *horizontalLayout_5;
+    QSpacerItem *horizontalSpacer_3;
+    QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_3;
-    QVBoxLayout *verticalLayout_3;
     QVBoxLayout *verticalLayout_2;
     QLabel *labComments;
     QLineEdit *leComment;
@@ -81,19 +85,32 @@ public:
     QLabel *labFrames;
     QSpinBox *sbFrames;
     QFrame *line;
+    QHBoxLayout *horizontalLayout_4;
+    QSpacerItem *horizontalSpacer;
+    QVBoxLayout *verticalLayout_6;
     QHBoxLayout *horizontalLayout_2;
+    QLabel *label;
+    QComboBox *cbScenes;
+    QFrame *line_2;
     QGridLayout *gridLayout;
-    QLabel *labActivePad;
-    QLabel *labActivePadInfo;
-    QLabel *labSceneCount;
-    QLabel *labSceneCountValue;
+    QLabel *label_2;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
+    QPushButton *pushButton_5;
+    QFrame *line_4;
+    QGridLayout *gridLayout_2;
     QLabel *labFrameCount;
+    QLabel *labActivePadInfo;
+    QLabel *labTimeValue;
+    QLabel *labTime;
+    QLabel *labPadCountValue;
+    QLabel *labActivePad;
     QLabel *labFramesCountValue;
     QLabel *labPadCount;
-    QLabel *labPadCountValue;
-    QSpacerItem *horizontalSpacer;
     QSpacerItem *verticalSpacer_2;
-    QVBoxLayout *verticalLayout_6;
+    QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
     QFrame *line_3;
@@ -167,13 +184,13 @@ public:
         action_Open_Scene->setObjectName(QString::fromUtf8("action_Open_Scene"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        gridLayout_2 = new QGridLayout(centralWidget);
-        gridLayout_2->setSpacing(6);
-        gridLayout_2->setContentsMargins(11, 11, 11, 11);
-        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        verticalLayout_7 = new QVBoxLayout();
-        verticalLayout_7->setSpacing(6);
-        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        gridLayout_3 = new QGridLayout(centralWidget);
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setContentsMargins(11, 11, 11, 11);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        verticalLayout_8 = new QVBoxLayout();
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
         gvStoryboard = new QGraphicsView(centralWidget);
         gvStoryboard->setObjectName(QString::fromUtf8("gvStoryboard"));
         QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
@@ -184,14 +201,21 @@ public:
         gvStoryboard->setMinimumSize(QSize(0, 140));
         gvStoryboard->setMaximumSize(QSize(16777215, 140));
 
-        verticalLayout_7->addWidget(gvStoryboard);
+        verticalLayout_8->addWidget(gvStoryboard);
 
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setSpacing(6);
+        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_5->addItem(horizontalSpacer_3);
+
+        verticalLayout_7 = new QVBoxLayout();
+        verticalLayout_7->setSpacing(6);
+        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
@@ -207,7 +231,10 @@ public:
         verticalLayout_2->addWidget(leComment);
 
 
-        verticalLayout_3->addLayout(verticalLayout_2);
+        horizontalLayout_3->addLayout(verticalLayout_2);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_3);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
@@ -285,108 +312,180 @@ public:
         horizontalLayout->addLayout(verticalLayout);
 
 
-        verticalLayout_3->addLayout(horizontalLayout);
+        verticalLayout_7->addLayout(horizontalLayout);
 
         line = new QFrame(centralWidget);
         line->setObjectName(QString::fromUtf8("line"));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        verticalLayout_3->addWidget(line);
+        verticalLayout_7->addWidget(line);
 
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        gridLayout = new QGridLayout();
-        gridLayout->setSpacing(6);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        labActivePad = new QLabel(centralWidget);
-        labActivePad->setObjectName(QString::fromUtf8("labActivePad"));
-
-        gridLayout->addWidget(labActivePad, 0, 0, 1, 1);
-
-        labActivePadInfo = new QLabel(centralWidget);
-        labActivePadInfo->setObjectName(QString::fromUtf8("labActivePadInfo"));
-
-        gridLayout->addWidget(labActivePadInfo, 0, 1, 1, 1);
-
-        labSceneCount = new QLabel(centralWidget);
-        labSceneCount->setObjectName(QString::fromUtf8("labSceneCount"));
-
-        gridLayout->addWidget(labSceneCount, 1, 0, 1, 1);
-
-        labSceneCountValue = new QLabel(centralWidget);
-        labSceneCountValue->setObjectName(QString::fromUtf8("labSceneCountValue"));
-
-        gridLayout->addWidget(labSceneCountValue, 1, 1, 1, 1);
-
-        labFrameCount = new QLabel(centralWidget);
-        labFrameCount->setObjectName(QString::fromUtf8("labFrameCount"));
-
-        gridLayout->addWidget(labFrameCount, 2, 0, 1, 1);
-
-        labFramesCountValue = new QLabel(centralWidget);
-        labFramesCountValue->setObjectName(QString::fromUtf8("labFramesCountValue"));
-
-        gridLayout->addWidget(labFramesCountValue, 2, 1, 1, 1);
-
-        labPadCount = new QLabel(centralWidget);
-        labPadCount->setObjectName(QString::fromUtf8("labPadCount"));
-
-        gridLayout->addWidget(labPadCount, 3, 0, 1, 1);
-
-        labPadCountValue = new QLabel(centralWidget);
-        labPadCountValue->setObjectName(QString::fromUtf8("labPadCountValue"));
-
-        gridLayout->addWidget(labPadCountValue, 3, 1, 1, 1);
-
-
-        horizontalLayout_2->addLayout(gridLayout);
-
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_2);
-
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout_3->addItem(verticalSpacer_2);
-
-
-        horizontalLayout_3->addLayout(verticalLayout_3);
+        horizontalLayout_4->addItem(horizontalSpacer);
 
         verticalLayout_6 = new QVBoxLayout();
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        horizontalLayout_2->addWidget(label);
+
+        cbScenes = new QComboBox(centralWidget);
+        cbScenes->setObjectName(QString::fromUtf8("cbScenes"));
+
+        horizontalLayout_2->addWidget(cbScenes);
+
+
+        verticalLayout_6->addLayout(horizontalLayout_2);
+
+        line_2 = new QFrame(centralWidget);
+        line_2->setObjectName(QString::fromUtf8("line_2"));
+        line_2->setFrameShape(QFrame::HLine);
+        line_2->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout_6->addWidget(line_2);
+
+        gridLayout = new QGridLayout();
+        gridLayout->setSpacing(6);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout->addWidget(label_2, 0, 0, 1, 1);
+
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+
+        gridLayout->addWidget(pushButton, 0, 1, 1, 1);
+
+        pushButton_2 = new QPushButton(centralWidget);
+        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+
+        gridLayout->addWidget(pushButton_2, 1, 0, 1, 1);
+
+        pushButton_3 = new QPushButton(centralWidget);
+        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+
+        gridLayout->addWidget(pushButton_3, 1, 1, 1, 1);
+
+        pushButton_4 = new QPushButton(centralWidget);
+        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+
+        gridLayout->addWidget(pushButton_4, 2, 0, 1, 1);
+
+        pushButton_5 = new QPushButton(centralWidget);
+        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+
+        gridLayout->addWidget(pushButton_5, 2, 1, 1, 1);
+
+
+        verticalLayout_6->addLayout(gridLayout);
+
+        line_4 = new QFrame(centralWidget);
+        line_4->setObjectName(QString::fromUtf8("line_4"));
+        line_4->setFrameShape(QFrame::HLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout_6->addWidget(line_4);
+
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        labFrameCount = new QLabel(centralWidget);
+        labFrameCount->setObjectName(QString::fromUtf8("labFrameCount"));
+
+        gridLayout_2->addWidget(labFrameCount, 1, 0, 1, 1);
+
+        labActivePadInfo = new QLabel(centralWidget);
+        labActivePadInfo->setObjectName(QString::fromUtf8("labActivePadInfo"));
+
+        gridLayout_2->addWidget(labActivePadInfo, 0, 1, 1, 1);
+
+        labTimeValue = new QLabel(centralWidget);
+        labTimeValue->setObjectName(QString::fromUtf8("labTimeValue"));
+
+        gridLayout_2->addWidget(labTimeValue, 2, 1, 1, 1);
+
+        labTime = new QLabel(centralWidget);
+        labTime->setObjectName(QString::fromUtf8("labTime"));
+
+        gridLayout_2->addWidget(labTime, 2, 0, 1, 1);
+
+        labPadCountValue = new QLabel(centralWidget);
+        labPadCountValue->setObjectName(QString::fromUtf8("labPadCountValue"));
+
+        gridLayout_2->addWidget(labPadCountValue, 3, 1, 1, 1);
+
+        labActivePad = new QLabel(centralWidget);
+        labActivePad->setObjectName(QString::fromUtf8("labActivePad"));
+
+        gridLayout_2->addWidget(labActivePad, 0, 0, 1, 1);
+
+        labFramesCountValue = new QLabel(centralWidget);
+        labFramesCountValue->setObjectName(QString::fromUtf8("labFramesCountValue"));
+
+        gridLayout_2->addWidget(labFramesCountValue, 1, 1, 1, 1);
+
+        labPadCount = new QLabel(centralWidget);
+        labPadCount->setObjectName(QString::fromUtf8("labPadCount"));
+
+        gridLayout_2->addWidget(labPadCount, 3, 0, 1, 1);
+
+
+        verticalLayout_6->addLayout(gridLayout_2);
+
+
+        horizontalLayout_4->addLayout(verticalLayout_6);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_4);
+
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout_7->addItem(verticalSpacer_2);
+
+
+        horizontalLayout_5->addLayout(verticalLayout_7);
+
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         gvSketchPad = new QGraphicsView(centralWidget);
         gvSketchPad->setObjectName(QString::fromUtf8("gvSketchPad"));
         gvSketchPad->setMinimumSize(QSize(0, 0));
         gvSketchPad->setMaximumSize(QSize(10000, 10000));
         gvSketchPad->setMouseTracking(true);
 
-        verticalLayout_6->addWidget(gvSketchPad);
+        verticalLayout_3->addWidget(gvSketchPad);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_6->addItem(verticalSpacer);
+        verticalLayout_3->addItem(verticalSpacer);
 
 
-        horizontalLayout_3->addLayout(verticalLayout_6);
+        horizontalLayout_5->addLayout(verticalLayout_3);
 
 
-        verticalLayout_7->addLayout(horizontalLayout_3);
+        verticalLayout_8->addLayout(horizontalLayout_5);
 
 
-        gridLayout_2->addLayout(verticalLayout_7, 0, 0, 1, 1);
+        gridLayout_3->addLayout(verticalLayout_8, 0, 0, 1, 1);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QString::fromUtf8("line_3"));
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line_3, 1, 0, 1, 1);
+        gridLayout_3->addWidget(line_3, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -504,14 +603,21 @@ public:
         labSceneInfo->setText(QString());
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
-        labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
-        labActivePadInfo->setText(QString());
-        labSceneCount->setText(QApplication::translate("MainWindow", "Scenes:", 0, QApplication::UnicodeUTF8));
-        labSceneCountValue->setText(QString());
+        label->setText(QApplication::translate("MainWindow", "Scenes:", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Pens:", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("MainWindow", "Standard Pen", 0, QApplication::UnicodeUTF8));
+        pushButton_2->setText(QApplication::translate("MainWindow", "F5 Sketch pen", 0, QApplication::UnicodeUTF8));
+        pushButton_3->setText(QApplication::translate("MainWindow", "F6 User defined", 0, QApplication::UnicodeUTF8));
+        pushButton_4->setText(QApplication::translate("MainWindow", "F7 User defined", 0, QApplication::UnicodeUTF8));
+        pushButton_5->setText(QApplication::translate("MainWindow", "F8 User defined", 0, QApplication::UnicodeUTF8));
         labFrameCount->setText(QApplication::translate("MainWindow", "Frames total:", 0, QApplication::UnicodeUTF8));
+        labActivePadInfo->setText(QString());
+        labTimeValue->setText(QString());
+        labTime->setText(QApplication::translate("MainWindow", "Time:", 0, QApplication::UnicodeUTF8));
+        labPadCountValue->setText(QString());
+        labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
         labFramesCountValue->setText(QString());
         labPadCount->setText(QApplication::translate("MainWindow", "Pads in current scene:", 0, QApplication::UnicodeUTF8));
-        labPadCountValue->setText(QString());
         menu_File->setTitle(QApplication::translate("MainWindow", "&File/Storyboard", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
