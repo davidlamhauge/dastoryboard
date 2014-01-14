@@ -8,6 +8,7 @@
 #include <QtGui>
 #include <QMainWindow>
 
+
 class SketchPad;
 
 struct standardPen{     // 4 standard pens can be saved in F5 ,F6, F7 og F8
@@ -71,6 +72,7 @@ private slots:
     void updateScene();         // updates scene info
     void updateShot();          // updates shot info
     void updateFrames();        // updates shot and frames for pad struct
+    void updateScenelist();             // updates scene names to comboBox
     void saveImages();          // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb

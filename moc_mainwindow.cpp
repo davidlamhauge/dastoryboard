@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Jan 12 09:43:20 2014
+** Created: Tue Jan 14 12:16:29 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      30,   14, // methods
+      31,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -58,9 +58,10 @@ static const uint qt_meta_data_MainWindow[] = {
      319,   11,   11,   11, 0x08,
      332,   11,   11,   11, 0x08,
      347,   11,   11,   11, 0x08,
-     360,   11,   11,   11, 0x08,
-     375,   11,   11,   11, 0x08,
-     394,   11,   11,   11, 0x08,
+     365,   11,   11,   11, 0x08,
+     378,   11,   11,   11, 0x08,
+     393,   11,   11,   11, 0x08,
+     412,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -75,7 +76,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "cancelPenPick()\0eraseF5()\0eraseAll()\0"
     "about()\0appendSketchPad()\0insertSketchPad()\0"
     "updateComment()\0updateScene()\0"
-    "updateShot()\0updateFrames()\0saveImages()\0"
+    "updateShot()\0updateFrames()\0"
+    "updateScenelist()\0saveImages()\0"
     "updateImages()\0centerStoryboard()\0"
     "changeImage()\0"
 };
@@ -112,10 +114,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 23: _t->updateScene(); break;
         case 24: _t->updateShot(); break;
         case 25: _t->updateFrames(); break;
-        case 26: _t->saveImages(); break;
-        case 27: _t->updateImages(); break;
-        case 28: _t->centerStoryboard(); break;
-        case 29: _t->changeImage(); break;
+        case 26: _t->updateScenelist(); break;
+        case 27: _t->saveImages(); break;
+        case 28: _t->updateImages(); break;
+        case 29: _t->centerStoryboard(); break;
+        case 30: _t->changeImage(); break;
         default: ;
         }
     }
@@ -154,9 +157,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 30)
+        if (_id < 31)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 30;
+        _id -= 31;
     }
     return _id;
 }
