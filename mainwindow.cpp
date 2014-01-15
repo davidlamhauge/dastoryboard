@@ -70,12 +70,19 @@ void MainWindow::setupConnects()
     connect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
     connect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
     connect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
+    connect(ui->btnStandardPen,SIGNAL(pressed()),this,SLOT(penStd()));
+    connect(ui->btnF5,SIGNAL(pressed()),this,SLOT(penF5()));
+    connect(ui->btnF6,SIGNAL(pressed()),this,SLOT(penF6()));
+    connect(ui->btnF7,SIGNAL(pressed()),this,SLOT(penF7()));
+    connect(ui->btnF8,SIGNAL(pressed()),this,SLOT(penF8()));
     connect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
     connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
+
+    connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
 
 }
 
@@ -655,6 +662,7 @@ void MainWindow::readStoryboardXML()
         ui->labSceneInfo->setText(padInfo[scene]);
         ui->leShot->setText(padInfo[shot]);
         ui->sbFrames->setValue(padInfo[frames].toInt());
+        setBtnColors();
         updateImages();
         updateScenelist();
         addThumbLabels();
@@ -664,6 +672,40 @@ void MainWindow::readStoryboardXML()
         msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
         msgBox.setIcon(QMessageBox::Information);
         msgBox.exec();
+    }
+}
+
+void MainWindow::setBtnColors()
+{
+    for (int i = 0; i < 5;i++){
+        int r = sPenList[i].penColor.red();
+        int g = sPenList[i].penColor.green();
+        int b = sPenList[i].penColor.blue();
+        int rgb = r+g+b;
+        QColor c;
+        if (rgb > 350) c = QColor(Qt::black);
+        else c = QColor(Qt::white);
+        if (i == 0){
+            ui->btnStandardPen->setText(tr("Pen: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnStandardPen->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+                                              .arg(sPenList[i].penColor.name()).arg(c.name()));
+        }else if (i == 1){
+            ui->btnF5->setText(tr("F5@: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF5->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+                                              .arg(sPenList[i].penColor.name()).arg(c.name()));
+        }else if (i == 2){
+            ui->btnF6->setText(tr("F6: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF6->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+                                              .arg(sPenList[i].penColor.name()).arg(c.name()));
+        }else if (i == 3){
+            ui->btnF7->setText(tr("F7: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF7->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+                                              .arg(sPenList[i].penColor.name()).arg(c.name()));
+        }else{
+            ui->btnF8->setText(tr("F8: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF8->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+                                              .arg(sPenList[i].penColor.name()).arg(c.name()));
+        }
     }
 }
 
@@ -694,12 +736,22 @@ void MainWindow::okPenPick()
     sPen.penWidth = pc->sbWidth->value();
     sketchPad->setPenWidth(sPen.penWidth);
     sPenList.replace(activePen,sPen);
+    setBtnColors();
+    pc->cbPen->setCurrentIndex(0);
     pc->close();
 }
 
 void MainWindow::cancelPenPick()
 {
+    pc->cbPen->setCurrentIndex(0);
     pc->close();
+}
+
+void MainWindow::penStd()
+{
+    sPen = sPenList[0];
+    sketchPad->setPenColor(sPen.penColor);
+    sketchPad->setPenWidth(sPen.penWidth);
 }
 
 void MainWindow::penF5()

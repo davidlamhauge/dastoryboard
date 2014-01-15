@@ -39,5 +39,6 @@ penChooser::penChooser(QDialog *parent) :
     setLayout(layout);
     setWindowTitle(tr("Choose Pen color and width"));
 
+    cbPen->setCurrentIndex(cbPen->findText("Pen"));
     sbWidth->setFocus();
 }

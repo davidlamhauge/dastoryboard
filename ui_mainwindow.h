@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Jan 13 13:19:32 2014
+** Created: Tue Jan 14 20:56:32 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -94,11 +94,11 @@ public:
     QFrame *line_2;
     QGridLayout *gridLayout;
     QLabel *label_2;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton_3;
-    QPushButton *pushButton_4;
-    QPushButton *pushButton_5;
+    QPushButton *btnStandardPen;
+    QPushButton *btnF5;
+    QPushButton *btnF6;
+    QPushButton *btnF7;
+    QPushButton *btnF8;
     QFrame *line_4;
     QGridLayout *gridLayout_2;
     QLabel *labFrameCount;
@@ -362,30 +362,30 @@ public:
 
         gridLayout->addWidget(label_2, 0, 0, 1, 1);
 
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        btnStandardPen = new QPushButton(centralWidget);
+        btnStandardPen->setObjectName(QString::fromUtf8("btnStandardPen"));
 
-        gridLayout->addWidget(pushButton, 0, 1, 1, 1);
+        gridLayout->addWidget(btnStandardPen, 0, 1, 1, 1);
 
-        pushButton_2 = new QPushButton(centralWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        btnF5 = new QPushButton(centralWidget);
+        btnF5->setObjectName(QString::fromUtf8("btnF5"));
 
-        gridLayout->addWidget(pushButton_2, 1, 0, 1, 1);
+        gridLayout->addWidget(btnF5, 1, 0, 1, 1);
 
-        pushButton_3 = new QPushButton(centralWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        btnF6 = new QPushButton(centralWidget);
+        btnF6->setObjectName(QString::fromUtf8("btnF6"));
 
-        gridLayout->addWidget(pushButton_3, 1, 1, 1, 1);
+        gridLayout->addWidget(btnF6, 1, 1, 1, 1);
 
-        pushButton_4 = new QPushButton(centralWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        btnF7 = new QPushButton(centralWidget);
+        btnF7->setObjectName(QString::fromUtf8("btnF7"));
 
-        gridLayout->addWidget(pushButton_4, 2, 0, 1, 1);
+        gridLayout->addWidget(btnF7, 2, 0, 1, 1);
 
-        pushButton_5 = new QPushButton(centralWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        btnF8 = new QPushButton(centralWidget);
+        btnF8->setObjectName(QString::fromUtf8("btnF8"));
 
-        gridLayout->addWidget(pushButton_5, 2, 1, 1, 1);
+        gridLayout->addWidget(btnF8, 2, 1, 1, 1);
 
 
         verticalLayout_6->addLayout(gridLayout);
@@ -605,11 +605,11 @@ public:
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "Scenes:", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "Pens:", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Standard Pen", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "F5 Sketch pen", 0, QApplication::UnicodeUTF8));
-        pushButton_3->setText(QApplication::translate("MainWindow", "F6 User defined", 0, QApplication::UnicodeUTF8));
-        pushButton_4->setText(QApplication::translate("MainWindow", "F7 User defined", 0, QApplication::UnicodeUTF8));
-        pushButton_5->setText(QApplication::translate("MainWindow", "F8 User defined", 0, QApplication::UnicodeUTF8));
+        btnStandardPen->setText(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
+        btnF5->setText(QApplication::translate("MainWindow", "F5 @", 0, QApplication::UnicodeUTF8));
+        btnF6->setText(QApplication::translate("MainWindow", "F6", 0, QApplication::UnicodeUTF8));
+        btnF7->setText(QApplication::translate("MainWindow", "F7", 0, QApplication::UnicodeUTF8));
+        btnF8->setText(QApplication::translate("MainWindow", "F8", 0, QApplication::UnicodeUTF8));
         labFrameCount->setText(QApplication::translate("MainWindow", "Frames total:", 0, QApplication::UnicodeUTF8));
         labActivePadInfo->setText(QString());
         labTimeValue->setText(QString());

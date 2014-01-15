@@ -260,37 +260,37 @@
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QPushButton" name="pushButton">
+                 <widget class="QPushButton" name="btnStandardPen">
                   <property name="text">
-                   <string>Standard Pen</string>
+                   <string>Pen</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QPushButton" name="pushButton_2">
+                 <widget class="QPushButton" name="btnF5">
                   <property name="text">
-                   <string>F5 Sketch pen</string>
+                   <string>F5 @</string>
                   </property>
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QPushButton" name="pushButton_3">
+                 <widget class="QPushButton" name="btnF6">
                   <property name="text">
-                   <string>F6 User defined</string>
+                   <string>F6</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QPushButton" name="pushButton_4">
+                 <widget class="QPushButton" name="btnF7">
                   <property name="text">
-                   <string>F7 User defined</string>
+                   <string>F7</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QPushButton" name="pushButton_5">
+                 <widget class="QPushButton" name="btnF8">
                   <property name="text">
-                   <string>F8 User defined</string>
+                   <string>F8</string>
                   </property>
                  </widget>
                 </item>

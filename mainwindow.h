@@ -56,6 +56,7 @@ private slots:
     void setPrefs();            // set preferences via PrefDialog
     void okPrefs();
     void cancelPrefs();
+    void penStd();              // select Standard Pen
     void penF5();               // select sPen F5                           F5
     void penF6();               // select sPen F6                           F6
     void penF7();               // select sPen F7                           F7
@@ -97,6 +98,7 @@ private:
     void readProjXML();                 // reads .projdastoryboard info from xml file
     void readStoryboardXML();                     // reads .dastoryboard info from xml file
 
+    void setBtnColors();
     QString loadSettings();             // returns sbFileName or ""
     QString getSbFileName();            // gets new storybard filename
     QString boolToString(bool b);
