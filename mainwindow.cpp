@@ -720,7 +720,8 @@ void MainWindow::penPick()
     pc = new penChooser();
     pc->colordialog->setCurrentColor(sketchPad->penColor());
     pc->sbWidth->setValue(sketchPad->penWidth());
-    pc->cbPen->setCurrentIndex(activePen);
+//    pc->cbPen->setCurrentIndex(activePen);
+    pc->cbPen->setCurrentIndex(0);
     pc->setModal(true);
     pc->show();
     connect(pc->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
@@ -739,12 +740,14 @@ void MainWindow::okPenPick()
     setBtnColors();
     pc->cbPen->setCurrentIndex(0);
     pc->close();
+    pc->deleteLater();
 }
 
 void MainWindow::cancelPenPick()
 {
     pc->cbPen->setCurrentIndex(0);
     pc->close();
+    pc->deleteLater();
 }
 
 void MainWindow::penStd()
