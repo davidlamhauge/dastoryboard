@@ -742,28 +742,11 @@ void MainWindow::penPick()
     pc = new penChooser();
     pc->colordialog->setCurrentColor(sketchPad->penColor());
     pc->sbWidth->setValue(sketchPad->penWidth());
-    pc->cbPen->setCurrentIndex(activePen);
-
-    if (pc->exec() == penChooser::Accepted){
-        qDebug() << "test";
-        activePen = pc->cbPen->currentIndex();
-        sPen = sPenList[activePen];
-        sPen.penColor = pc->colordialog->currentColor();
-        sketchPad->setPenColor(sPen.penColor);
-        sPen.penWidth = pc->sbWidth->value();
-        sketchPad->setPenWidth(sPen.penWidth);
-        sPenList.replace(activePen,sPen);
-        setBtnColors();
-        pc->close();
-    }else{
-        pc->close();
-    }
-    /*
-     * if(dlg.exec() == QDialog::Accepted)
+    pc->cbPen->setCurrentIndex(0);
     pc->setModal(true);
     pc->show();
     connect(pc->btnCancel,SIGNAL(clicked()),pc,SLOT(getNewPenInfo()));
-    connect(pc->btnOk,SIGNAL(clicked()),pc,SLOT(getNewPenInfo()));*/
+    connect(pc->btnOk,SIGNAL(clicked()),pc,SLOT(getNewPenInfo()));
 }
 
 void MainWindow::okPenPick()
@@ -778,12 +761,14 @@ void MainWindow::okPenPick()
     setBtnColors();
     pc->cbPen->setCurrentIndex(0);
     pc->close();
+    pc->deleteLater();
 }
 
 void MainWindow::cancelPenPick()
 {
     pc->cbPen->setCurrentIndex(0);
     pc->close();
+    pc->deleteLater();
 }
 
 void MainWindow::penStd()
