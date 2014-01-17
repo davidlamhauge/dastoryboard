@@ -2,6 +2,7 @@
 #define PENCHOOSER_H
 
 #include <QDialog>
+#include <QDialogButtonBox>
 #include <QColorDialog>
 #include <QLabel>
 #include <QPushButton>
@@ -23,8 +24,10 @@ public:
     QComboBox *cbPen;
     QPushButton *btnCancel;
     QPushButton *btnOk;
+    QDialogButtonBox *box;
     QGridLayout *buttonLayout;
     QVBoxLayout *layout;
+
 signals:
 
 public slots:

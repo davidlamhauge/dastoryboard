@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Jan 14 20:56:32 2014
+** Created: Wed Jan 15 16:01:24 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,7 +67,6 @@ public:
     QVBoxLayout *verticalLayout_8;
     QGraphicsView *gvStoryboard;
     QHBoxLayout *horizontalLayout_5;
-    QSpacerItem *horizontalSpacer_3;
     QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayout_2;
@@ -113,6 +112,7 @@ public:
     QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
+    QSpacerItem *horizontalSpacer_3;
     QFrame *line_3;
     QMenuBar *menuBar;
     QMenu *menu_File;
@@ -206,10 +206,6 @@ public:
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_5->addItem(horizontalSpacer_3);
-
         verticalLayout_7 = new QVBoxLayout();
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
@@ -474,6 +470,10 @@ public:
 
         horizontalLayout_5->addLayout(verticalLayout_3);
 
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_5->addItem(horizontalSpacer_3);
+
 
         verticalLayout_8->addLayout(horizontalLayout_5);
 
@@ -541,7 +541,6 @@ public:
         menuSketchpad->addAction(actionErase_Sketch_Pen);
         menu_Help->addAction(action_About);
         menuScene->addAction(action_New_Scene);
-        menuScene->addAction(action_Open_Scene);
 
         retranslateUi(MainWindow);
 

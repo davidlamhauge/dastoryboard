@@ -96,7 +96,8 @@ private:
     void addThumbLabels();              // adds labels on thumbs with (scene,shot)
     void updateInfoLabels();            // updates labels for frames total etc
     void readProjXML();                 // reads .projdastoryboard info from xml file
-    void readStoryboardXML();                     // reads .dastoryboard info from xml file
+    void readStoryboardXML();           // reads .dastoryboard info from xml file
+    void clearLists();                  // Clears lists
 
     void setBtnColors();
     QString loadSettings();             // returns sbFileName or ""

@@ -58,7 +58,6 @@ void MainWindow::setupConnects()
     connect(ui->action_New_Storyboard,SIGNAL(triggered()),this,SLOT(newStoryboard()));
     connect(ui->action_Open_Storyboard,SIGNAL(triggered()),this,SLOT(openStoryboard()));
     connect(ui->action_Save_Storyboard,SIGNAL(triggered()),this,SLOT(writeStoryboardXML()));
-//    connect(ui->action_Open_Scene,SIGNAL(triggered()),this,SLOT(openScene()));
     connect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
     connect(ui->actionPreferences,SIGNAL(triggered()),this,SLOT(setPrefs()));
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
@@ -83,7 +82,6 @@ void MainWindow::setupConnects()
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
     connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
-
 }
 
 void MainWindow::startSaveImageTimer(int i)
@@ -241,23 +239,32 @@ void MainWindow::cancelPrefs()
 
 void MainWindow::newStoryboard()
 {
+    writeStoryboardXML();
     if (projFileName != "")
         writeProjXML();
     projFileName = QFileDialog::getSaveFileName(this,
-        tr("dastoryboard project filename"), "",
-        tr("dastoryboard project files (*.projdastoryboard)"));
-
+                                                tr("dastoryboard project filename"), "",
+                                                tr("dastoryboard project files (*.projdastoryboard)"));
     if (!projFileName.isEmpty()){
         if (!projFileName.endsWith(".projdastoryboard"))
             projFileName += ".projdastoryboard";
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
-        writeProjXML();
+        clearLists();
         enableScene();
+        enableStoryPad();
+        initStoryboard();
+        updateScenelist();
+        updateInfoLabels();
+        setBtnColors();
+        board->setSceneRect(0,0,padThumbList.size()*170,140);
+        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        startSaveImageTimer(saveInterval);
     }
 }
 
 void MainWindow::openStoryboard()
 {
+    writeStoryboardXML();
     if (projFileName != "")
         writeProjXML();
     projFileName = QFileDialog::getOpenFileName(this,
@@ -277,6 +284,7 @@ void MainWindow::newScene()
                                       tr("Scene name: (maximum 6 char.)"),
                                       QLineEdit::Normal,"", &ok);
     if (ok && !scenePath.isEmpty()){
+        writeStoryboardXML();
         sceneDir = scenePath;
         QDir dir = QDir(projFilePath);
         dir.mkdir(projFilePath + scenePath);
@@ -290,27 +298,30 @@ void MainWindow::newScene()
         initStoryboard();
         writeProjXML();
         updateScenelist();
+        updateInfoLabels();
+        setBtnColors();
+        board->setSceneRect(0,0,padThumbList.size()*170,140);
+        ui->gvStoryboard->resize(padThumbList.size()*170,140);
         startSaveImageTimer(saveInterval);
     }
 }
 
 void MainWindow::openScene()
 {
+    writeStoryboardXML();
     QString sc = ui->cbScenes->currentText();
     sbFileName = projFilePath + sc + "/" + sc + ".dastoryboard";
     scenePath = projFilePath + sc + "/";
     sceneDir = sc;                                  // sceneDir = sc
-    if (!sbFileName.isEmpty()){     // if storyboard-file has been chosen
-        enableStoryPad();
-        if (!sceneList.contains(sbFileName))
-            sceneList.append(sbFileName);
-        if (!scenePaths.contains(scenePath))
-            scenePaths.append(scenePath);
-        writeProjXML();
-        readStoryboardXML();
-        updateScenelist();
-        startSaveImageTimer(saveInterval);
-    }
+    enableStoryPad();
+    if (!sceneList.contains(sbFileName))
+        sceneList.append(sbFileName);
+    if (!scenePaths.contains(scenePath))
+        scenePaths.append(scenePath);
+    writeProjXML();
+    readStoryboardXML();
+    updateScenelist();
+    startSaveImageTimer(saveInterval);
     int i;
     i = ui->cbScenes->findText(sc);
     ui->cbScenes->setCurrentIndex(i);
@@ -675,6 +686,17 @@ void MainWindow::readStoryboardXML()
     }
 }
 
+void MainWindow::clearLists()
+{
+    padInfoList.clear();            // clear list for reading file
+    padInfo.clear();
+    padThumbList.clear();
+    sPenList.clear();
+    sceneList.clear();
+    scenePaths.clear();
+    board->clear();
+}
+
 void MainWindow::setBtnColors()
 {
     for (int i = 0; i < 5;i++){
@@ -721,10 +743,27 @@ void MainWindow::penPick()
     pc->colordialog->setCurrentColor(sketchPad->penColor());
     pc->sbWidth->setValue(sketchPad->penWidth());
     pc->cbPen->setCurrentIndex(activePen);
+
+    if (pc->exec() == penChooser::Accepted){
+        qDebug() << "test";
+        activePen = pc->cbPen->currentIndex();
+        sPen = sPenList[activePen];
+        sPen.penColor = pc->colordialog->currentColor();
+        sketchPad->setPenColor(sPen.penColor);
+        sPen.penWidth = pc->sbWidth->value();
+        sketchPad->setPenWidth(sPen.penWidth);
+        sPenList.replace(activePen,sPen);
+        setBtnColors();
+        pc->close();
+    }else{
+        pc->close();
+    }
+    /*
+     * if(dlg.exec() == QDialog::Accepted)
     pc->setModal(true);
     pc->show();
-    connect(pc->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
-    connect(pc->btnOk,SIGNAL(clicked()),this,SLOT(okPenPick()));
+    connect(pc->btnCancel,SIGNAL(clicked()),pc,SLOT(getNewPenInfo()));
+    connect(pc->btnOk,SIGNAL(clicked()),pc,SLOT(getNewPenInfo()));*/
 }
 
 void MainWindow::okPenPick()
@@ -892,6 +931,8 @@ void MainWindow::enableStoryPad()
     ui->menuSketchpad->setEnabled(true);
     ui->menuSettings->setEnabled(true);
     ui->action_Save_Storyboard->setEnabled(true);
+
+    board->clear();
 }
 
 void MainWindow::disableScene()
