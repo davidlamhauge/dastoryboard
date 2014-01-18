@@ -261,12 +261,16 @@ void MainWindow::openStoryboard()
     if (projFileName != "")
         writeProjXML();
     projFileName = QFileDialog::getOpenFileName(this,
-        tr("dastoryboard filename"), "",
+        tr("dastoryboard filename"), projFilePath,
         tr("dastoryboard files (*.projdastoryboard)"));
     if (!projFileName.isEmpty()){
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
         enableScene();
+        enableStoryPad();
+        initStoryboard();
         readProjXML();
+        readStoryboardXML();
+        updateInfoLabels();
     }
 }
 
@@ -276,7 +280,10 @@ void MainWindow::newScene()
     scenePath = QInputDialog::getText(this, tr("New Scene"),
                                       tr("Scene name: (maximum 6 char.)"),
                                       QLineEdit::Normal,"", &ok);
-    if (ok && !scenePath.isEmpty()){
+    if (scenePath.length() > 6)
+        QMessageBox::information(this, tr("Scene not created!"),
+                                 tr("Scene name must not exceed 6 chars"));
+    if (ok && !scenePath.isEmpty() && scenePath.length() < 7){
         sceneDir = scenePath;
         QDir dir = QDir(projFilePath);
         dir.mkdir(projFilePath + scenePath);
@@ -709,10 +716,20 @@ void MainWindow::setBtnColors()
     }
 }
 
+void MainWindow::closeActiveStoryboard()
+{
+    writeProjXML();
+    writeStoryboardXML();
+    disableScene();
+}
+
 void MainWindow::closeEvent(QCloseEvent *e)
 {
     saveImages();
-    e->accept(); // TODO!!!
+    writeStoryboardXML();
+    writeProjXML();
+    saveSettings();
+    e->accept();
 }
 
 void MainWindow::penPick()
@@ -863,12 +880,14 @@ bool MainWindow::stringToBool(QString s)
 void MainWindow::disableStoryPad()
 {
     ui->gvSketchPad->setEnabled(false);
-    ui->labScene->setEnabled(false);
-    ui->labShot->setEnabled(false);
     ui->leShot->setEnabled(false);
-    ui->labFrames->setEnabled(false);
+    ui->cbScenes->setEnabled(false);
     ui->sbFrames->setEnabled(false);
-    ui->labComments->setEnabled(false);
+    ui->btnStandardPen->setEnabled(false);
+    ui->btnF5->setEnabled(false);
+    ui->btnF6->setEnabled(false);
+    ui->btnF7->setEnabled(false);
+    ui->btnF8->setEnabled(false);
     ui->leComment->setEnabled(false);
     ui->menuLoad_Pen->setEnabled(false);
     ui->menuSettings->setEnabled(false);
@@ -879,12 +898,14 @@ void MainWindow::disableStoryPad()
 void MainWindow::enableStoryPad()
 {
     ui->gvSketchPad->setEnabled(true);
-    ui->labScene->setEnabled(true);
-    ui->labShot->setEnabled(true);
     ui->leShot->setEnabled(true);
-    ui->labFrames->setEnabled(true);
+    ui->cbScenes->setEnabled(true);
+    ui->btnStandardPen->setEnabled(true);
+    ui->btnF5->setEnabled(true);
+    ui->btnF6->setEnabled(true);
+    ui->btnF7->setEnabled(true);
+    ui->btnF8->setEnabled(true);
     ui->sbFrames->setEnabled(true);
-    ui->labComments->setEnabled(true);
     ui->leComment->setEnabled(true);
     ui->menuLoad_Pen->setEnabled(true);
     ui->menuSketchpad->setEnabled(true);
