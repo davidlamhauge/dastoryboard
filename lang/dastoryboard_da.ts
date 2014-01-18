@@ -9,317 +9,312 @@
         <translation>daStoryBoard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="59"/>
+        <location filename="../mainwindow.ui" line="72"/>
         <source>Comments:  (max 100 chars.)</source>
         <translation>Kommentarer:  (maks. 100 tegn)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="94"/>
-        <location filename="../mainwindow.ui" line="489"/>
+        <location filename="../mainwindow.ui" line="88"/>
+        <location filename="../mainwindow.ui" line="463"/>
         <source>Scene</source>
         <translation>Scene</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="156"/>
+        <location filename="../mainwindow.ui" line="146"/>
         <source>Shot</source>
         <translation>Skud</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="174"/>
+        <location filename="../mainwindow.ui" line="160"/>
         <source>Frames:</source>
         <translation>Billeder:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="333"/>
+        <location filename="../mainwindow.ui" line="314"/>
         <source>Active pad:</source>
         <translation>Aktivt ark:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="461"/>
+        <location filename="../mainwindow.ui" line="435"/>
         <source>Load Pen</source>
         <translation>Hent Pen</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="252"/>
-        <location filename="../mainwindow.ui" line="457"/>
+        <location filename="../mainwindow.ui" line="240"/>
+        <location filename="../mainwindow.ui" line="431"/>
         <source>Pen</source>
         <translation>Pen</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="224"/>
+        <location filename="../mainwindow.ui" line="212"/>
         <source>Scenes:</source>
         <translation>Scener:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="245"/>
+        <location filename="../mainwindow.ui" line="233"/>
         <source>Pens:</source>
         <translation>Penne:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="298"/>
+        <location filename="../mainwindow.ui" line="286"/>
         <source>Frames total:</source>
-        <translation>Billeder ialt:</translation>
+        <translation>Billeder i alt:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="319"/>
+        <location filename="../mainwindow.ui" line="307"/>
         <source>Time:</source>
         <translation>Tid:</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="347"/>
-        <source>Pads in current scene:</source>
-        <translation>Ark i nuværende scene:</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.ui" line="445"/>
+        <location filename="../mainwindow.ui" line="419"/>
         <source>&amp;File/Storyboard</source>
         <translation>&amp;Fil/Storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="473"/>
+        <location filename="../mainwindow.ui" line="447"/>
         <source>Sketchpad</source>
         <translation>Skitseark</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="483"/>
+        <location filename="../mainwindow.ui" line="457"/>
         <source>&amp;Help</source>
         <translation>&amp;Hjælp</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="517"/>
+        <location filename="../mainwindow.ui" line="491"/>
         <source>&amp;New Storyboard</source>
         <translation>&amp;Nyt Storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="520"/>
+        <location filename="../mainwindow.ui" line="494"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="525"/>
+        <location filename="../mainwindow.ui" line="499"/>
         <source>&amp;Save Storyboard</source>
         <translation>&amp;Gem Storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="528"/>
+        <location filename="../mainwindow.ui" line="502"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="533"/>
+        <location filename="../mainwindow.ui" line="507"/>
         <source>E&amp;xit</source>
         <translation>Afs&amp;lut</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="536"/>
+        <location filename="../mainwindow.ui" line="510"/>
         <source>Ctrl+X</source>
         <translation>Ctrl+X</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="541"/>
+        <location filename="../mainwindow.ui" line="515"/>
         <source>Save Pen 1</source>
         <translation>Gem Pen 1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="544"/>
+        <location filename="../mainwindow.ui" line="518"/>
         <source>Ctrl+F5</source>
         <translation>Ctrl+F5</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="549"/>
+        <location filename="../mainwindow.ui" line="523"/>
         <source>Save Pen 2</source>
         <translation>Gem Pen 2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="552"/>
+        <location filename="../mainwindow.ui" line="526"/>
         <source>Ctrl+F6</source>
         <translation>Ctrl+F6</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="557"/>
+        <location filename="../mainwindow.ui" line="531"/>
         <source>Save Pen 3</source>
         <translation>Gem Pen 3</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="560"/>
+        <location filename="../mainwindow.ui" line="534"/>
         <source>Ctrl+F7</source>
         <translation>Ctrl+F7</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="565"/>
+        <location filename="../mainwindow.ui" line="539"/>
         <source>Save Pen 4</source>
         <translation>Gem Pen 4</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="568"/>
+        <location filename="../mainwindow.ui" line="542"/>
         <source>Ctrl+F8</source>
         <translation>Ctrl+F8</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="573"/>
+        <location filename="../mainwindow.ui" line="547"/>
         <source>Load Pen 1</source>
         <translation>Hent Pen 1</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="576"/>
+        <location filename="../mainwindow.ui" line="550"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="581"/>
+        <location filename="../mainwindow.ui" line="555"/>
         <source>Load Pen 2</source>
         <translation>Hent Pen 2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="266"/>
-        <location filename="../mainwindow.ui" line="584"/>
+        <location filename="../mainwindow.ui" line="254"/>
+        <location filename="../mainwindow.ui" line="558"/>
         <source>F6</source>
         <translation>F6</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="589"/>
+        <location filename="../mainwindow.ui" line="563"/>
         <source>Load Pen 3</source>
         <translation>Hent Pen 3</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="273"/>
-        <location filename="../mainwindow.ui" line="592"/>
+        <location filename="../mainwindow.ui" line="261"/>
+        <location filename="../mainwindow.ui" line="566"/>
         <source>F7</source>
         <translation>F7</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="597"/>
+        <location filename="../mainwindow.ui" line="571"/>
         <source>Load Pen 4</source>
         <translation>Hent Pen 4</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="280"/>
-        <location filename="../mainwindow.ui" line="600"/>
+        <location filename="../mainwindow.ui" line="268"/>
+        <location filename="../mainwindow.ui" line="574"/>
         <source>F8</source>
         <translation>F8</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="259"/>
+        <location filename="../mainwindow.ui" line="247"/>
         <source>F5 @</source>
         <translation>F5 @</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="605"/>
+        <location filename="../mainwindow.ui" line="579"/>
         <source>Set Pen Width</source>
         <translation>Indstil Pen bredde</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="608"/>
+        <location filename="../mainwindow.ui" line="582"/>
         <source>Alt+W</source>
         <translation>Alt+W</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="613"/>
+        <location filename="../mainwindow.ui" line="587"/>
         <source>Set Pen Color and Width</source>
         <translation>Indstil Pen Farve og Bredde</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="616"/>
+        <location filename="../mainwindow.ui" line="590"/>
         <source>F4</source>
         <translation>F4</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="621"/>
+        <location filename="../mainwindow.ui" line="595"/>
         <source>Save Settings</source>
         <translation>Gem Indstillinger</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="624"/>
+        <location filename="../mainwindow.ui" line="598"/>
         <source>Alt+S</source>
         <translation>Alt+S</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="629"/>
+        <location filename="../mainwindow.ui" line="603"/>
         <source>Append Sketchpad</source>
         <translation>Tilføj Skitseark</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="632"/>
+        <location filename="../mainwindow.ui" line="606"/>
         <source>Alt+A</source>
         <translation>Alt+A</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="637"/>
+        <location filename="../mainwindow.ui" line="611"/>
         <source>Insert Sketchpad</source>
         <translation>Indsæt Skitseark</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="640"/>
+        <location filename="../mainwindow.ui" line="614"/>
         <source>Alt+I</source>
         <translation>Alt+I</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="645"/>
+        <location filename="../mainwindow.ui" line="619"/>
         <source>&amp;Open Storyboard</source>
         <translation>Å&amp;bn Storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="648"/>
+        <location filename="../mainwindow.ui" line="622"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="653"/>
+        <location filename="../mainwindow.ui" line="627"/>
         <source>&amp;About</source>
         <translation>&amp;Om</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="674"/>
+        <location filename="../mainwindow.ui" line="648"/>
         <source>Preferences</source>
         <translation>Indstillinger</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="677"/>
+        <location filename="../mainwindow.ui" line="651"/>
         <source>F12</source>
         <translation>F12</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="682"/>
+        <location filename="../mainwindow.ui" line="656"/>
         <source>Center Storyboard</source>
         <translation>Centrér Storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="685"/>
+        <location filename="../mainwindow.ui" line="659"/>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="690"/>
+        <location filename="../mainwindow.ui" line="664"/>
         <source>&amp;New Scene</source>
         <translation>&amp;Ny Scene</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="693"/>
+        <location filename="../mainwindow.ui" line="667"/>
         <source>Alt+N</source>
         <translation>Alt+N</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="698"/>
+        <location filename="../mainwindow.ui" line="672"/>
         <source>&amp;Open Scene</source>
         <translation>Å&amp;bn Scene</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="701"/>
+        <location filename="../mainwindow.ui" line="675"/>
         <source>Alt+O</source>
         <translation>Alt+O</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="661"/>
+        <location filename="../mainwindow.ui" line="635"/>
         <source>F9</source>
         <translation>F9</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="666"/>
+        <location filename="../mainwindow.ui" line="640"/>
         <source>Erase Sketch Pen</source>
         <translation>Slet skitse Pen</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="669"/>
+        <location filename="../mainwindow.ui" line="643"/>
         <source>Shift+F5</source>
         <translation>Shift+F5</translation>
     </message>
@@ -341,13 +336,13 @@
         <translation>dastoryboard filer (*.dastoryboard)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="658"/>
-        <location filename="../mainwindow.cpp" line="793"/>
+        <location filename="../mainwindow.ui" line="632"/>
+        <location filename="../mainwindow.cpp" line="791"/>
         <source>Erase drawing</source>
         <translation>Slet tegning</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="794"/>
+        <location filename="../mainwindow.cpp" line="792"/>
         <source>Do you want to erase the drawing?
 It can NOT be undone!
 </source>
@@ -356,12 +351,12 @@ Det kan IKKE fortrydes!
 </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="812"/>
+        <location filename="../mainwindow.cpp" line="810"/>
         <source>About dastoryboard</source>
         <translation>Om dastoryboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="813"/>
+        <location filename="../mainwindow.cpp" line="811"/>
         <source>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; is an Open Source storyboard software for your conveniance. Please enjoy!</source>
         <translation>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; er et Open Source storyboard program, lavet til dig. God fornøjelse!</translation>
     </message>
@@ -389,6 +384,12 @@ Det kan IKKE fortrydes!
         <location filename="../mainwindow.cpp" line="277"/>
         <source>Scene name: (maximum 6 char.)</source>
         <translation>Scene navn: (maksimum 6 tegn.)</translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.cpp" line="357"/>
+        <location filename="../mainwindow.cpp" line="399"/>
+        <source>%1 of %2</source>
+        <translation>%1 af %2</translation>
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="689"/>
@@ -430,7 +431,7 @@ Det kan IKKE fortrydes!
         <translation>Det var ikke muligt at gemme storyboard tegningen. Har du skrive rettigheder til mappen?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="353"/>
+        <location filename="../mainwindow.cpp" line="354"/>
         <source>dastoryboard:     Project: %1     Scene: </source>
         <translation>dastoryboard:     Projekt: %1     Scene: </translation>
     </message>
@@ -440,13 +441,7 @@ Det kan IKKE fortrydes!
         <translation>dastoryboard project filer (*.projdastoryboard)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="356"/>
-        <location filename="../mainwindow.cpp" line="399"/>
-        <source>%1, %2</source>
-        <translation>%1, %2</translation>
-    </message>
-    <message>
-        <location filename="../mainwindow.cpp" line="362"/>
+        <location filename="../mainwindow.cpp" line="363"/>
         <source>%1:%2:%3</source>
         <translation>%1:%2:%3</translation>
     </message>

@@ -354,15 +354,14 @@ void MainWindow::updateInfoLabels()
     MainWindow::setWindowTitle(tr("dastoryboard:     Project: %1     Scene: ").arg(s) + sceneDir);
     //MainWindow::setWindowFlags(Qt::);
     ui->labSceneInfo->setText(sceneDir);
-    ui->labActivePadInfo->setText(tr("%1, %2")
-                                  .arg(padInfo[scene]).arg(padInfo[shot]));
+    ui->labActivePadInfo->setText(tr("%1 of %2")
+                                  .arg(padInfo[shot]).arg(padInfoList.size()));
     ui->labFramesCountValue->setText(QString::number(fr));
     int mm = fr / (60 * fps);
     int ss = (fr - (mm * 60)) / fps ;
     int ff = fr - (mm * 60) - (ss * fps);
     ui->labTimeValue->setText(tr("%1:%2:%3").arg(QString::number(mm),2,'0')
                               .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
-    ui->labPadCountValue->setText(QString::number(padInfoList.size()));
 }
 
 void MainWindow::updateScenelist()
@@ -397,8 +396,8 @@ void MainWindow::updateImages() // updates storyboard thumbnails
     board->addItem(pixItem);
     pixItem->setPos(((activePad + 1)*170) - 165 , 3);
     pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-    ui->labActivePadInfo->setText(tr("%1, %2")
-                                  .arg(padInfo[scene]).arg(padInfo[shot]));
+    ui->labActivePadInfo->setText(tr("%1 of %2")
+                                  .arg(padInfo[shot]).arg(padInfoList.size()));
     addThumbLabels();
 //    ui->gvStoryboard->update();
     ui->leComment->setText(padInfoList[activePad][comment]);

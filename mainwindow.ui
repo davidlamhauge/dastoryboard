@@ -308,13 +308,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QLabel" name="labPadCountValue">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="labActivePad">
                   <property name="text">
@@ -326,13 +319,6 @@
                  <widget class="QLabel" name="labFramesCountValue">
                   <property name="text">
                    <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="labPadCount">
-                  <property name="text">
-                   <string>Pads in current scene:</string>
                   </property>
                  </widget>
                 </item>

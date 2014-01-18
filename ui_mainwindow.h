@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jan 18 09:31:16 2014
+** Created: Sat Jan 18 13:25:37 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -101,10 +101,8 @@ public:
     QLabel *labActivePadInfo;
     QLabel *labTimeValue;
     QLabel *labTime;
-    QLabel *labPadCountValue;
     QLabel *labActivePad;
     QLabel *labFramesCountValue;
-    QLabel *labPadCount;
     QSpacerItem *verticalSpacer_2;
     QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
@@ -395,11 +393,6 @@ public:
 
         gridLayout_2->addWidget(labTime, 2, 0, 1, 1);
 
-        labPadCountValue = new QLabel(centralWidget);
-        labPadCountValue->setObjectName(QString::fromUtf8("labPadCountValue"));
-
-        gridLayout_2->addWidget(labPadCountValue, 3, 1, 1, 1);
-
         labActivePad = new QLabel(centralWidget);
         labActivePad->setObjectName(QString::fromUtf8("labActivePad"));
 
@@ -409,11 +402,6 @@ public:
         labFramesCountValue->setObjectName(QString::fromUtf8("labFramesCountValue"));
 
         gridLayout_2->addWidget(labFramesCountValue, 1, 1, 1, 1);
-
-        labPadCount = new QLabel(centralWidget);
-        labPadCount->setObjectName(QString::fromUtf8("labPadCount"));
-
-        gridLayout_2->addWidget(labPadCount, 3, 0, 1, 1);
 
 
         verticalLayout_6->addLayout(gridLayout_2);
@@ -593,10 +581,8 @@ public:
         labActivePadInfo->setText(QString());
         labTimeValue->setText(QString());
         labTime->setText(QApplication::translate("MainWindow", "Time:", 0, QApplication::UnicodeUTF8));
-        labPadCountValue->setText(QString());
         labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
         labFramesCountValue->setText(QString());
-        labPadCount->setText(QApplication::translate("MainWindow", "Pads in current scene:", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File/Storyboard", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
