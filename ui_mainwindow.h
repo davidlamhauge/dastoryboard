@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Jan 16 23:28:43 2014
+** Created: Sat Jan 18 09:31:16 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -63,24 +63,21 @@ public:
     QAction *action_New_Scene;
     QAction *action_Open_Scene;
     QWidget *centralWidget;
-    QGridLayout *gridLayout_3;
-    QVBoxLayout *verticalLayout_8;
+    QGridLayout *gridLayout_4;
+    QVBoxLayout *verticalLayout_4;
     QGraphicsView *gvStoryboard;
-    QHBoxLayout *horizontalLayout_5;
-    QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayout_2;
-    QLabel *labComments;
-    QLineEdit *leComment;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_2;
-    QVBoxLayout *verticalLayout_5;
+    QVBoxLayout *verticalLayout;
+    QLabel *labComments;
+    QLineEdit *leComment;
+    QGridLayout *gridLayout_3;
     QLabel *labScene;
     QLabel *labSceneInfo;
-    QVBoxLayout *verticalLayout_4;
     QLabel *labShot;
     QLineEdit *leShot;
-    QVBoxLayout *verticalLayout;
     QLabel *labFrames;
     QSpinBox *sbFrames;
     QFrame *line;
@@ -184,13 +181,13 @@ public:
         action_Open_Scene->setObjectName(QString::fromUtf8("action_Open_Scene"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        gridLayout_3 = new QGridLayout(centralWidget);
-        gridLayout_3->setSpacing(6);
-        gridLayout_3->setContentsMargins(11, 11, 11, 11);
-        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
-        verticalLayout_8 = new QVBoxLayout();
-        verticalLayout_8->setSpacing(6);
-        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
+        gridLayout_4 = new QGridLayout(centralWidget);
+        gridLayout_4->setSpacing(6);
+        gridLayout_4->setContentsMargins(11, 11, 11, 11);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         gvStoryboard = new QGraphicsView(centralWidget);
         gvStoryboard->setObjectName(QString::fromUtf8("gvStoryboard"));
         QSizePolicy sizePolicy1(QSizePolicy::MinimumExpanding, QSizePolicy::Expanding);
@@ -201,37 +198,14 @@ public:
         gvStoryboard->setMinimumSize(QSize(0, 140));
         gvStoryboard->setMaximumSize(QSize(16777215, 140));
 
-        verticalLayout_8->addWidget(gvStoryboard);
+        verticalLayout_4->addWidget(gvStoryboard);
 
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        verticalLayout_7 = new QVBoxLayout();
-        verticalLayout_7->setSpacing(6);
-        verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        labComments = new QLabel(centralWidget);
-        labComments->setObjectName(QString::fromUtf8("labComments"));
-
-        verticalLayout_2->addWidget(labComments);
-
-        leComment = new QLineEdit(centralWidget);
-        leComment->setObjectName(QString::fromUtf8("leComment"));
-        leComment->setMaxLength(100);
-
-        verticalLayout_2->addWidget(leComment);
-
-
-        horizontalLayout_3->addLayout(verticalLayout_2);
-
-
-        verticalLayout_7->addLayout(horizontalLayout_3);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
@@ -239,13 +213,27 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer_2);
 
-        verticalLayout_5 = new QVBoxLayout();
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        labComments = new QLabel(centralWidget);
+        labComments->setObjectName(QString::fromUtf8("labComments"));
+
+        verticalLayout->addWidget(labComments);
+
+        leComment = new QLineEdit(centralWidget);
+        leComment->setObjectName(QString::fromUtf8("leComment"));
+        leComment->setMaxLength(100);
+
+        verticalLayout->addWidget(leComment);
+
+        gridLayout_3 = new QGridLayout();
+        gridLayout_3->setSpacing(6);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         labScene = new QLabel(centralWidget);
         labScene->setObjectName(QString::fromUtf8("labScene"));
 
-        verticalLayout_5->addWidget(labScene);
+        gridLayout_3->addWidget(labScene, 0, 0, 1, 1);
 
         labSceneInfo = new QLabel(centralWidget);
         labSceneInfo->setObjectName(QString::fromUtf8("labSceneInfo"));
@@ -266,35 +254,23 @@ public:
         font.setWeight(75);
         labSceneInfo->setFont(font);
 
-        verticalLayout_5->addWidget(labSceneInfo);
+        gridLayout_3->addWidget(labSceneInfo, 0, 1, 1, 1);
 
-
-        horizontalLayout->addLayout(verticalLayout_5);
-
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
         labShot = new QLabel(centralWidget);
         labShot->setObjectName(QString::fromUtf8("labShot"));
 
-        verticalLayout_4->addWidget(labShot);
+        gridLayout_3->addWidget(labShot, 1, 0, 1, 1);
 
         leShot = new QLineEdit(centralWidget);
         leShot->setObjectName(QString::fromUtf8("leShot"));
         leShot->setMaxLength(10);
 
-        verticalLayout_4->addWidget(leShot);
+        gridLayout_3->addWidget(leShot, 1, 1, 1, 1);
 
-
-        horizontalLayout->addLayout(verticalLayout_4);
-
-        verticalLayout = new QVBoxLayout();
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         labFrames = new QLabel(centralWidget);
         labFrames->setObjectName(QString::fromUtf8("labFrames"));
 
-        verticalLayout->addWidget(labFrames);
+        gridLayout_3->addWidget(labFrames, 2, 0, 1, 1);
 
         sbFrames = new QSpinBox(centralWidget);
         sbFrames->setObjectName(QString::fromUtf8("sbFrames"));
@@ -302,20 +278,23 @@ public:
         sbFrames->setMaximum(999);
         sbFrames->setValue(50);
 
-        verticalLayout->addWidget(sbFrames);
+        gridLayout_3->addWidget(sbFrames, 2, 1, 1, 1);
 
 
-        horizontalLayout->addLayout(verticalLayout);
-
-
-        verticalLayout_7->addLayout(horizontalLayout);
+        verticalLayout->addLayout(gridLayout_3);
 
         line = new QFrame(centralWidget);
         line->setObjectName(QString::fromUtf8("line"));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        verticalLayout_7->addWidget(line);
+        verticalLayout->addWidget(line);
+
+
+        horizontalLayout->addLayout(verticalLayout);
+
+
+        verticalLayout_2->addLayout(horizontalLayout);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setSpacing(6);
@@ -443,14 +422,14 @@ public:
         horizontalLayout_4->addLayout(verticalLayout_6);
 
 
-        verticalLayout_7->addLayout(horizontalLayout_4);
+        verticalLayout_2->addLayout(horizontalLayout_4);
 
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        verticalLayout_7->addItem(verticalSpacer_2);
+        verticalLayout_2->addItem(verticalSpacer_2);
 
 
-        horizontalLayout_5->addLayout(verticalLayout_7);
+        horizontalLayout_3->addLayout(verticalLayout_2);
 
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setSpacing(6);
@@ -468,24 +447,24 @@ public:
         verticalLayout_3->addItem(verticalSpacer);
 
 
-        horizontalLayout_5->addLayout(verticalLayout_3);
+        horizontalLayout_3->addLayout(verticalLayout_3);
 
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_5->addItem(horizontalSpacer_3);
+        horizontalLayout_3->addItem(horizontalSpacer_3);
 
 
-        verticalLayout_8->addLayout(horizontalLayout_5);
+        verticalLayout_4->addLayout(horizontalLayout_3);
 
 
-        gridLayout_3->addLayout(verticalLayout_8, 0, 0, 1, 1);
+        gridLayout_4->addLayout(verticalLayout_4, 0, 0, 1, 1);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QString::fromUtf8("line_3"));
         line_3->setFrameShape(QFrame::HLine);
         line_3->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_3->addWidget(line_3, 1, 0, 1, 1);
+        gridLayout_4->addWidget(line_3, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

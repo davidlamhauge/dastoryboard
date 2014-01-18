@@ -333,8 +333,9 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
     for (int i = 0;i<padInfoList.size();i++){
         QGraphicsTextItem *txt = new QGraphicsTextItem();
         txt->setHtml("<div style=\'background-color:#ffffff;\'> "
-                     + padInfoList[i][scene] + " , "
-                     + padInfoList[i][shot] + " </div>");
+                     + padInfoList[i][scene] + ","
+                     + padInfoList[i][shot] + ",("
+                     + padInfoList[i][frames] + ")</div>");
         board->addItem(txt);
         txt->setPos(((i + 1)*170) - 165 , 3);
     }

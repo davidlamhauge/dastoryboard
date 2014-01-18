@@ -97,8 +97,8 @@ private:
     void updateInfoLabels();            // updates labels for frames total etc
     void readProjXML();                 // reads .projdastoryboard info from xml file
     void readStoryboardXML();                     // reads .dastoryboard info from xml file
-
     void setBtnColors();
+
     QString loadSettings();             // returns sbFileName or ""
     QString getSbFileName();            // gets new storybard filename
     QString boolToString(bool b);
