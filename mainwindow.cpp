@@ -107,6 +107,8 @@ void MainWindow::setPadSize(int w, int h)
 
 void MainWindow::initStoryboard()
 {
+//    sceneList.clear();
+//    scenePaths.clear();
     padInfoList.clear();
     padThumbList.clear();
     padInfo.clear();
@@ -251,8 +253,10 @@ void MainWindow::newStoryboard()
         if (!projFileName.endsWith(".projdastoryboard"))
             projFileName += ".projdastoryboard";
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
-        writeProjXML();
         enableScene();
+        disableStoryPad();
+        initStoryboard();
+        writeProjXML();
     }
 }
 
@@ -270,7 +274,9 @@ void MainWindow::openStoryboard()
         initStoryboard();
         readProjXML();
         readStoryboardXML();
+        updateImages();
         updateInfoLabels();
+        startSaveImageTimer(saveInterval);
     }
 }
 
@@ -499,7 +505,9 @@ void MainWindow::writeProjXML()
 
             xmlwriter.writeStartElement("variables");       // variables START
             xmlwriter.writeTextElement("projFileName",projFileName);
+            xmlwriter.writeTextElement("projFilePath",projFilePath);
             xmlwriter.writeTextElement("sbFileName",sbFileName);
+            xmlwriter.writeTextElement("sceneDir",sceneDir);
             xmlwriter.writeTextElement("Fps",QString::number(fps));
             xmlwriter.writeTextElement("autoNumber",boolToString(autoNumber));
             xmlwriter.writeEndElement();                    // variables STOP
@@ -526,8 +534,12 @@ void MainWindow::readProjXML()
             xmlreader.readNext();
             if (xmlreader.isStartElement() && xmlreader.name() == "projFileName")
                 projFileName = xmlreader.readElementText();
+            if (xmlreader.isStartElement() && xmlreader.name() == "projFilePath")
+                projFilePath = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
                 sbFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "sceneDir")
+                sceneDir = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "Fps")
                 fps = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "autoNumber")
@@ -536,6 +548,10 @@ void MainWindow::readProjXML()
                 scenePaths.append(xmlreader.readElementText());
         }
     }
+    QStringList sl;
+    sl = sbFileName.split('/');
+    sceneDir = sl[sl.size()-2];
+    updateScenelist();
 }
 
 void MainWindow::writeStoryboardXML()
@@ -551,6 +567,7 @@ void MainWindow::writeStoryboardXML()
             xmlwriter.writeStartElement("storyboard");  // storyboard START
             xmlwriter.writeStartElement("variables");   // variables START
             xmlwriter.writeTextElement("sbFileName",sbFileName);
+            xmlwriter.writeTextElement("scenePath",scenePath);
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
             xmlwriter.writeTextElement("activePen",QString::number(activePen));
@@ -610,6 +627,8 @@ void MainWindow::readStoryboardXML()
             xmlreader.readNext();
             if (xmlreader.isStartElement() && xmlreader.name() == "sbFileName")
                 sbFileName = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "scenePath")
+                scenePath = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
                 lastNumber = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
@@ -658,6 +677,8 @@ void MainWindow::readStoryboardXML()
                 padInfo.clear();
             }
         }
+        updateScenelist();
+        qDebug() << scenePaths.size() << " :scenepaths size";
         board->setSceneRect(0,0,padThumbList.size()*170,140);
         ui->gvStoryboard->resize(padThumbList.size()*170,140);
         sPen = sPenList[activePen];
@@ -671,7 +692,6 @@ void MainWindow::readStoryboardXML()
         ui->sbFrames->setValue(padInfo[frames].toInt());
         setBtnColors();
         updateImages();
-        updateScenelist();
         addThumbLabels();
         startSaveImageTimer(saveInterval);
     }else{
