@@ -10,23 +10,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    updateInterval = 2000;      // millisecs. to be set as preference TODO
-    saveInterval = 10000;       // millisecs. to be set as preference TODO
-    fps = 25;
-    scenePath = "";
-    scenePaths.clear();
-    sceneList.clear();
-    autoNumber = true;
-    pad = new QGraphicsScene(this);
-    ui->gvSketchPad->setFixedSize(642,482);
-    ui->gvSketchPad->setScene(pad);
-    board = new QGraphicsScene(this);
-    QBrush grayBrush(Qt::gray);
-    board->setBackgroundBrush(grayBrush);
-    ui->gvStoryboard->setScene(board);
-    ui->gvStoryboard->show();
+    initVars();
+    initScenes();
     setupConnects();
-    projFileName = loadSettings();    // gets the fileName if sbFileName exists!
+    projFileName = loadSettings();    // get fileName from settings if it exists!
     if (projFileName.isEmpty()){
         disableStoryPad();
         disableScene();
@@ -86,6 +73,37 @@ void MainWindow::setupConnects()
 
 }
 
+void MainWindow::initVars()
+{
+    updateInterval = 2000;      // millisecs. to be set as preference TODO
+    saveInterval = 10000;       // millisecs. to be set as preference TODO
+    fps = 25;
+    scenePath = "";             // path to scenes images + thumbs
+    sbFileName = "";            // storyboard filename, absolute path
+//    projFileName = "";          // project filename, absolute path
+//    projFilePath = "";          // filepath, including the last '/'
+    scenePaths.clear();         // List with scene paths to sub-dirs
+    sceneList.clear();          // List with scenes in project
+    autoNumber = true;
+    sceneDir = "";              // name of directory of scene
+    padInfo.clear();            // fileName, comment, shot name etc
+    padInfoList.clear();        // list of stringlists with padInfo
+    padThumbList.clear();       // list of all resized images as 160x120 pixmaps
+    sPenList.clear();
+}
+
+void MainWindow::initScenes()
+{
+    pad = new QGraphicsScene(this);
+    ui->gvSketchPad->setFixedSize(642,482);
+    ui->gvSketchPad->setScene(pad);
+    board = new QGraphicsScene(this);
+    QBrush grayBrush(Qt::gray);
+    board->setBackgroundBrush(grayBrush);
+    ui->gvStoryboard->setScene(board);
+    ui->gvStoryboard->show();
+}
+
 void MainWindow::startSaveImageTimer(int i)
 {
     timer = new QTimer(this);
@@ -105,21 +123,24 @@ void MainWindow::setPadSize(int w, int h)
     ui->gvSketchPad->setFixedSize(w,h);
 }
 
-void MainWindow::initStoryboard()
+void MainWindow::resetPenList()
 {
-//    sceneList.clear();
-//    scenePaths.clear();
-    padInfoList.clear();
-    padThumbList.clear();
-    padInfo.clear();
     sPenList.clear();
-    board->clear();
     for (int i = 0;i<5;i++)
     {
         sPen.penWidth = 6;
         sPen.penColor = QColor(80,80,80);
         sPenList.append(sPen);
     }
+}
+
+void MainWindow::initStoryboard()
+{
+    padInfoList.clear();
+    padThumbList.clear();
+    padInfo.clear();
+    resetPenList();
+    board->clear();
     lastNumber = 0;
     activePad = 0;
     activePen = 0;
@@ -137,20 +158,6 @@ void MainWindow::initStoryboard()
 void MainWindow::initPad()
 {
     sketchPad->clearImage();
-
-    // update text and values in padInfo, when changes are made
-    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-    ui->leComment->clear();
-    ui->leShot->clear();
-    ui->sbFrames->setValue(50);
-    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-
     QPixmap imageThumb;
     imageThumb = QPixmap::fromImage(sketchPad->image);
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
@@ -165,7 +172,7 @@ void MainWindow::initPad()
 }
 
 void MainWindow::initPadInfo() /* sketchPad info as strings */
-{
+{           // initiates padinfo, and information about the pad
     padInfo.clear();
     padInfo.append(QString::number(lastNumber) + ".png");  // image filename!
     padInfo.append("");
@@ -177,6 +184,16 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     padInfo.append("50");
     padInfo.append("false");
     padInfoList.replace(activePad,padInfo);
+            // update text and values in padInfo, when changes are made
+    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    ui->leComment->clear();
+    ui->leShot->clear();
+    ui->sbFrames->setValue(50);
+    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
 }
 
 QString MainWindow::getSbFileName()
@@ -253,10 +270,26 @@ void MainWindow::newStoryboard()
         if (!projFileName.endsWith(".projdastoryboard"))
             projFileName += ".projdastoryboard";
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
+
+        timer->stop();
+        updateTimer->stop();
+        initVars();
+        resetPenList();         // reset sPenList, amd
+        qDebug() << "test 1";
+        setBtnColors();         // ... set correct labels on them
+        qDebug() << "test 2";
+        board->clear();
+        qDebug() << "test 3";
+        pad->clear();
+        qDebug() << "test 4";
         enableScene();
+        qDebug() << "test 5";
         disableStoryPad();
-        initStoryboard();
-        writeProjXML();
+        qDebug() << "test 6";
+        updateInfoLabels();
+        qDebug() << "test 6";
+ //       initStoryboard();
+ //       writeProjXML();
     }
 }
 
@@ -357,24 +390,35 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
 
 void MainWindow::updateInfoLabels()
 {
-    int fr = 0;
-    for (int i = 0; i < padInfoList.size();i++){
-        fr += padInfoList[i][frames].toInt();
+    if (padInfoList.size() > 0){
+        qDebug() << "padinfolist > 0";
+        QStringList sl = projFileName.split('/');
+        QString s = sl.last();
+        s.chop(17);
+        MainWindow::setWindowTitle(tr("dastoryboard:     Project: %1     Scene: ").arg(s) + sceneDir);
+        //MainWindow::setWindowFlags(Qt::);
+        ui->labSceneInfo->setText(sceneDir);
+        ui->labActivePadInfo->setText(tr("%1 of %2")
+                                      .arg(padInfo[shot]).arg(padInfoList.size()));
+        int fr = 0;
+        for (int i = 0; i < padInfoList.size();i++){
+            fr += padInfoList[i][frames].toInt();
+        }
+        ui->labFramesCountValue->setText(QString::number(fr));
+        int mm = fr / (60 * fps);
+        int ss = (fr - (mm * 60)) / fps ;
+        int ff = fr - (mm * 60) - (ss * fps);
+        ui->labTimeValue->setText(tr("%1:%2:%3").arg(QString::number(mm),2,'0')
+                                  .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
+    }else{
+        qDebug() << "padinfolist == 0";
+        MainWindow::setWindowTitle(tr("dastoryboard"));
+        ui->labSceneInfo->setText("");
+        ui->labActivePadInfo->setText("");
+        ui->labFramesCountValue->setText("");
+        ui->labTimeValue->setText("00:00:00");
     }
-    QStringList sl = projFileName.split('/');
-    QString s = sl.last();
-    s.chop(17);
-    MainWindow::setWindowTitle(tr("dastoryboard:     Project: %1     Scene: ").arg(s) + sceneDir);
-    //MainWindow::setWindowFlags(Qt::);
-    ui->labSceneInfo->setText(sceneDir);
-    ui->labActivePadInfo->setText(tr("%1 of %2")
-                                  .arg(padInfo[shot]).arg(padInfoList.size()));
-    ui->labFramesCountValue->setText(QString::number(fr));
-    int mm = fr / (60 * fps);
-    int ss = (fr - (mm * 60)) / fps ;
-    int ff = fr - (mm * 60) - (ss * fps);
-    ui->labTimeValue->setText(tr("%1:%2:%3").arg(QString::number(mm),2,'0')
-                              .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
+
 }
 
 void MainWindow::updateScenelist()
@@ -427,6 +471,7 @@ void MainWindow::centerStoryboard()
 
 void MainWindow::changeImage()
 {
+    qDebug() << board->selectedItems();
     if (!board->selectedItems().isEmpty()){
         updateImages();
         saveImages();
@@ -772,7 +817,9 @@ void MainWindow::okPenPick()
     sketchPad->setPenColor(sPen.penColor);
     sPen.penWidth = pc->sbWidth->value();
     sketchPad->setPenWidth(sPen.penWidth);
+    qDebug() << "sPenList 1";
     sPenList.replace(activePen,sPen);
+    qDebug() << "sPenList 2";
     setBtnColors();
     pc->close();
 }

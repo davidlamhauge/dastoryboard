@@ -82,6 +82,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    void initVars();                    // initiates variables (strings, int etc)
+    void initScenes();                  // initiates scenes for pad and thumbs
     void setupConnects();               // initiates connects
     void disableStoryPad();             // disables storypad + buttons etc
     void enableStoryPad();              // enables storypad + buttons etc
@@ -90,6 +92,7 @@ private:
     void startSaveImageTimer(int i);    // starts timer for 'i' millisecs
     void startUpdateImageTimer(int i);  // starts timer for 'i' millisecs
     void setPadSize(int w, int h);      // sets size to (w x h) pixels
+    void resetPenList();                // resets sPenList to five gray pens
     void initStoryboard();              // initiaqtes a new storyboard
     void initPad();                     // initiates the new pad
     void initPadInfo();                 // initiates values n padInfo
