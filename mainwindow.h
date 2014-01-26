@@ -84,12 +84,15 @@ private:
 
     void initVars();                    // initiates variables (strings, int etc)
     void initScenes();                  // initiates scenes for pad and thumbs
-    void setupConnects();               // initiates connects
+    void setupGlobalConnects();         // initiates connects
+    void setupNewSceneConnect();        // initiates connect for New Scene
+    void setupAllConnects();            // initiates the rest af the connects
+    void disconnectAllConnects();       // disconnects all except Global Connects
     void disableStoryPad();             // disables storypad + buttons etc
     void enableStoryPad();              // enables storypad + buttons etc
+    void closeActiveStoryboard();       // clears lists etc, so a new storyboard can begin
     void disableScene();
     void enableScene();
-    void startSaveImageTimer(int i);    // starts timer for 'i' millisecs
     void startUpdateImageTimer(int i);  // starts timer for 'i' millisecs
     void setPadSize(int w, int h);      // sets size to (w x h) pixels
     void resetPenList();                // resets sPenList to five gray pens
@@ -101,7 +104,6 @@ private:
     void readProjXML();                 // reads .projdastoryboard info from xml file
     void readStoryboardXML();           // reads .dastoryboard info from xml file
     void setBtnColors();                // sets colors on the Pen buttons
-    void closeActiveStoryboard();       // clears lists etc, so a new storyboard can begin
 
     QString loadSettings();             // returns sbFileName or ""
     QString getSbFileName();            // gets new storybard filename
@@ -116,11 +118,9 @@ private:
     int activeScene;
     int activePen;                      // pen number in sPenList (from 0 to 4)
     int lastNumber;                     // last number given to a sketchpad
-    int updateInterval;                 // interval for updateImageTimer
-    int saveInterval;
+    int updateInterval;                 // interval for updateTimer
 
     bool autoNumber;
-    QTimer *timer;
     QTimer *updateTimer;
 
     QString projFileName;               // project filename, absolute path
@@ -128,6 +128,7 @@ private:
     QString sbFileName;                 // storyboard filename, absolute path
     QString scenePath;                  // path to scenes images + thumbs
     QString sceneDir;                   // name of directory of scene
+    QString prefPath;                   // path to use for new storyboards
 
     QStringList scenePaths;             // List with scene paths to sub-dirs
     QStringList sceneList;              // List with scenes in project

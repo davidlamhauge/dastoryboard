@@ -9,10 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    projFileName = "";          // project filename, absolute path
+    projFilePath = "";          // filepath, including the last '/'
+    prefPath = "";
     initVars();
     initScenes();
-    setupConnects();
+    setupGlobalConnects();
     projFileName = loadSettings();    // get fileName from settings if it exists!
     if (projFileName.isEmpty()){
         disableStoryPad();
@@ -24,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
             readProjXML();
             readStoryboardXML();
             updateInfoLabels();
+            setupNewSceneConnect();
+            setupAllConnects();
         }else{
             disableStoryPad();
             disableScene();
@@ -40,16 +44,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setupConnects()
+void MainWindow::setupGlobalConnects()
 {
     connect(ui->action_New_Storyboard,SIGNAL(triggered()),this,SLOT(newStoryboard()));
     connect(ui->action_Open_Storyboard,SIGNAL(triggered()),this,SLOT(openStoryboard()));
     connect(ui->action_Save_Storyboard,SIGNAL(triggered()),this,SLOT(writeStoryboardXML()));
-//    connect(ui->action_Open_Scene,SIGNAL(triggered()),this,SLOT(openScene()));
-    connect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
     connect(ui->actionPreferences,SIGNAL(triggered()),this,SLOT(setPrefs()));
     connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
+}
 
+void MainWindow::setupNewSceneConnect()
+{
+    connect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
+}
+
+void MainWindow::setupAllConnects()
+{
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     connect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
     connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
@@ -68,20 +79,38 @@ void MainWindow::setupConnects()
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
+}
 
-    connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
+void MainWindow::disconnectAllConnects()
+{
+    disconnect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
+    disconnect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
+    disconnect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
+    disconnect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
+    disconnect(ui->actionErase_Sketch_Pen,SIGNAL(triggered()),this,SLOT(eraseF5()));
+    disconnect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
+    disconnect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
+    disconnect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
+    disconnect(ui->btnStandardPen,SIGNAL(pressed()),this,SLOT(penStd()));
+    disconnect(ui->btnF5,SIGNAL(pressed()),this,SLOT(penF5()));
+    disconnect(ui->btnF6,SIGNAL(pressed()),this,SLOT(penF6()));
+    disconnect(ui->btnF7,SIGNAL(pressed()),this,SLOT(penF7()));
+    disconnect(ui->btnF8,SIGNAL(pressed()),this,SLOT(penF8()));
+    disconnect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
+
+    disconnect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
+    // set pen width and color
+    disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
+    disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
 }
 
 void MainWindow::initVars()
-{
-    updateInterval = 2000;      // millisecs. to be set as preference TODO
-    saveInterval = 10000;       // millisecs. to be set as preference TODO
+{       // initiates vars, EXCEPT projFileName and projFilePath
+    updateInterval = 2013;      // millisecs. to be set as preference TODO
     fps = 25;
     scenePath = "";             // path to scenes images + thumbs
     sbFileName = "";            // storyboard filename, absolute path
-//    projFileName = "";          // project filename, absolute path
-//    projFilePath = "";          // filepath, including the last '/'
     scenePaths.clear();         // List with scene paths to sub-dirs
     sceneList.clear();          // List with scenes in project
     autoNumber = true;
@@ -98,17 +127,10 @@ void MainWindow::initScenes()
     ui->gvSketchPad->setFixedSize(642,482);
     ui->gvSketchPad->setScene(pad);
     board = new QGraphicsScene(this);
-    QBrush grayBrush(Qt::gray);
+    QBrush grayBrush(QColor(Qt::gray));
     board->setBackgroundBrush(grayBrush);
     ui->gvStoryboard->setScene(board);
     ui->gvStoryboard->show();
-}
-
-void MainWindow::startSaveImageTimer(int i)
-{
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()),this,SLOT(saveImages()));
-    timer->start(i);
 }
 
 void MainWindow::startUpdateImageTimer(int i)
@@ -166,9 +188,7 @@ void MainWindow::initPad()
     board->addItem(pixItem);        //...and add it to storyboard as an Item..!
     pixItem->setPos(((activePad+1) *170) - 165 , 3); // place pixItem in storyboard
 
-    updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()),this,SLOT(updateImages()));
-    updateTimer->start(updateInterval);
+    startUpdateImageTimer(updateInterval);
 }
 
 void MainWindow::initPadInfo() /* sketchPad info as strings */
@@ -188,18 +208,20 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
     disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
     disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
     ui->leComment->clear();
     ui->leShot->clear();
     ui->sbFrames->setValue(50);
     connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
     connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
     connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 }
 
 QString MainWindow::getSbFileName()
 {
     return QFileDialog::getOpenFileName(this,
-        tr("dastoryboard filename"), "",
+        tr("dastoryboard filename"),prefPath,
         tr("dastoryboard files (*.dastoryboard)"));
 }
 
@@ -258,38 +280,45 @@ void MainWindow::cancelPrefs()
     prefs->close();
 }
 
+void MainWindow::closeActiveStoryboard()
+{
+    writeProjXML();
+    writeStoryboardXML();
+    disableScene();
+}
+
 void MainWindow::newStoryboard()
 {
-    if (projFileName != "")
+    if (projFileName != ""){
         writeProjXML();
+        writeStoryboardXML();
+        Q_ASSERT(updateTimer->isActive());
+        updateTimer->stop();
+    }
     projFileName = QFileDialog::getSaveFileName(this,
-        tr("dastoryboard project filename"), "",
+        tr("dastoryboard project filename"), prefPath,
         tr("dastoryboard project files (*.projdastoryboard)"));
 
     if (!projFileName.isEmpty()){
         if (!projFileName.endsWith(".projdastoryboard"))
             projFileName += ".projdastoryboard";
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
+        prefPath = projFilePath;
+        disconnectAllConnects();
+        setupNewSceneConnect();
 
-        timer->stop();
-        updateTimer->stop();
         initVars();
         resetPenList();         // reset sPenList, amd
-        qDebug() << "test 1";
         setBtnColors();         // ... set correct labels on them
-        qDebug() << "test 2";
         board->clear();
-        qDebug() << "test 3";
         pad->clear();
-        qDebug() << "test 4";
         enableScene();
-        qDebug() << "test 5";
         disableStoryPad();
-        qDebug() << "test 6";
         updateInfoLabels();
-        qDebug() << "test 6";
  //       initStoryboard();
  //       writeProjXML();
+    }else{
+        updateTimer->start(updateInterval);
     }
 }
 
@@ -309,7 +338,6 @@ void MainWindow::openStoryboard()
         readStoryboardXML();
         updateImages();
         updateInfoLabels();
-        startSaveImageTimer(saveInterval);
     }
 }
 
@@ -325,18 +353,19 @@ void MainWindow::newScene()
     if (ok && !scenePath.isEmpty() && scenePath.length() < 7){
         sceneDir = scenePath;
         QDir dir = QDir(projFilePath);
-        dir.mkdir(projFilePath + scenePath);
-        sbFileName = projFilePath + scenePath + "/" + scenePath + ".dastoryboard";
-        scenePath = projFilePath + scenePath + "/";
+        dir.mkdir(projFilePath + sceneDir);
+        sbFileName = projFilePath + sceneDir + "/" + sceneDir + ".dastoryboard";
+        scenePath = projFilePath + sceneDir + "/";
         sceneList.append(sbFileName);
         scenePaths.append(scenePath);
+        setupAllConnects();
         saveSettings();
-
         enableStoryPad();
         initStoryboard();
         writeProjXML();
         updateScenelist();
-        startSaveImageTimer(saveInterval);
+        setBtnColors();
+        updateInfoLabels();
     }
 }
 
@@ -355,7 +384,6 @@ void MainWindow::openScene()
         writeProjXML();
         readStoryboardXML();
         updateScenelist();
-        startSaveImageTimer(saveInterval);
     }
     int i;
     i = ui->cbScenes->findText(sc);
@@ -391,7 +419,6 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
 void MainWindow::updateInfoLabels()
 {
     if (padInfoList.size() > 0){
-        qDebug() << "padinfolist > 0";
         QStringList sl = projFileName.split('/');
         QString s = sl.last();
         s.chop(17);
@@ -411,7 +438,6 @@ void MainWindow::updateInfoLabels()
         ui->labTimeValue->setText(tr("%1:%2:%3").arg(QString::number(mm),2,'0')
                                   .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
     }else{
-        qDebug() << "padinfolist == 0";
         MainWindow::setWindowTitle(tr("dastoryboard"));
         ui->labSceneInfo->setText("");
         ui->labActivePadInfo->setText("");
@@ -439,29 +465,30 @@ void MainWindow::updateScenelist()
 
 void MainWindow::updateImages() // updates storyboard thumbnails
 {
-    if (autoNumber){                         // autonumber the Shot
-        for (int i = 0; i < padInfoList.size();i++){
-            padInfoList[i][shot] = QString::number(i+1);
+    if (padThumbList.size() > 0 && padThumbList.size() > activePad){
+        if (autoNumber){                         // autonumber the Shot
+            for (int i = 0; i < padInfoList.size();i++){
+                padInfoList[i][shot] = QString::number(i+1);
+            }
         }
+        QPixmap imageThumb;
+        imageThumb = QPixmap::fromImage(sketchPad->image);
+        imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+        padThumbList.replace(activePad,imageThumb); // update padThumbList
+        QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+        board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
+        board->addItem(pixItem);
+        pixItem->setPos(((activePad + 1)*170) - 165 , 3);
+        pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+        ui->labActivePadInfo->setText(tr("%1 of %2")
+                                      .arg(padInfo[shot]).arg(padInfoList.size()));
+        addThumbLabels();
+        ui->leComment->setText(padInfoList[activePad][comment]);
+        ui->labSceneInfo->setText(padInfoList[activePad][scene]);
+        ui->leShot->setText(padInfoList[activePad][shot]);
+        ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
+        sketchPad->update();
     }
-    QPixmap imageThumb;
-    imageThumb = QPixmap::fromImage(sketchPad->image);
-    imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
-    padThumbList.replace(activePad,imageThumb); // update padThumbList
-    QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
-    board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
-    board->addItem(pixItem);
-    pixItem->setPos(((activePad + 1)*170) - 165 , 3);
-    pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-    ui->labActivePadInfo->setText(tr("%1 of %2")
-                                  .arg(padInfo[shot]).arg(padInfoList.size()));
-    addThumbLabels();
-//    ui->gvStoryboard->update();
-    ui->leComment->setText(padInfoList[activePad][comment]);
-    ui->labSceneInfo->setText(padInfoList[activePad][scene]);
-    ui->leShot->setText(padInfoList[activePad][shot]);
-    ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
-    sketchPad->update();
 }
 
 void MainWindow::centerStoryboard()
@@ -471,7 +498,6 @@ void MainWindow::centerStoryboard()
 
 void MainWindow::changeImage()
 {
-    qDebug() << board->selectedItems();
     if (!board->selectedItems().isEmpty()){
         updateImages();
         saveImages();
@@ -500,7 +526,6 @@ void MainWindow::appendSketchPad()
     ui->gvStoryboard->resize(padThumbList.size()*170,140);
     updateImages();
     writeStoryboardXML();
-    startSaveImageTimer(saveInterval);
 }
 
 void MainWindow::insertSketchPad()
@@ -532,8 +557,7 @@ void MainWindow::insertSketchPad()
         sketchPad->clearImage();
         updateImages();
         ui->gvStoryboard->update();
-        emit writeStoryboardXML();
-        startSaveImageTimer(saveInterval);
+        writeStoryboardXML();
     }
 }
 
@@ -593,9 +617,7 @@ void MainWindow::readProjXML()
                 scenePaths.append(xmlreader.readElementText());
         }
     }
-    QStringList sl;
-    sl = sbFileName.split('/');
-    sceneDir = sl[sl.size()-2];
+    prefPath = projFilePath;
     updateScenelist();
 }
 
@@ -631,7 +653,7 @@ void MainWindow::writeStoryboardXML()
             xmlwriter.writeEndElement();                // penlist STOP
 
             xmlwriter.writeStartElement("sketchpads");  // sketchpads START
-            for (int i = 0;i < padInfoList.size() ; i++){ // TODO !!!!!!!!!!!!
+            for (int i = 0;i < padInfoList.size() ; i++){
                 padInfo = padInfoList[i];
                 xmlwriter.writeStartElement("sketchpad");  // sketchpad START
                 xmlwriter.writeTextElement("fileName",padInfo[fileName]);
@@ -723,7 +745,6 @@ void MainWindow::readStoryboardXML()
             }
         }
         updateScenelist();
-        qDebug() << scenePaths.size() << " :scenepaths size";
         board->setSceneRect(0,0,padThumbList.size()*170,140);
         ui->gvStoryboard->resize(padThumbList.size()*170,140);
         sPen = sPenList[activePen];
@@ -738,7 +759,6 @@ void MainWindow::readStoryboardXML()
         setBtnColors();
         updateImages();
         addThumbLabels();
-        startSaveImageTimer(saveInterval);
     }else{
         QMessageBox msgBox;
         msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
@@ -781,13 +801,6 @@ void MainWindow::setBtnColors()
     }
 }
 
-void MainWindow::closeActiveStoryboard()
-{
-    writeProjXML();
-    writeStoryboardXML();
-    disableScene();
-}
-
 void MainWindow::closeEvent(QCloseEvent *e)
 {
     saveImages();
@@ -817,9 +830,7 @@ void MainWindow::okPenPick()
     sketchPad->setPenColor(sPen.penColor);
     sPen.penWidth = pc->sbWidth->value();
     sketchPad->setPenWidth(sPen.penWidth);
-    qDebug() << "sPenList 1";
     sPenList.replace(activePen,sPen);
-    qDebug() << "sPenList 2";
     setBtnColors();
     pc->close();
 }

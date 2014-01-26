@@ -27,5 +27,6 @@ FORMS    += mainwindow.ui
 
 TRANSLATIONS += \
     lang/dastoryboard_da.ts
+
 RESOURCES += \
     lang.qrc

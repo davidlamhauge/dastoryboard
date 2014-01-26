@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jan 18 13:25:37 2014
+** Created: Sat Jan 25 20:35:13 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,11 +85,11 @@ public:
     QSpacerItem *horizontalSpacer;
     QVBoxLayout *verticalLayout_6;
     QHBoxLayout *horizontalLayout_2;
-    QLabel *label;
+    QLabel *labScenes;
     QComboBox *cbScenes;
     QFrame *line_2;
     QGridLayout *gridLayout;
-    QLabel *label_2;
+    QLabel *labPens;
     QPushButton *btnStandardPen;
     QPushButton *btnF5;
     QPushButton *btnF6;
@@ -107,6 +107,8 @@ public:
     QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
+    QLabel *labTest1;
+    QLabel *labTest2;
     QSpacerItem *horizontalSpacer_3;
     QFrame *line_3;
     QMenuBar *menuBar;
@@ -123,7 +125,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1058, 818);
+        MainWindow->resize(1058, 815);
         QSizePolicy sizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -307,10 +309,10 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        labScenes = new QLabel(centralWidget);
+        labScenes->setObjectName(QString::fromUtf8("labScenes"));
 
-        horizontalLayout_2->addWidget(label);
+        horizontalLayout_2->addWidget(labScenes);
 
         cbScenes = new QComboBox(centralWidget);
         cbScenes->setObjectName(QString::fromUtf8("cbScenes"));
@@ -330,10 +332,10 @@ public:
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        labPens = new QLabel(centralWidget);
+        labPens->setObjectName(QString::fromUtf8("labPens"));
 
-        gridLayout->addWidget(label_2, 0, 0, 1, 1);
+        gridLayout->addWidget(labPens, 0, 0, 1, 1);
 
         btnStandardPen = new QPushButton(centralWidget);
         btnStandardPen->setObjectName(QString::fromUtf8("btnStandardPen"));
@@ -434,6 +436,16 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer);
 
+        labTest1 = new QLabel(centralWidget);
+        labTest1->setObjectName(QString::fromUtf8("labTest1"));
+
+        verticalLayout_3->addWidget(labTest1);
+
+        labTest2 = new QLabel(centralWidget);
+        labTest2->setObjectName(QString::fromUtf8("labTest2"));
+
+        verticalLayout_3->addWidget(labTest2);
+
 
         horizontalLayout_3->addLayout(verticalLayout_3);
 
@@ -508,7 +520,6 @@ public:
         menuSketchpad->addAction(actionErase_Sketch_Pen);
         menu_Help->addAction(action_About);
         menuScene->addAction(action_New_Scene);
-        menuScene->addAction(action_Open_Scene);
 
         retranslateUi(MainWindow);
 
@@ -570,8 +581,8 @@ public:
         labSceneInfo->setText(QString());
         labShot->setText(QApplication::translate("MainWindow", "Shot", 0, QApplication::UnicodeUTF8));
         labFrames->setText(QApplication::translate("MainWindow", "Frames:", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "Scenes:", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindow", "Pens:", 0, QApplication::UnicodeUTF8));
+        labScenes->setText(QApplication::translate("MainWindow", "Scenes:", 0, QApplication::UnicodeUTF8));
+        labPens->setText(QApplication::translate("MainWindow", "Pens:", 0, QApplication::UnicodeUTF8));
         btnStandardPen->setText(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         btnF5->setText(QApplication::translate("MainWindow", "F5 @", 0, QApplication::UnicodeUTF8));
         btnF6->setText(QApplication::translate("MainWindow", "F6", 0, QApplication::UnicodeUTF8));
@@ -583,6 +594,8 @@ public:
         labTime->setText(QApplication::translate("MainWindow", "Time:", 0, QApplication::UnicodeUTF8));
         labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
         labFramesCountValue->setText(QString());
+        labTest1->setText(QApplication::translate("MainWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
+        labTest2->setText(QApplication::translate("MainWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File/Storyboard", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
