@@ -76,6 +76,8 @@ void MainWindow::setupAllConnects()
     connect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
     connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
+    connect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
+
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -99,6 +101,7 @@ void MainWindow::disconnectAllConnects()
     disconnect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
     disconnect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
+    disconnect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
     // set pen width and color
     disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -508,6 +511,7 @@ void MainWindow::changeImage()
         padInfo = padInfoList.at(activePad);
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
+        ui->labTest1->setText(projFilePath + sceneDir + "/" + padInfo[fileName]);
     }
 }
 
@@ -884,10 +888,9 @@ void MainWindow::eraseF5()
 void MainWindow::eraseAll()
 {
     int ret = QMessageBox::warning(this, tr("Erase drawing"),
-                                    tr("Do you want to erase the drawing?\n"
-                                       "It can NOT be undone!\n"                                       ),
-                                    QMessageBox::Ok | QMessageBox::Cancel,
-                                    QMessageBox::Cancel);
+                                   tr("Do you want to erase the drawing?"),
+                                   QMessageBox::Ok | QMessageBox::Cancel,
+                                   QMessageBox::Cancel);
     switch (ret)
     {
        case QMessageBox::Ok:
@@ -896,7 +899,60 @@ void MainWindow::eraseAll()
        case QMessageBox::Cancel:
        default:
            break;
-     }
+    }
+}
+
+void MainWindow::deleteDrawing()
+{
+    if (board->selectedItems().size() == 1 && padThumbList.size() > 1){
+        int ret = QMessageBox::warning(this, tr("Delete drawing from harddisc"),
+                                       tr("Do you want to delete the drawing?\n"
+                                          "It can NOT be undone!\n"),
+                                       QMessageBox::Ok | QMessageBox::Cancel,
+                                       QMessageBox::Cancel);
+        QFile fPad;
+        fPad.setFileName(projFilePath + sceneDir + "/" + padInfo[fileName]);
+        QFile fTmb;
+        fTmb.setFileName(projFilePath + sceneDir + "/t" + padInfo[fileName]);
+        QPixmap imageThumb;
+        switch (ret) {
+        case QMessageBox::Ok:
+            updateTimer->stop();
+            if (!fPad.remove())
+                qDebug() << "delete file failed!";
+            if (!fTmb.remove())
+                qDebug() << ("delete thumb file failed!");
+            padThumbList.removeAt(activePad);
+            padInfoList.removeAt(activePad);
+            if (padThumbList.size() > 0)
+                if (activePad + 1 > padThumbList.size())
+                    activePad -= 1;
+            padInfo = padInfoList.at(activePad);
+            sketchPad->image.load(scenePath + padInfo[fileName]);
+            board->clear();
+            board->setSceneRect(0,0,padThumbList.size()*170,140);
+            ui->gvStoryboard->resize(padThumbList.size()*170,140);
+            for (int i = 0;i < padThumbList.size();i++){
+                imageThumb = padThumbList.at(i);
+                QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+                board->addItem(pixItem);
+                pixItem->setPos((i+1)*170 - 165,3);
+                pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+            }
+            updateImages();
+            ui->labTest1->setText(projFilePath + sceneDir + "/" + padInfo[fileName]);
+            startUpdateImageTimer(updateInterval);
+            break;
+        case QMessageBox::Cancel:
+        default:
+            break;
+        }
+    }else{
+        QMessageBox msgBox;
+        msgBox.setText(tr("You can't manually delete all drawings."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.exec();
+    }
 }
 
 

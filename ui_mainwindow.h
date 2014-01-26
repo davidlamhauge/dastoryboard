@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jan 25 20:35:13 2014
+** Created: Sun Jan 26 09:45:28 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -62,6 +62,7 @@ public:
     QAction *actionCenter_Storyboard;
     QAction *action_New_Scene;
     QAction *action_Open_Scene;
+    QAction *actionDelete_drawing;
     QWidget *centralWidget;
     QGridLayout *gridLayout_4;
     QVBoxLayout *verticalLayout_4;
@@ -179,6 +180,8 @@ public:
         action_New_Scene->setObjectName(QString::fromUtf8("action_New_Scene"));
         action_Open_Scene = new QAction(MainWindow);
         action_Open_Scene->setObjectName(QString::fromUtf8("action_Open_Scene"));
+        actionDelete_drawing = new QAction(MainWindow);
+        actionDelete_drawing->setObjectName(QString::fromUtf8("actionDelete_drawing"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_4 = new QGridLayout(centralWidget);
@@ -509,6 +512,7 @@ public:
         menu_File->addAction(actionE_xit);
         menuSettings->addAction(actionSet_Pen_Color);
         menuSettings->addAction(menuLoad_Pen->menuAction());
+        menuSettings->addAction(actionErase_Sketch_Pen);
         menuLoad_Pen->addAction(actionLoad_Pen_1);
         menuLoad_Pen->addAction(actionLoad_Pen_2);
         menuLoad_Pen->addAction(actionLoad_Pen_3);
@@ -517,7 +521,7 @@ public:
         menuSketchpad->addAction(actionInsert_Sketchpad);
         menuSketchpad->addAction(actionCenter_Storyboard);
         menuSketchpad->addAction(actionErase_All);
-        menuSketchpad->addAction(actionErase_Sketch_Pen);
+        menuSketchpad->addAction(actionDelete_drawing);
         menu_Help->addAction(action_About);
         menuScene->addAction(action_New_Scene);
 
@@ -576,6 +580,8 @@ public:
         action_New_Scene->setShortcut(QApplication::translate("MainWindow", "Alt+N", 0, QApplication::UnicodeUTF8));
         action_Open_Scene->setText(QApplication::translate("MainWindow", "&Open Scene", 0, QApplication::UnicodeUTF8));
         action_Open_Scene->setShortcut(QApplication::translate("MainWindow", "Alt+O", 0, QApplication::UnicodeUTF8));
+        actionDelete_drawing->setText(QApplication::translate("MainWindow", "Delete drawing", 0, QApplication::UnicodeUTF8));
+        actionDelete_drawing->setShortcut(QApplication::translate("MainWindow", "Del", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labSceneInfo->setText(QString());

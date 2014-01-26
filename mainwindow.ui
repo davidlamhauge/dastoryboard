@@ -455,6 +455,7 @@
     </widget>
     <addaction name="actionSet_Pen_Color"/>
     <addaction name="menuLoad_Pen"/>
+    <addaction name="actionErase_Sketch_Pen"/>
    </widget>
    <widget class="QMenu" name="menuSketchpad">
     <property name="title">
@@ -464,7 +465,7 @@
     <addaction name="actionInsert_Sketchpad"/>
     <addaction name="actionCenter_Storyboard"/>
     <addaction name="actionErase_All"/>
-    <addaction name="actionErase_Sketch_Pen"/>
+    <addaction name="actionDelete_drawing"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -686,6 +687,14 @@
    </property>
    <property name="shortcut">
     <string>Alt+O</string>
+   </property>
+  </action>
+  <action name="actionDelete_drawing">
+   <property name="text">
+    <string>Delete drawing</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
  </widget>

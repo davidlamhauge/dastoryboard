@@ -66,6 +66,7 @@ private slots:
     void cancelPenPick();       // if 'cancel' is pressed in penChooser
     void eraseF5();             // erases lines with sketchpen-color        Shift-F5
     void eraseAll();            // erases entire picture                    F9
+    void deleteDrawing();       // erases drawing from board and harddisc   Del
     void about();
     void appendSketchPad();     // saves active pad and appends new         ALT+A
     void insertSketchPad();     // saves active pad and inserts new         ALT+I
