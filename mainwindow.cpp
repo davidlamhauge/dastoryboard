@@ -77,6 +77,8 @@ void MainWindow::setupAllConnects()
 
     connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
     connect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
+    connect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
+    connect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
 
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -102,6 +104,8 @@ void MainWindow::disconnectAllConnects()
 
     disconnect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
     disconnect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
+    disconnect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
+    disconnect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
     // set pen width and color
     disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -512,6 +516,7 @@ void MainWindow::changeImage()
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
         ui->labTest1->setText(projFilePath + sceneDir + "/" + padInfo[fileName]);
+        ui->labTest2->setText("Activepad: " + QString::number(activePad));
     }
 }
 
@@ -562,6 +567,48 @@ void MainWindow::insertSketchPad()
         updateImages();
         ui->gvStoryboard->update();
         writeStoryboardXML();
+    }
+}
+
+void MainWindow::movePadLeft()
+{
+    if (board->selectedItems().size() == 1 && activePad > 0){
+        padInfoList.swap(activePad, activePad - 1);
+        padThumbList.swap(activePad, activePad - 1);
+
+        QPixmap imageThumb;
+        board->clear();
+        board->setSceneRect(0,0,padThumbList.size()*170,140);
+        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        for (int i = 0;i < padThumbList.size();i++){
+            imageThumb = padThumbList.at(i);
+            QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+            board->addItem(pixItem);
+            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+        }
+        activePad -= 1;
+    }
+}
+
+void MainWindow::movePadRight()
+{
+    if (board->selectedItems().size() == 1 && padThumbList.size() > activePad + 1){
+        padInfoList.swap(activePad, activePad + 1);
+        padThumbList.swap(activePad, activePad + 1);
+
+        QPixmap imageThumb;
+        board->clear();
+        board->setSceneRect(0,0,padThumbList.size()*170,140);
+        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        for (int i = 0;i < padThumbList.size();i++){
+            imageThumb = padThumbList.at(i);
+            QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+            board->addItem(pixItem);
+            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
+        }
+        activePad += 1;
     }
 }
 

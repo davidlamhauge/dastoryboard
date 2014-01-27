@@ -70,6 +70,8 @@ private slots:
     void about();
     void appendSketchPad();     // saves active pad and appends new         ALT+A
     void insertSketchPad();     // saves active pad and inserts new         ALT+I
+    void movePadLeft();         // moves pad to the left, if possible       SHIFT+Left
+    void movePadRight();        // moves pad to the right, if possible      SHIFT+RIGHT
     void updateComment();       // udates comment for pad
     void updateScene();         // updates scene info
     void updateShot();          // updates shot info

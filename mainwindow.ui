@@ -466,6 +466,9 @@
     <addaction name="actionCenter_Storyboard"/>
     <addaction name="actionErase_All"/>
     <addaction name="actionDelete_drawing"/>
+    <addaction name="separator"/>
+    <addaction name="actionMovePadLeft"/>
+    <addaction name="actionMovePadRight"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -617,7 +620,7 @@
     <string>Append Sketchpad</string>
    </property>
    <property name="shortcut">
-    <string>Alt+A</string>
+    <string>+</string>
    </property>
   </action>
   <action name="actionInsert_Sketchpad">
@@ -625,7 +628,7 @@
     <string>Insert Sketchpad</string>
    </property>
    <property name="shortcut">
-    <string>Alt+I</string>
+    <string>Ins</string>
    </property>
   </action>
   <action name="action_Open_Storyboard">
@@ -695,6 +698,22 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="actionMovePadLeft">
+   <property name="text">
+    <string>Move pad to the left</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Left</string>
+   </property>
+  </action>
+  <action name="actionMovePadRight">
+   <property name="text">
+    <string>Move pad to the right</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Right</string>
    </property>
   </action>
  </widget>

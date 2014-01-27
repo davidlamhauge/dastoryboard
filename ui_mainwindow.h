@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Jan 26 09:45:28 2014
+** Created: Sun Jan 26 22:08:42 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -63,6 +63,8 @@ public:
     QAction *action_New_Scene;
     QAction *action_Open_Scene;
     QAction *actionDelete_drawing;
+    QAction *actionMovePadLeft;
+    QAction *actionMovePadRight;
     QWidget *centralWidget;
     QGridLayout *gridLayout_4;
     QVBoxLayout *verticalLayout_4;
@@ -182,6 +184,10 @@ public:
         action_Open_Scene->setObjectName(QString::fromUtf8("action_Open_Scene"));
         actionDelete_drawing = new QAction(MainWindow);
         actionDelete_drawing->setObjectName(QString::fromUtf8("actionDelete_drawing"));
+        actionMovePadLeft = new QAction(MainWindow);
+        actionMovePadLeft->setObjectName(QString::fromUtf8("actionMovePadLeft"));
+        actionMovePadRight = new QAction(MainWindow);
+        actionMovePadRight->setObjectName(QString::fromUtf8("actionMovePadRight"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_4 = new QGridLayout(centralWidget);
@@ -522,6 +528,9 @@ public:
         menuSketchpad->addAction(actionCenter_Storyboard);
         menuSketchpad->addAction(actionErase_All);
         menuSketchpad->addAction(actionDelete_drawing);
+        menuSketchpad->addSeparator();
+        menuSketchpad->addAction(actionMovePadLeft);
+        menuSketchpad->addAction(actionMovePadRight);
         menu_Help->addAction(action_About);
         menuScene->addAction(action_New_Scene);
 
@@ -562,9 +571,9 @@ public:
         actionSave_Settings->setText(QApplication::translate("MainWindow", "Save Settings", 0, QApplication::UnicodeUTF8));
         actionSave_Settings->setShortcut(QApplication::translate("MainWindow", "Alt+S", 0, QApplication::UnicodeUTF8));
         actionAppend_Sketchpad->setText(QApplication::translate("MainWindow", "Append Sketchpad", 0, QApplication::UnicodeUTF8));
-        actionAppend_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Alt+A", 0, QApplication::UnicodeUTF8));
+        actionAppend_Sketchpad->setShortcut(QApplication::translate("MainWindow", "+", 0, QApplication::UnicodeUTF8));
         actionInsert_Sketchpad->setText(QApplication::translate("MainWindow", "Insert Sketchpad", 0, QApplication::UnicodeUTF8));
-        actionInsert_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Alt+I", 0, QApplication::UnicodeUTF8));
+        actionInsert_Sketchpad->setShortcut(QApplication::translate("MainWindow", "Ins", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setText(QApplication::translate("MainWindow", "&Open Storyboard", 0, QApplication::UnicodeUTF8));
         action_Open_Storyboard->setShortcut(QApplication::translate("MainWindow", "Ctrl+O", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "&About", 0, QApplication::UnicodeUTF8));
@@ -582,6 +591,10 @@ public:
         action_Open_Scene->setShortcut(QApplication::translate("MainWindow", "Alt+O", 0, QApplication::UnicodeUTF8));
         actionDelete_drawing->setText(QApplication::translate("MainWindow", "Delete drawing", 0, QApplication::UnicodeUTF8));
         actionDelete_drawing->setShortcut(QApplication::translate("MainWindow", "Del", 0, QApplication::UnicodeUTF8));
+        actionMovePadLeft->setText(QApplication::translate("MainWindow", "Move pad to the left", 0, QApplication::UnicodeUTF8));
+        actionMovePadLeft->setShortcut(QApplication::translate("MainWindow", "Shift+Left", 0, QApplication::UnicodeUTF8));
+        actionMovePadRight->setText(QApplication::translate("MainWindow", "Move pad to the right", 0, QApplication::UnicodeUTF8));
+        actionMovePadRight->setShortcut(QApplication::translate("MainWindow", "Shift+Right", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labSceneInfo->setText(QString());
