@@ -591,7 +591,7 @@ void MainWindow::movePadLeft()
         activePad -= 1;
         addThumbLabels();
         updateInfoLabels();
-//        board->itemAt(QPoint((activePad+1)*170-155,15))->setSelected(true);
+        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
     }
 }
 
@@ -616,6 +616,7 @@ void MainWindow::movePadRight()
         activePad += 1;
         addThumbLabels();
         updateInfoLabels();
+        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
     }
 }
 
