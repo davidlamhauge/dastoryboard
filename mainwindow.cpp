@@ -577,17 +577,21 @@ void MainWindow::movePadLeft()
         padThumbList.swap(activePad, activePad - 1);
 
         QPixmap imageThumb;
+        QGraphicsPixmapItem *pixItem;
         board->clear();
         board->setSceneRect(0,0,padThumbList.size()*170,140);
         ui->gvStoryboard->resize(padThumbList.size()*170,140);
         for (int i = 0;i < padThumbList.size();i++){
             imageThumb = padThumbList.at(i);
-            QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+            pixItem = new QGraphicsPixmapItem(imageThumb);
             board->addItem(pixItem);
             pixItem->setPos((i+1)*170 - 165,3);
             pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         }
         activePad -= 1;
+        addThumbLabels();
+        updateInfoLabels();
+//        board->itemAt(QPoint((activePad+1)*170-155,15))->setSelected(true);
     }
 }
 
@@ -598,17 +602,20 @@ void MainWindow::movePadRight()
         padThumbList.swap(activePad, activePad + 1);
 
         QPixmap imageThumb;
+        QGraphicsPixmapItem *pixItem;
         board->clear();
         board->setSceneRect(0,0,padThumbList.size()*170,140);
         ui->gvStoryboard->resize(padThumbList.size()*170,140);
         for (int i = 0;i < padThumbList.size();i++){
             imageThumb = padThumbList.at(i);
-            QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
+            pixItem = new QGraphicsPixmapItem(imageThumb);
             board->addItem(pixItem);
             pixItem->setPos((i+1)*170 - 165,3);
             pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         }
         activePad += 1;
+        addThumbLabels();
+        updateInfoLabels();
     }
 }
 
