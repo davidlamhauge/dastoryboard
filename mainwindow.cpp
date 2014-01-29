@@ -592,6 +592,7 @@ void MainWindow::movePadLeft()
         addThumbLabels();
         updateInfoLabels();
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        centerStoryboard();
     }
 }
 
@@ -617,6 +618,7 @@ void MainWindow::movePadRight()
         addThumbLabels();
         updateInfoLabels();
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        centerStoryboard();
     }
 }
 
