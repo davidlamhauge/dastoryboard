@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'animatic.h'
 **
-** Created: Sat Feb 1 22:21:41 2014
+** Created: Sun Feb 2 07:31:22 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -33,14 +33,14 @@ static const uint qt_meta_data_animatic[] = {
  // slots: signature, parameters, type, tag, flags
       10,    9,    9,    9, 0x0a,
       27,    9,    9,    9, 0x0a,
-      45,    9,    9,    9, 0x0a,
-      62,    9,    9,    9, 0x0a,
+      44,    9,    9,    9, 0x0a,
+      61,    9,    9,    9, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_animatic[] = {
-    "animatic\0\0btnPlayClicked()\0btnPauseClicked()\0"
+    "animatic\0\0btnPlayClicked()\0btnStopClicked()\0"
     "btnQuitClicked()\0clearTimer()\0"
 };
 
@@ -51,7 +51,7 @@ void animatic::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         animatic *_t = static_cast<animatic *>(_o);
         switch (_id) {
         case 0: _t->btnPlayClicked(); break;
-        case 1: _t->btnPauseClicked(); break;
+        case 1: _t->btnStopClicked(); break;
         case 2: _t->btnQuitClicked(); break;
         case 3: _t->clearTimer(); break;
         default: ;

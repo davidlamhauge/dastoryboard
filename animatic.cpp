@@ -32,6 +32,7 @@ animatic::animatic(const int &fpsec, const QString &projPath, const QString &scD
     projFilePath = projPath;
     sceneDir = scDir;
     fps = fpsec;
+    run = false;
 
     timer = new QTimer();
     loop = new QEventLoop();
@@ -45,7 +46,7 @@ animatic::animatic(const int &fpsec, const QString &projPath, const QString &scD
 void animatic::initConnects()
 {
     connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
-    connect(btnStop,SIGNAL(clicked()),this,SLOT(btnPauseClicked()));
+    connect(btnStop,SIGNAL(clicked()),this,SLOT(btnStopClicked()));
     connect(btnQuit,SIGNAL(clicked()),this,SLOT(btnQuitClicked()));
     connect(timer, SIGNAL(timeout()),this,SLOT(clearTimer()));
 }
@@ -63,15 +64,16 @@ void animatic::btnPlayClicked()
 {
     if (infoList.size() > 0){
         btnPlayMode();
-        QTime t;
-        t.start();
+        run = true;
+//        QTime t;                              // for checking time accuracy (1)
+//        t.start();                            // for checking time accuracy (2)
         for (int i = startPad->currentIndex();i < infoList.size();i++){
-            sc->addPixmap(pixmapList[i]);
-            view->update();
-            sleep((1000/fps) * infoList[i][frames].toInt());
+            sc->addPixmap(pixmapList[i]);                       // add pixmap
+            sleep((1000/fps) * infoList[i][frames].toInt());    // sleep x millisecs
+            if (run == false)                                   // break if run == false
+                break;
         }
-        int tid = t.elapsed();
-        qDebug() << tid << " ms";
+//        qDebug() << t.elapsed() << " ms";     // for checking time accuracy (3)
         sc->clear();
         view->update();
         btnReadyMode();
@@ -90,9 +92,10 @@ void animatic::sleep(int milliseconds) {
     loop->exec();
 }
 
-void animatic::btnPauseClicked()
+void animatic::btnStopClicked()
 {
-
+    run = false;
+    loop->exit();
 }
 
 void animatic::btnQuitClicked()

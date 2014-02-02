@@ -47,7 +47,7 @@ signals:
 
 public slots:
     void btnPlayClicked();
-    void btnPauseClicked();
+    void btnStopClicked();
     void btnQuitClicked();
     void clearTimer();
 
@@ -60,6 +60,7 @@ private:
     void sleep(int milliseconds);
 
     int fps;
+    bool run;
 
     QTimer *timer;
     QEventLoop *loop;
