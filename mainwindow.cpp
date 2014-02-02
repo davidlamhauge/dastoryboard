@@ -900,8 +900,8 @@ void MainWindow::penPick()
     pc->sbWidth->setValue(sketchPad->penWidth());
     pc->cbPen->setCurrentIndex(0);
     pc->setModal(true);
-    connect(pc->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
-    connect(pc->btnOk,SIGNAL(clicked()),this,SLOT(okPenPick()));
+    connect(pc->btnExit,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
+    connect(pc->btnChange,SIGNAL(clicked()),this,SLOT(okPenPick()));
     pc->show();
 }
 
@@ -915,7 +915,6 @@ void MainWindow::okPenPick()
     sketchPad->setPenWidth(sPen.penWidth);
     sPenList.replace(activePen,sPen);
     setBtnColors();
-    pc->close();
 }
 
 void MainWindow::cancelPenPick()

@@ -366,7 +366,7 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="35"/>
-        <location filename="../mainwindow.cpp" line="846"/>
+        <location filename="../mainwindow.cpp" line="847"/>
         <source>File: %1 not found!</source>
         <translation>Filen: %1 ikke fundet!</translation>
     </message>
@@ -435,8 +435,8 @@
     <message>
         <location filename="../mainwindow.cpp" line="438"/>
         <location filename="../mainwindow.cpp" line="493"/>
-        <location filename="../mainwindow.cpp" line="606"/>
-        <location filename="../mainwindow.cpp" line="637"/>
+        <location filename="../mainwindow.cpp" line="607"/>
+        <location filename="../mainwindow.cpp" line="638"/>
         <source>%1 of %2</source>
         <translation>%1 af %2</translation>
     </message>
@@ -453,41 +453,41 @@
         <translation>dastoryboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="864"/>
-        <location filename="../mainwindow.cpp" line="868"/>
-        <location filename="../mainwindow.cpp" line="872"/>
-        <location filename="../mainwindow.cpp" line="876"/>
-        <location filename="../mainwindow.cpp" line="880"/>
+        <location filename="../mainwindow.cpp" line="865"/>
+        <location filename="../mainwindow.cpp" line="869"/>
+        <location filename="../mainwindow.cpp" line="873"/>
+        <location filename="../mainwindow.cpp" line="877"/>
+        <location filename="../mainwindow.cpp" line="881"/>
         <source>QPushButton { background: %1 ; color: %2 }</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>QPushButton { background: %1 ; color: %2 }</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="867"/>
+        <location filename="../mainwindow.cpp" line="868"/>
         <source>F5@: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F5@: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="871"/>
+        <location filename="../mainwindow.cpp" line="872"/>
         <source>F6: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F6: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="875"/>
+        <location filename="../mainwindow.cpp" line="876"/>
         <source>F7: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F7: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="879"/>
+        <location filename="../mainwindow.cpp" line="880"/>
         <source>F8: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F8: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="863"/>
+        <location filename="../mainwindow.cpp" line="864"/>
         <source>Pen: %1px</source>
         <translation>Pen: %1px</translation>
     </message>
@@ -530,7 +530,7 @@ DEt kan ikke fortrydes!</translation>
         <translation>dastoryboard project filer (*.projdastoryboard)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="758"/>
+        <location filename="../mainwindow.cpp" line="759"/>
         <source>No filename chosen!</source>
         <translation>Intet filenavn valgt!</translation>
     </message>
@@ -617,7 +617,7 @@ DEt kan ikke fortrydes!</translation>
         <translation>Se Animatic</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="76"/>
+        <location filename="../animatic.cpp" line="80"/>
         <source>No images to show!!</source>
         <translation>Ingen billeder at vise!</translation>
     </message>
@@ -661,13 +661,13 @@ DEt kan ikke fortrydes!</translation>
     </message>
     <message>
         <location filename="../penchooser.cpp" line="23"/>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
+        <source>Exit</source>
+        <translation>Afslut</translation>
     </message>
     <message>
         <location filename="../penchooser.cpp" line="25"/>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Change color</source>
+        <translation>Ændr farve</translation>
     </message>
     <message>
         <location filename="../penchooser.cpp" line="40"/>

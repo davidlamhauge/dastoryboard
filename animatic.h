@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QTimer>
+#include <QTime>
 #include <QEventLoop>
 #include <QComboBox>
 

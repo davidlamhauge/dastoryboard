@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'animatic.h'
 **
-** Created: Sat Feb 1 21:57:07 2014
+** Created: Sat Feb 1 22:21:41 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

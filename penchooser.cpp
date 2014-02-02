@@ -20,17 +20,17 @@ penChooser::penChooser(QDialog *parent) :
        << tr("F7 User defined") << tr("F8 User defined");
     cbPen->addItems(sl);
 
-    btnCancel = new QPushButton(tr("Cancel"),this);
+    btnExit = new QPushButton(tr("Exit"),this);
 
-    btnOk = new QPushButton(tr("OK"),this);
+    btnChange = new QPushButton(tr("Change color"),this);
 
     buttonLayout = new QGridLayout();
     buttonLayout->addWidget(labWidth,0,0);
-    buttonLayout->addWidget(sbWidth,0,1);
-    buttonLayout->addWidget(labPen,1,0);
+    buttonLayout->addWidget(labPen,0,1);
+    buttonLayout->addWidget(sbWidth,1,0);
     buttonLayout->addWidget(cbPen,1,1);
-    buttonLayout->addWidget(btnCancel,2,0);
-    buttonLayout->addWidget(btnOk,2,1);
+    buttonLayout->addWidget(btnExit,2,0);
+    buttonLayout->addWidget(btnChange,2,1);
 
     layout = new QVBoxLayout();
     layout->addWidget(colordialog);

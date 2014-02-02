@@ -63,11 +63,15 @@ void animatic::btnPlayClicked()
 {
     if (infoList.size() > 0){
         btnPlayMode();
+        QTime t;
+        t.start();
         for (int i = startPad->currentIndex();i < infoList.size();i++){
             sc->addPixmap(pixmapList[i]);
             view->update();
-            sleep((1000/25) * infoList[i][frames].toInt());
+            sleep((1000/fps) * infoList[i][frames].toInt());
         }
+        int tid = t.elapsed();
+        qDebug() << tid << " ms";
         sc->clear();
         view->update();
         btnReadyMode();

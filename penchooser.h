@@ -21,8 +21,8 @@ public:
     QSpinBox *sbWidth;
     QLabel *labPen;
     QComboBox *cbPen;
-    QPushButton *btnCancel;
-    QPushButton *btnOk;
+    QPushButton *btnExit;
+    QPushButton *btnChange;
     QGridLayout *buttonLayout;
     QVBoxLayout *layout;
 signals:
