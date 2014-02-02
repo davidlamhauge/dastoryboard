@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Jan 26 22:08:42 2014
+** Created: Sat Feb 1 17:39:03 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,6 +65,7 @@ public:
     QAction *actionDelete_drawing;
     QAction *actionMovePadLeft;
     QAction *actionMovePadRight;
+    QAction *actionRun_Scene;
     QWidget *centralWidget;
     QGridLayout *gridLayout_4;
     QVBoxLayout *verticalLayout_4;
@@ -188,6 +189,8 @@ public:
         actionMovePadLeft->setObjectName(QString::fromUtf8("actionMovePadLeft"));
         actionMovePadRight = new QAction(MainWindow);
         actionMovePadRight->setObjectName(QString::fromUtf8("actionMovePadRight"));
+        actionRun_Scene = new QAction(MainWindow);
+        actionRun_Scene->setObjectName(QString::fromUtf8("actionRun_Scene"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout_4 = new QGridLayout(centralWidget);
@@ -533,6 +536,8 @@ public:
         menuSketchpad->addAction(actionMovePadRight);
         menu_Help->addAction(action_About);
         menuScene->addAction(action_New_Scene);
+        menuScene->addSeparator();
+        menuScene->addAction(actionRun_Scene);
 
         retranslateUi(MainWindow);
 
@@ -595,6 +600,8 @@ public:
         actionMovePadLeft->setShortcut(QApplication::translate("MainWindow", "Shift+Left", 0, QApplication::UnicodeUTF8));
         actionMovePadRight->setText(QApplication::translate("MainWindow", "Move pad to the right", 0, QApplication::UnicodeUTF8));
         actionMovePadRight->setShortcut(QApplication::translate("MainWindow", "Shift+Right", 0, QApplication::UnicodeUTF8));
+        actionRun_Scene->setText(QApplication::translate("MainWindow", "Run Scene", 0, QApplication::UnicodeUTF8));
+        actionRun_Scene->setShortcut(QApplication::translate("MainWindow", "F2", 0, QApplication::UnicodeUTF8));
         labComments->setText(QApplication::translate("MainWindow", "Comments:  (max 100 chars.)", 0, QApplication::UnicodeUTF8));
         labScene->setText(QApplication::translate("MainWindow", "Scene", 0, QApplication::UnicodeUTF8));
         labSceneInfo->setText(QString());

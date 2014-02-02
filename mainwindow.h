@@ -3,6 +3,7 @@
 
 #include "penchooser.h"
 #include "prefdialog.h"
+#include "animatic.h"
 
 #include <QList>
 #include <QtGui>
@@ -81,6 +82,7 @@ private slots:
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb
     void changeImage();
+    void runAnimatic();         // opens window to run animatic
 
 private:
     Ui::MainWindow *ui;
@@ -148,6 +150,7 @@ private:
     standardPen sPen;
     penChooser *pc;
     PrefDialog *prefs;
+    animatic *anim;
 };
 
 #endif // MAINWINDOW_H

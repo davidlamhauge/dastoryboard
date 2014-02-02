@@ -481,6 +481,8 @@
      <string>Scene</string>
     </property>
     <addaction name="action_New_Scene"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Scene"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuScene"/>
@@ -714,6 +716,14 @@
    </property>
    <property name="shortcut">
     <string>Shift+Right</string>
+   </property>
+  </action>
+  <action name="actionRun_Scene">
+   <property name="text">
+    <string>Run Scene</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
    </property>
   </action>
  </widget>

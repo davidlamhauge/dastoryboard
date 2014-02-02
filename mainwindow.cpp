@@ -83,6 +83,8 @@ void MainWindow::setupAllConnects()
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
+
+    connect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
 }
 
 void MainWindow::disconnectAllConnects()
@@ -110,6 +112,7 @@ void MainWindow::disconnectAllConnects()
     disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
+    disconnect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
 }
 
 void MainWindow::initVars()
@@ -442,10 +445,10 @@ void MainWindow::updateInfoLabels()
         int mm = fr / (60 * fps);
         int ss = (fr - (mm * 60)) / fps ;
         int ff = fr - (mm * 60) - (ss * fps);
-        ui->labTimeValue->setText(tr("%1:%2:%3").arg(QString::number(mm),2,'0')
+        ui->labTimeValue->setText(tr("%1:%2:%3","DO NOT TRANSLATE THIS").arg(QString::number(mm),2,'0')
                                   .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
     }else{
-        MainWindow::setWindowTitle(tr("dastoryboard"));
+        MainWindow::setWindowTitle(tr("dastoryboard","DO NOT TRANSLATE THIS"));
         ui->labSceneInfo->setText("");
         ui->labActivePadInfo->setText("");
         ui->labFramesCountValue->setText("");
@@ -520,6 +523,14 @@ void MainWindow::changeImage()
     }
 }
 
+void MainWindow::runAnimatic()
+{
+    writeStoryboardXML();
+    anim = new animatic(fps, projFilePath, sceneDir, this);
+    anim->setModal(true);
+    anim->show();
+}
+
 void MainWindow::appendSketchPad()
 {
     updateImages();
@@ -591,7 +602,12 @@ void MainWindow::movePadLeft()
         activePad -= 1;
         addThumbLabels();
         updateInfoLabels();
+        disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        ui->labActivePadInfo->setText(tr("%1 of %2")
+                                      .arg(padInfo[shot]).arg(padInfoList.size()));
+        ui->labTest2->setText("Activepad: " + QString::number(activePad));
+        connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         centerStoryboard();
     }
 }
@@ -617,7 +633,12 @@ void MainWindow::movePadRight()
         activePad += 1;
         addThumbLabels();
         updateInfoLabels();
+        disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        ui->labActivePadInfo->setText(tr("%1 of %2")
+                                      .arg(padInfo[shot]).arg(padInfoList.size()));
+        ui->labTest2->setText("Activepad: " + QString::number(activePad));
+        connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         centerStoryboard();
     }
 }
@@ -820,6 +841,7 @@ void MainWindow::readStoryboardXML()
         setBtnColors();
         updateImages();
         addThumbLabels();
+        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
     }else{
         QMessageBox msgBox;
         msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
@@ -840,23 +862,23 @@ void MainWindow::setBtnColors()
         else c = QColor(Qt::white);
         if (i == 0){
             ui->btnStandardPen->setText(tr("Pen: %1px").arg(QString::number(sPenList[i].penWidth)));
-            ui->btnStandardPen->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+            ui->btnStandardPen->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else if (i == 1){
-            ui->btnF5->setText(tr("F5@: %1px").arg(QString::number(sPenList[i].penWidth)));
-            ui->btnF5->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+            ui->btnF5->setText(tr("F5@: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF5->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else if (i == 2){
-            ui->btnF6->setText(tr("F6: %1px").arg(QString::number(sPenList[i].penWidth)));
-            ui->btnF6->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+            ui->btnF6->setText(tr("F6: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF6->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else if (i == 3){
-            ui->btnF7->setText(tr("F7: %1px").arg(QString::number(sPenList[i].penWidth)));
-            ui->btnF7->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+            ui->btnF7->setText(tr("F7: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF7->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else{
-            ui->btnF8->setText(tr("F8: %1px").arg(QString::number(sPenList[i].penWidth)));
-            ui->btnF8->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }")
+            ui->btnF8->setText(tr("F8: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF8->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }
     }
