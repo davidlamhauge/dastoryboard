@@ -66,6 +66,7 @@ private:
     void sleep(int milliseconds);
 
     int fps;
+    int framesTotal;                // frames in the animatic from start to end
     bool run;
 
     QTimer *timer;

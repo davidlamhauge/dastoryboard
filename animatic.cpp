@@ -65,7 +65,7 @@ void animatic::initComboBox()
 
 void animatic::btnPlayClicked()
 {
-    if (infoList.size() > 0){
+    if (infoList.size() > 0 && proc.state() == 0){
         btnPlayMode();
         run = true;
 //        QTime t;                              // for checking time accuracy (1)
@@ -108,11 +108,13 @@ void animatic::btnQuitClicked()
 
 void animatic::exportAnimatic()
 {
-    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mp4");
+//        QTime t;                              // for checking time accuracy (1)
+//        t.start();                            // for checking time accuracy (2)
+    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mpg");
     if (f.exists()){
-        int ret = QMessageBox::warning(this, tr("Erase mp4-file"),
+        int ret = QMessageBox::warning(this, tr("Erase mpg-file"),
                                        tr("The file %1 exists!\n"
-                                          "Do you want to overwrite it?").arg(sceneDir + ".mp4"),
+                                          "Do you want to overwrite it?").arg(sceneDir + ".mpg"),
                                        QMessageBox::No | QMessageBox::Yes,
                                        QMessageBox::No);
         switch (ret)
@@ -120,45 +122,78 @@ void animatic::exportAnimatic()
         case QMessageBox::No:
             btnQuit->setFocus();
             break;
+        case QMessageBox::Yes:;
+            f.remove();
         default:;
         }
     }
+
     btnExport->setEnabled(false);
     btnQuit->setEnabled(false);
     btnFromStart->setEnabled(false);
-    f.remove();
+    // Make directory for images to convert later
+    proc.start("mkdir",QStringList() << projFilePath + sceneDir + "/tmp/");
+    while (proc.state() > 0)
+        sleep(2);
+//    qDebug() << t.elapsed() << " ms, directory tmp made";     // for checking time accuracy (3)
+    // Make images in numeric order
     int teller = 1;
+
+    QMessageBox msgBox;
+    msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+    msgBox.show();
+
+    QString fname;
     for (int i = 0; i < pixmapList.size();i++){
         QImage image = pixmapList[i].toImage();
         for (int j = 0;j < infoList[i][frames].toInt();j++){
-            image.save(projFilePath + sceneDir + "/" + sceneDir +
-                       tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
-            teller += 1;
+            if (j == 0){ // IF it is the first drawing
+                msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                 fname= projFilePath + sceneDir + "/tmp/" + sceneDir +
+                        tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0');
+                if (image.save(fname))
+                    teller += 1;
+                else{
+                    qDebug() << "ERROR in saving";
+                    break;
+                }
+            }else{
+                msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                proc.start("cp",QStringList() << fname
+                           << projFilePath + sceneDir + "/tmp/" + sceneDir +
+                           tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
+                while (proc.state() > 0)
+                    sleep(2);
+                    teller += 1;
+            }
         }
     }
+//    qDebug() << t.elapsed() << " ms, files made";     // for checking time accuracy (3)
     QStringList sl;
-    sl << "-i" << projFilePath + sceneDir + "/" + sceneDir + "_%5d.png";
+    sl << "-i" << projFilePath + sceneDir + "/tmp/" + sceneDir + "_%5d.png";
     QString sr;
     sl << "-r" << sr.setNum(fps) ;
-    sl << projFilePath + sceneDir + "/" + sceneDir + ".mp4";
+    sl << projFilePath + sceneDir + "/" + sceneDir + ".mpg";
+    msgBox.setText(tr("Video is made - Please wait..."));
     proc.start("ffmpeg",sl);
     while (proc.state() > 0)
-        sleep(5);
+        sleep(4);
+//    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
     sl.clear();
-    QDir dir(projFilePath + sceneDir + "/");
-    dir.setNameFilters(sl << sceneDir + "*.png");
-    dir.setFilter(QDir::Files);
-    foreach (QString dirfile, dir.entryList()) {
-        dir.remove(dirfile);
-    }
+    sl << "-r" << "-d" << projFilePath + sceneDir + "/tmp/";
+    proc.start("rm",sl);
+    msgBox.close();
+    //
     btnExport->setEnabled(true);
     btnFromStart->setEnabled(true);
     btnQuit->setEnabled(true);
     btnQuit->setFocus();
+//    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
 }
 
 void animatic::readXml()
 {
+    framesTotal = 0;
     QString activePath = projFilePath + sceneDir + "/";
     QFile sbFile(activePath + sceneDir + ".dastoryboard");    // open the storyboard file
     if (sbFile.open(QIODevice::ReadOnly)){
@@ -172,6 +207,7 @@ void animatic::readXml()
                 QPixmap im;
                 if (im.load(activePath + infos[fileName])){
                     pixmapList.append(im);  // add pixmap to pixmapList
+                    framesTotal += infos[frames].toInt();
                     infoList.append(infos); // append infos to the infoList, and..
                     infos.clear();          // .. clear the infos
                 }
