@@ -526,9 +526,17 @@ void MainWindow::changeImage()
 void MainWindow::runAnimatic()
 {
     writeStoryboardXML();
+    updateTimer->stop();
     anim = new animatic(fps, projFilePath, sceneDir, this);
     anim->setModal(true);
     anim->show();
+    connect(anim,SIGNAL(aniClose()),this,SLOT(restartTimer()));
+}
+
+void MainWindow::restartTimer()
+{
+    disconnect(anim,SIGNAL(aniClose()),this,SLOT(restartTimer()));
+    startUpdateImageTimer(updateInterval);
 }
 
 void MainWindow::appendSketchPad()

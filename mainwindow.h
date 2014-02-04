@@ -83,6 +83,7 @@ private slots:
     void centerStoryboard();    // centers storyboard around the active pads thumb
     void changeImage();
     void runAnimatic();         // opens window to run animatic
+    void restartTimer();        // restarts timer after animatic
 
 private:
     Ui::MainWindow *ui;

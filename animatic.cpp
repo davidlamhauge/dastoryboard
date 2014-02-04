@@ -11,6 +11,8 @@ animatic::animatic(const int &fpsec, const QString &projPath, const QString &scD
     labStartPad = new QLabel(tr("From:"));
     startPad = new QComboBox();
 
+    btnExport = new QPushButton(tr("Export video"));
+
     btnFromStart = new QPushButton(tr("Play","Meaning: Play from chosen start"));
     btnStop = new QPushButton(tr("Stop"));
     btnQuit = new QPushButton(tr("Quit"));
@@ -18,6 +20,7 @@ animatic::animatic(const int &fpsec, const QString &projPath, const QString &scD
     buttonlayout = new QGridLayout();
     buttonlayout->addWidget(labStartPad,0,0);
     buttonlayout->addWidget(startPad,0,1);
+    buttonlayout->addWidget(btnExport,0,2);
     buttonlayout->addWidget(btnFromStart,1,0);
     buttonlayout->addWidget(btnStop,1,1);
     buttonlayout->addWidget(btnQuit,1,2);
@@ -48,7 +51,7 @@ void animatic::initConnects()
     connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
     connect(btnStop,SIGNAL(clicked()),this,SLOT(btnStopClicked()));
     connect(btnQuit,SIGNAL(clicked()),this,SLOT(btnQuitClicked()));
-    connect(timer, SIGNAL(timeout()),this,SLOT(clearTimer()));
+    connect(btnExport,SIGNAL(clicked()),this,SLOT(exportAnimatic()));
 }
 
 void animatic::initComboBox()
@@ -75,7 +78,6 @@ void animatic::btnPlayClicked()
         }
 //        qDebug() << t.elapsed() << " ms";     // for checking time accuracy (3)
         sc->clear();
-        view->update();
         btnReadyMode();
     }else{
         QMessageBox msgBox;
@@ -94,13 +96,65 @@ void animatic::sleep(int milliseconds) {
 
 void animatic::btnStopClicked()
 {
-    run = false;
-    loop->exit();
+    run = false;        // set run to false, and...
+    loop->exit();       // ...exit the loop, to stop animatic from running
 }
 
 void animatic::btnQuitClicked()
 {
-    close();
+    emit aniClose();
+    close();            // close window
+}
+
+void animatic::exportAnimatic()
+{
+    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mp4");
+    if (f.exists()){
+        int ret = QMessageBox::warning(this, tr("Erase mp4-file"),
+                                       tr("The file %1 exists!\n"
+                                          "Do you want to overwrite it?").arg(sceneDir + ".mp4"),
+                                       QMessageBox::No | QMessageBox::Yes,
+                                       QMessageBox::No);
+        switch (ret)
+        {
+        case QMessageBox::No:
+            btnQuit->setFocus();
+            break;
+        default:;
+        }
+    }
+    btnExport->setEnabled(false);
+    btnQuit->setEnabled(false);
+    btnFromStart->setEnabled(false);
+    f.remove();
+    int teller = 1;
+    for (int i = 0; i < pixmapList.size();i++){
+        QImage image = pixmapList[i].toImage();
+        for (int j = 0;j < infoList[i][frames].toInt();j++){
+            image.save(projFilePath + sceneDir + "/" + sceneDir +
+                       tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
+            teller += 1;
+        }
+    }
+    QStringList sl;
+    sl << "-i" << projFilePath + sceneDir + "/" + sceneDir + "_%5d.png";
+    QString sr;
+    sl << "-r" << sr.setNum(fps) ;
+    sl << projFilePath + sceneDir + "/" + sceneDir + ".mp4";
+    proc.start("ffmpeg",sl);
+    while (proc.state() > 0)
+        sleep(5);
+    sl.clear();
+    QDir dir(projFilePath + sceneDir + "/");
+    dir.setNameFilters(sl << sceneDir + "*.png");
+    dir.setFilter(QDir::Files);
+    foreach (QString dirfile, dir.entryList()) {
+        dir.remove(dirfile);
+    }
+    btnExport->setEnabled(true);
+    btnFromStart->setEnabled(true);
+    btnQuit->setEnabled(true);
+    btnQuit->setFocus();
 }
 
 void animatic::readXml()
@@ -117,9 +171,9 @@ void animatic::readXml()
                 infos.append(xmlreader.readElementText());
                 QPixmap im;
                 if (im.load(activePath + infos[fileName])){
-                    pixmapList.append(im);
-                    infoList.append(infos);
-                    infos.clear();
+                    pixmapList.append(im);  // add pixmap to pixmapList
+                    infoList.append(infos); // append infos to the infoList, and..
+                    infos.clear();          // .. clear the infos
                 }
             }
         }
@@ -131,16 +185,29 @@ void animatic::btnReadyMode()
 {
     btnFromStart->setEnabled(true);
     btnStop->setEnabled(false);
+    btnFromStart->setFocus();
 }
 
 void animatic::btnPlayMode()
 {
     btnFromStart->setEnabled(false);
     btnStop->setEnabled(true);
+    btnStop->setFocus();
 }
 
-void animatic::clearTimer()
+void animatic::btnDisableAll()
 {
-    timer->stop();
-    return;
+    btnFromStart->setEnabled(false);
+    btnStop->setEnabled(false);
+    btnQuit->setEnabled(false);
+    btnExport->setEnabled(false);
 }
+
+void animatic::btnEnableAll()
+{
+    btnFromStart->setEnabled(true);
+    btnStop->setEnabled(true);
+    btnQuit->setEnabled(true);
+    btnExport->setEnabled(true);
+}
+

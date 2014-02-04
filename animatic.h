@@ -10,6 +10,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QFile>
+#include <QDir>
 #include <QXmlStreamReader>
 #include <QDebug>
 #include <QMessageBox>
@@ -17,6 +18,7 @@
 #include <QTime>
 #include <QEventLoop>
 #include <QComboBox>
+#include <QProcess>
 
 class animatic : public QDialog
 {
@@ -33,6 +35,7 @@ public:
     QGraphicsView *view;
     QLabel *labStartPad;
     QComboBox *startPad;
+    QPushButton *btnExport;
 
     QLabel *labFromStart;
     QPushButton *btnFromStart;
@@ -44,12 +47,13 @@ public:
     QGridLayout *buttonlayout;
 
 signals:
+    void aniClose();
 
 public slots:
     void btnPlayClicked();
     void btnStopClicked();
     void btnQuitClicked();
-    void clearTimer();
+    void exportAnimatic();          // export animatic to mp4 or avi
 
 private:
     void initConnects();
@@ -57,6 +61,8 @@ private:
     void readXml();
     void btnReadyMode();
     void btnPlayMode();
+    void btnDisableAll();
+    void btnEnableAll();
     void sleep(int milliseconds);
 
     int fps;
@@ -64,7 +70,7 @@ private:
 
     QTimer *timer;
     QEventLoop *loop;
-
+    QProcess proc;
     QString projFilePath;
     QString sceneDir;
 
