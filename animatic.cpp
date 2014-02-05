@@ -110,11 +110,11 @@ void animatic::exportAnimatic()
 {
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
-    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mpg");
+    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mp4");
     if (f.exists()){
         int ret = QMessageBox::warning(this, tr("Erase mpg-file"),
                                        tr("The file %1 exists!\n"
-                                          "Do you want to overwrite it?").arg(sceneDir + ".mpg"),
+                                          "Do you want to overwrite it?").arg(sceneDir + ".mp4"),
                                        QMessageBox::No | QMessageBox::Yes,
                                        QMessageBox::No);
         switch (ret)
@@ -140,6 +140,7 @@ void animatic::exportAnimatic()
     int teller = 1;
 
     QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Export to video..."));
     msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
     msgBox.show();
 
@@ -154,7 +155,7 @@ void animatic::exportAnimatic()
                 if (image.save(fname))
                     teller += 1;
                 else{
-                    qDebug() << "ERROR in saving";
+                    msgBox.setText(tr("Error while saving image..."));
                     break;
                 }
             }else{
@@ -173,8 +174,8 @@ void animatic::exportAnimatic()
     sl << "-i" << projFilePath + sceneDir + "/tmp/" + sceneDir + "_%5d.png";
     QString sr;
     sl << "-r" << sr.setNum(fps) ;
-    sl << projFilePath + sceneDir + "/" + sceneDir + ".mpg";
-    msgBox.setText(tr("Video is made - Please wait..."));
+    sl << projFilePath + sceneDir + "/" + sceneDir + ".mp4";
+    msgBox.setText(tr("Video is generated - Please wait..."));
     proc.start("ffmpeg",sl);
     while (proc.state() > 0)
         sleep(4);
