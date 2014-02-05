@@ -632,14 +632,23 @@ DEt kan ikke fortrydes!</translation>
         <translation>Slet mpg-fil</translation>
     </message>
     <message>
+        <location filename="../animatic.cpp" line="144"/>
+        <location filename="../animatic.cpp" line="152"/>
+        <location filename="../animatic.cpp" line="162"/>
+        <source>Generating image %1 of %2</source>
+        <translation>Genererer billede %1 af %2</translation>
+    </message>
+    <message>
         <location filename="../animatic.cpp" line="158"/>
         <source>Error while saving image...</source>
         <translation>Fejl under gemning af billedfil...</translation>
     </message>
     <message>
         <location filename="../animatic.cpp" line="178"/>
-        <source>Video is generated - Please wait...</source>
-        <translation>Video genereres - Vent venligst...</translation>
+        <source>Video is generated - Please wait...
+This message box will close when finished.</source>
+        <translation>Videoens genereres - Vent venligst...
+Denne meddelelses boks lukker når videoen er færdig.</translation>
     </message>
     <message>
         <location filename="../animatic.cpp" line="116"/>
@@ -652,13 +661,6 @@ Do you want to overwrite it?</source>
         <location filename="../animatic.cpp" line="143"/>
         <source>Export to video...</source>
         <translation>Eksporter til video...</translation>
-    </message>
-    <message>
-        <location filename="../animatic.cpp" line="144"/>
-        <location filename="../animatic.cpp" line="152"/>
-        <location filename="../animatic.cpp" line="162"/>
-        <source>Image %1 of %2</source>
-        <translation>Billede %1 af %2</translation>
     </message>
     <message>
         <location filename="../animatic.cpp" line="154"/>

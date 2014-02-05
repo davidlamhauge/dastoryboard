@@ -141,7 +141,7 @@ void animatic::exportAnimatic()
 
     QMessageBox msgBox;
     msgBox.setWindowTitle(tr("Export to video..."));
-    msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
     msgBox.show();
 
     QString fname;
@@ -149,7 +149,7 @@ void animatic::exportAnimatic()
         QImage image = pixmapList[i].toImage();
         for (int j = 0;j < infoList[i][frames].toInt();j++){
             if (j == 0){ // IF it is the first drawing
-                msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
                  fname= projFilePath + sceneDir + "/tmp/" + sceneDir +
                         tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0');
                 if (image.save(fname))
@@ -159,7 +159,7 @@ void animatic::exportAnimatic()
                     break;
                 }
             }else{
-                msgBox.setText(tr("Image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
                 proc.start("cp",QStringList() << fname
                            << projFilePath + sceneDir + "/tmp/" + sceneDir +
                            tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
@@ -175,7 +175,8 @@ void animatic::exportAnimatic()
     QString sr;
     sl << "-r" << sr.setNum(fps) ;
     sl << projFilePath + sceneDir + "/" + sceneDir + ".mp4";
-    msgBox.setText(tr("Video is generated - Please wait..."));
+    msgBox.setText(tr("Video is generated - Please wait...\n"
+                      "This message box will close when finished."));
     proc.start("ffmpeg",sl);
     while (proc.state() > 0)
         sleep(4);
@@ -189,7 +190,7 @@ void animatic::exportAnimatic()
     btnFromStart->setEnabled(true);
     btnQuit->setEnabled(true);
     btnQuit->setFocus();
-//    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
+    //    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
 }
 
 void animatic::readXml()
