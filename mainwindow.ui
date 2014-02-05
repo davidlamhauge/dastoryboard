@@ -377,20 +377,6 @@
             </property>
            </spacer>
           </item>
-          <item>
-           <widget class="QLabel" name="labTest1">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labTest2">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>

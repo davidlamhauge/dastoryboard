@@ -518,8 +518,6 @@ void MainWindow::changeImage()
         padInfo = padInfoList.at(activePad);
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
-        ui->labTest1->setText(projFilePath + sceneDir + "/" + padInfo[fileName]);
-        ui->labTest2->setText("Activepad: " + QString::number(activePad));
     }
 }
 
@@ -614,7 +612,6 @@ void MainWindow::movePadLeft()
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
-        ui->labTest2->setText("Activepad: " + QString::number(activePad));
         connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         centerStoryboard();
     }
@@ -645,7 +642,6 @@ void MainWindow::movePadRight()
         board->itemAt((activePad+1)*170-155,100)->setSelected(true);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
-        ui->labTest2->setText("Activepad: " + QString::number(activePad));
         connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
         centerStoryboard();
     }
@@ -1026,7 +1022,6 @@ void MainWindow::deleteDrawing()
                 pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
             }
             updateImages();
-            ui->labTest1->setText(projFilePath + sceneDir + "/" + padInfo[fileName]);
             startUpdateImageTimer(updateInterval);
             break;
         case QMessageBox::Cancel:
