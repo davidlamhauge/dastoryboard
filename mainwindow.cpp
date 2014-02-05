@@ -1046,7 +1046,7 @@ void MainWindow::about()
 {
     QMessageBox::about(this, tr("About dastoryboard"),
             tr("<p><b>dastoryboard</b> is an Open Source storyboard software "
-               "for your conveniance. Please enjoy!"));
+               "for your convenience. Please enjoy!"));
 }
 
 void MainWindow::updateComment()

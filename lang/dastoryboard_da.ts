@@ -394,7 +394,7 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="1048"/>
-        <source>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; is an Open Source storyboard software for your conveniance. Please enjoy!</source>
+        <source>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; is an Open Source storyboard software for your convenience. Please enjoy!</source>
         <translation>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; er et Open Source storyboard program, lavet til dig. God fornøjelse!</translation>
     </message>
     <message>
