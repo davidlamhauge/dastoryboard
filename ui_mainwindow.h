@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Feb 4 23:25:55 2014
+** Created: Wed Feb 5 16:59:49 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -111,8 +111,6 @@ public:
     QVBoxLayout *verticalLayout_3;
     QGraphicsView *gvSketchPad;
     QSpacerItem *verticalSpacer;
-    QLabel *labTest1;
-    QLabel *labTest2;
     QSpacerItem *horizontalSpacer_3;
     QFrame *line_3;
     QMenuBar *menuBar;
@@ -448,16 +446,6 @@ public:
 
         verticalLayout_3->addItem(verticalSpacer);
 
-        labTest1 = new QLabel(centralWidget);
-        labTest1->setObjectName(QString::fromUtf8("labTest1"));
-
-        verticalLayout_3->addWidget(labTest1);
-
-        labTest2 = new QLabel(centralWidget);
-        labTest2->setObjectName(QString::fromUtf8("labTest2"));
-
-        verticalLayout_3->addWidget(labTest2);
-
 
         horizontalLayout_3->addLayout(verticalLayout_3);
 
@@ -620,8 +608,6 @@ public:
         labTime->setText(QApplication::translate("MainWindow", "Time:", 0, QApplication::UnicodeUTF8));
         labActivePad->setText(QApplication::translate("MainWindow", "Active pad:", 0, QApplication::UnicodeUTF8));
         labFramesCountValue->setText(QString());
-        labTest1->setText(QApplication::translate("MainWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
-        labTest2->setText(QApplication::translate("MainWindow", "TextLabel", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File/Storyboard", 0, QApplication::UnicodeUTF8));
         menuSettings->setTitle(QApplication::translate("MainWindow", "Pen", 0, QApplication::UnicodeUTF8));
         menuLoad_Pen->setTitle(QApplication::translate("MainWindow", "Load Pen", 0, QApplication::UnicodeUTF8));
