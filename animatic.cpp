@@ -71,12 +71,14 @@ void animatic::btnPlayClicked()
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
         for (int i = startPad->currentIndex();i < infoList.size();i++){
+            setWindowTitle(tr("Image number: %1").arg(QString::number(i+1)));
             sc->addPixmap(pixmapList[i]);                       // add pixmap
             sleep((1000/fps) * infoList[i][frames].toInt());    // sleep x millisecs
             if (run == false)                                   // break if run == false
                 break;
         }
 //        qDebug() << t.elapsed() << " ms";     // for checking time accuracy (3)
+        setWindowTitle(tr("View Animatic"));
         sc->clear();
         btnReadyMode();
     }else{

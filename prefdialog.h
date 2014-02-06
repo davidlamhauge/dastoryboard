@@ -12,7 +12,7 @@ class PrefDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PrefDialog(QDialog *parent = 0);
+    explicit PrefDialog(const int &fpsec,QDialog *parent = 0);
 
     QLabel *labFps;
     QComboBox *cbFps;
@@ -29,6 +29,8 @@ public:
 signals:
     
 public slots:
+private:
+    int fps;
     
 };
 

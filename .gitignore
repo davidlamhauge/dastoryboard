@@ -20,6 +20,10 @@
 *.out
 *.app
 
+# Documents
+*.odt
+*.pdf
+
 # Qt-es
 
 *.pro.user

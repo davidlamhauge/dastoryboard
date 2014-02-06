@@ -1,15 +1,21 @@
 #include "prefdialog.h"
 
-PrefDialog::PrefDialog(QDialog *parent) :
+PrefDialog::PrefDialog(const int &fpsec, QDialog *parent) :
     QDialog(parent)
 {
+    fps = fpsec;
     labFps = new QLabel(tr("Frames per second?"));
     cbFps = new QComboBox(this);
     QStringList sl;
     sl.clear();
     sl << tr("24 fps.")  << tr("25 fps.") << tr("30 fps.");
     cbFps->addItems(sl);
-    cbFps->setCurrentIndex(1);
+    if (fps == 24)
+        cbFps->setCurrentIndex(0);
+    if (fps == 25)
+        cbFps->setCurrentIndex(1);
+    if (fps == 30)
+        cbFps->setCurrentIndex(2);
 
     labAutoNumber = new QLabel(tr("Autonumber Seq/sc/shot?"));
     cbAutoNumber = new QComboBox(this);

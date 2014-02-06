@@ -266,7 +266,7 @@ void MainWindow::saveSettings()
 
 void MainWindow::setPrefs()
 {
-    prefs = new PrefDialog();
+    prefs = new PrefDialog(fps);
     prefs->setModal(true);
     prefs->show();
     connect(prefs->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPrefs()));
@@ -282,6 +282,7 @@ void MainWindow::okPrefs()
     if (prefs->cbAutoNumber->currentIndex() == 0) autoNumber = false;
     else autoNumber = true;
     saveSettings();
+    updateInfoLabels();
     prefs->close();
 }
 
