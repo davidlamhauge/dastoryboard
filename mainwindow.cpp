@@ -118,7 +118,7 @@ void MainWindow::disconnectAllConnects()
 void MainWindow::initVars()
 {       // initiates vars, EXCEPT projFileName and projFilePath
     updateInterval = 2013;      // millisecs. to be set as preference TODO
-    fps = 25;
+    fps = 25;                   // can be changed from loadSettings...
     scenePath = "";             // path to scenes images + thumbs
     sbFileName = "";            // storyboard filename, absolute path
     scenePaths.clear();         // List with scene paths to sub-dirs
@@ -239,7 +239,7 @@ QString MainWindow::loadSettings()
 {
     QSettings settings("dalanima/dastoryboard","dastoryboard");
     settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
-    if (settings.contains("projFileName")){
+    if (settings.contains("projFileName")){             // if projFileName exists...
         scenePath = settings.value("scenePath").toString();
         sceneDir = settings.value("sceneDir").toString();
         projFilePath = settings.value("projFilePath").toString();
@@ -248,7 +248,7 @@ QString MainWindow::loadSettings()
         return settings.value("projFileName").toString();
     }
     else
-        return "";
+        return "";                                      // else return empty string
 }
 
 void MainWindow::saveSettings()
@@ -583,7 +583,7 @@ void MainWindow::insertSketchPad()
         ui->leShot->setText(padInfo[shot]);
         sketchPad->clearImage();
         updateImages();
-        ui->gvStoryboard->update();
+        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
         writeStoryboardXML();
     }
 }
@@ -1023,6 +1023,7 @@ void MainWindow::deleteDrawing()
                 pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
             }
             updateImages();
+            board->itemAt((activePad+1)*170-155,100)->setSelected(true);
             startUpdateImageTimer(updateInterval);
             break;
         case QMessageBox::Cancel:

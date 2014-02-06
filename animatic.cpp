@@ -71,7 +71,7 @@ void animatic::btnPlayClicked()
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
         for (int i = startPad->currentIndex();i < infoList.size();i++){
-            setWindowTitle(tr("Image number: %1").arg(QString::number(i+1)));
+            setWindowTitle(tr("Image number: %1").arg(infoList[i][shot]));
             sc->addPixmap(pixmapList[i]);                       // add pixmap
             sleep((1000/fps) * infoList[i][frames].toInt());    // sleep x millisecs
             if (run == false)                                   // break if run == false
@@ -205,6 +205,8 @@ void animatic::readXml()
         while(!xmlreader.atEnd()){
             xmlreader.readNext();
             if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
+                infos.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
                 infos.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "frames"){
                 infos.append(xmlreader.readElementText());

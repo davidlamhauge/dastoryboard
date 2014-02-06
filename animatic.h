@@ -28,7 +28,8 @@ public:
 
     enum padInfoLabels {
         fileName    = 0,
-        frames      = 1,
+        shot        = 1,
+        frames      = 2
     };
 
     QGraphicsScene *sc;
