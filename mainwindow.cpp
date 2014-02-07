@@ -326,8 +326,6 @@ void MainWindow::newStoryboard()
         enableScene();
         disableStoryPad();
         updateInfoLabels();
- //       initStoryboard();
- //       writeProjXML();
     }else{
         updateTimer->start(updateInterval);
     }

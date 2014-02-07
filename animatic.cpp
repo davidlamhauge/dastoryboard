@@ -167,7 +167,7 @@ void animatic::exportAnimatic()
                            tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
                 while (proc.state() > 0)
                     sleep(2);
-                    teller += 1;
+                teller += 1;
             }
         }
     }
