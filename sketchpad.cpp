@@ -63,9 +63,10 @@ void SketchPad::mousePressEvent(QMouseEvent *e)
         lastPoint = e->pos();
         sketching = true;
     }
-    if (e->button() == Qt::RightButton){
+/*    if (e->button() == Qt::RightButton){
         del1 = e->pos();
     }
+*/
 }
 
 void SketchPad::mouseMoveEvent(QMouseEvent *e)
@@ -80,6 +81,7 @@ void SketchPad::mouseReleaseEvent(QMouseEvent *e)
         drawLineTo(e->pos());
         sketching = false;
     }
+/*
     if (e->button() == Qt::RightButton){
         del2 = e->pos();
         if (del2.x() > 639)
@@ -93,6 +95,7 @@ void SketchPad::mouseReleaseEvent(QMouseEvent *e)
         }
         update();
     }
+*/
 }
 
 void SketchPad::paintEvent(QPaintEvent *e)
