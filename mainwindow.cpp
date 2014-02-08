@@ -182,6 +182,7 @@ void MainWindow::initStoryboard()
     lastNumber = 0;
     activePad = 0;
     activePen = 0;
+    audioFileName = "";
     sketchPad = new SketchPad();
     sketchPad->setFixedSize(640,480);
     sketchPad->initPad(scenePath,lastNumber);
@@ -827,6 +828,7 @@ void MainWindow::readStoryboardXML()
         padThumbList.clear();
         sPenList.clear();
         board->clear();
+        audioFileName = "";
         QXmlStreamReader xmlreader(&sbFile);
         while(!xmlreader.atEnd()){
             xmlreader.readNext();
