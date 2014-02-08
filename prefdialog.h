@@ -17,6 +17,9 @@ public:
     QLabel *labFps;
     QComboBox *cbFps;
 
+    QLabel *labVideoFormat;
+    QComboBox *cbVideoFormat;
+
     QLabel *labAutoNumber;
     QComboBox *cbAutoNumber;
 

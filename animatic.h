@@ -24,7 +24,7 @@ class animatic : public QDialog
 {
     Q_OBJECT
 public:
-    explicit animatic(const int &fpsec, const QString &projPath, const QString &scDir, QWidget *parent = 0);
+    explicit animatic(const int &fpsec, const QString &scPath, QWidget *parent = 0);
 
     enum padInfoLabels {
         fileName    = 0,
@@ -59,6 +59,7 @@ public slots:
 private:
     void initConnects();
     void initComboBox();
+    void renderVideo();             // the actual rendering of the video
     void readXml();
     void btnReadyMode();
     void btnPlayMode();
@@ -74,7 +75,9 @@ private:
     QEventLoop *loop;
     QProcess proc;
     QString projFilePath;
-    QString sceneDir;
+    QString sceneDir;           // scene directory, without slashes
+    QString videoFormat;        // .ogv or .mpg
+    QString scenePath;          // path to scene inclusive the last '/'
 
     QStringList infos;                // fileName, comment, shot name etc
     QList<QStringList> infoList;     // list of stringlists with padInfo

@@ -1,6 +1,7 @@
 #include "animatic.h"
 
-animatic::animatic(const int &fpsec, const QString &projPath, const QString &scDir, QWidget *parent) :
+animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
+//    animatic::animatic(const int &fpsec, const QString &projPath, const QString &scDir, QWidget *parent) :
     QDialog(parent)
 {
     sc = new QGraphicsScene(QRectF(0,0,640,480));
@@ -32,13 +33,17 @@ animatic::animatic(const int &fpsec, const QString &projPath, const QString &scD
     setLayout(vertLayout);
     setWindowTitle(tr("View Animatic"));
 
-    projFilePath = projPath;
-    sceneDir = scDir;
     fps = fpsec;
     run = false;
 
     timer = new QTimer();
     loop = new QEventLoop();
+
+    scenePath = scPath;
+    QString s = scenePath;
+    QStringList sl = s.split('/');
+    sceneDir = sl[sl.size()-2];
+
     readXml();              // read XML and load pixmaps, filenames and frames into list
     initComboBox();
     initConnects();
@@ -61,6 +66,74 @@ void animatic::initComboBox()
         startPad->addItem(QString::number(i));
     }
     startPad->setCurrentIndex(0);
+}
+
+void animatic::renderVideo()
+{
+    btnExport->setEnabled(false);
+    btnQuit->setEnabled(false);
+    btnFromStart->setEnabled(false);
+    // Make directory for images to convert later
+    proc.start("mkdir",QStringList() << scenePath + "tmp/");
+    while (proc.state() > 0)
+        sleep(2);
+//    qDebug() << t.elapsed() << " ms, directory tmp made";     // for checking time accuracy (3)
+    // Make images in numeric order
+    int teller = 1;
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Export to video..."));
+    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+    msgBox.show();
+
+    QString fname;
+    for (int i = 0; i < pixmapList.size();i++){
+        QImage image = pixmapList[i].toImage();
+        for (int j = 0;j < infoList[i][frames].toInt();j++){
+            if (j == 0){ // IF it is the first drawing
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                 fname= scenePath + "tmp/" + sceneDir +
+                        tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0');
+                if (image.save(fname))
+                    teller += 1;
+                else{
+                    msgBox.setText(tr("Error while saving image..."));
+                    break;
+                }
+            }else{
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                proc.start("cp",QStringList() << fname
+                           << scenePath + "tmp/" + sceneDir +
+                           tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
+                while (proc.state() > 0)
+                    sleep(2);
+                teller += 1;
+            }
+        }
+    }
+//    qDebug() << t.elapsed() << " ms, files made";     // for checking time accuracy (3)
+    QStringList sl;
+    sl << "-i" << scenePath + "tmp/" + sceneDir + "_%5d.png";
+    QString sr;
+    sl << "-r" << sr.setNum(fps) ;
+    sl << scenePath + sceneDir + videoFormat;
+    msgBox.setText(tr("Video is generated - Please wait...\n"
+                      "This message box will close when finished."));
+    proc.start("ffmpeg",sl);
+    while (proc.state() > 0)
+        sleep(4);
+//    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
+    sl.clear();
+    sl << "-r" << "-d" << scenePath + "tmp/";
+    proc.start("rm",sl);
+    msgBox.close();
+    //
+    btnExport->setEnabled(true);
+    btnFromStart->setEnabled(true);
+    btnQuit->setEnabled(true);
+    btnQuit->setFocus();
+    //    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
+
 }
 
 void animatic::btnPlayClicked()
@@ -112,11 +185,11 @@ void animatic::exportAnimatic()
 {
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
-    QFile f(projFilePath + sceneDir + "/" + sceneDir + ".mp4");
+    QFile f(scenePath + sceneDir + videoFormat);
     if (f.exists()){
-        int ret = QMessageBox::warning(this, tr("Erase mpg-file"),
+        int ret = QMessageBox::warning(this, tr("Erase video-file"),
                                        tr("The file %1 exists!\n"
-                                          "Do you want to overwrite it?").arg(sceneDir + ".mp4"),
+                                          "Do you want to overwrite it?").arg(sceneDir + videoFormat),
                                        QMessageBox::No | QMessageBox::Yes,
                                        QMessageBox::No);
         switch (ret)
@@ -126,92 +199,31 @@ void animatic::exportAnimatic()
             break;
         case QMessageBox::Yes:;
             f.remove();
+            renderVideo();
         default:;
         }
     }
 
-    btnExport->setEnabled(false);
-    btnQuit->setEnabled(false);
-    btnFromStart->setEnabled(false);
-    // Make directory for images to convert later
-    proc.start("mkdir",QStringList() << projFilePath + sceneDir + "/tmp/");
-    while (proc.state() > 0)
-        sleep(2);
-//    qDebug() << t.elapsed() << " ms, directory tmp made";     // for checking time accuracy (3)
-    // Make images in numeric order
-    int teller = 1;
-
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("Export to video..."));
-    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-    msgBox.show();
-
-    QString fname;
-    for (int i = 0; i < pixmapList.size();i++){
-        QImage image = pixmapList[i].toImage();
-        for (int j = 0;j < infoList[i][frames].toInt();j++){
-            if (j == 0){ // IF it is the first drawing
-                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                 fname= projFilePath + sceneDir + "/tmp/" + sceneDir +
-                        tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0');
-                if (image.save(fname))
-                    teller += 1;
-                else{
-                    msgBox.setText(tr("Error while saving image..."));
-                    break;
-                }
-            }else{
-                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                proc.start("cp",QStringList() << fname
-                           << projFilePath + sceneDir + "/tmp/" + sceneDir +
-                           tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
-                while (proc.state() > 0)
-                    sleep(2);
-                teller += 1;
-            }
-        }
-    }
-//    qDebug() << t.elapsed() << " ms, files made";     // for checking time accuracy (3)
-    QStringList sl;
-    sl << "-i" << projFilePath + sceneDir + "/tmp/" + sceneDir + "_%5d.png";
-    QString sr;
-    sl << "-r" << sr.setNum(fps) ;
-    sl << projFilePath + sceneDir + "/" + sceneDir + ".mp4";
-    msgBox.setText(tr("Video is generated - Please wait...\n"
-                      "This message box will close when finished."));
-    proc.start("ffmpeg",sl);
-    while (proc.state() > 0)
-        sleep(4);
-//    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
-    sl.clear();
-    sl << "-r" << "-d" << projFilePath + sceneDir + "/tmp/";
-    proc.start("rm",sl);
-    msgBox.close();
-    //
-    btnExport->setEnabled(true);
-    btnFromStart->setEnabled(true);
-    btnQuit->setEnabled(true);
-    btnQuit->setFocus();
-    //    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
 }
 
 void animatic::readXml()
 {
     framesTotal = 0;
-    QString activePath = projFilePath + sceneDir + "/";
-    QFile sbFile(activePath + sceneDir + ".dastoryboard");    // open the storyboard file
+    QFile sbFile(scenePath + sceneDir + ".dastoryboard");    // open the storyboard file
     if (sbFile.open(QIODevice::ReadOnly)){
         QXmlStreamReader xmlreader(&sbFile);
         while(!xmlreader.atEnd()){
             xmlreader.readNext();
             if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
                 infos.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "videoFormat")
+                videoFormat = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
                 infos.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "frames"){
                 infos.append(xmlreader.readElementText());
                 QPixmap im;
-                if (im.load(activePath + infos[fileName])){
+                if (im.load(scenePath + infos[fileName])){
                     pixmapList.append(im);  // add pixmap to pixmapList
                     framesTotal += infos[frames].toInt();
                     infoList.append(infos); // append infos to the infoList, and..

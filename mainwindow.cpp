@@ -121,6 +121,7 @@ void MainWindow::initVars()
     fps = 25;                   // can be changed from loadSettings...
     scenePath = "";             // path to scenes images + thumbs
     sbFileName = "";            // storyboard filename, absolute path
+    videoFormat = "ogg";
     scenePaths.clear();         // List with scene paths to sub-dirs
     sceneList.clear();          // List with scenes in project
     autoNumber = true;
@@ -245,6 +246,7 @@ QString MainWindow::loadSettings()
         projFilePath = settings.value("projFilePath").toString();
         fps = settings.value("Fps").toInt();
         autoNumber = settings.value("autoNumber").toBool();
+        videoFormat = settings.value("videoFormat").toString();
         return settings.value("projFileName").toString();
     }
     else
@@ -262,6 +264,7 @@ void MainWindow::saveSettings()
     settings.setValue("sceneDir",sceneDir);
     settings.setValue("Fps",fps);
     settings.setValue("autoNumber",autoNumber);
+    settings.setValue("videoFormat",videoFormat);
 }
 
 void MainWindow::setPrefs()
@@ -275,10 +278,16 @@ void MainWindow::setPrefs()
 
 void MainWindow::okPrefs()
 {
+    // set freferred frames per second
     if (prefs->cbFps->currentIndex() == 0) fps = 24;
     else if (prefs->cbFps->currentIndex() == 1) fps = 25;
     else fps = 30;
 
+    // Set preferred videoformat
+    if (prefs->cbVideoFormat->currentIndex() == 0) videoFormat = ".ogv";
+    else videoFormat = ".mpg";
+
+    // set preferred numbering: auto or manual
     if (prefs->cbAutoNumber->currentIndex() == 0) autoNumber = false;
     else autoNumber = true;
     saveSettings();
@@ -524,7 +533,7 @@ void MainWindow::runAnimatic()
 {
     writeStoryboardXML();
     updateTimer->stop();
-    anim = new animatic(fps, projFilePath, sceneDir, this);
+    anim = new animatic(fps, scenePath, this);
     anim->setModal(true);
     anim->show();
     connect(anim,SIGNAL(aniClose()),this,SLOT(restartTimer()));
@@ -720,6 +729,7 @@ void MainWindow::writeStoryboardXML()
             xmlwriter.writeStartElement("variables");   // variables START
             xmlwriter.writeTextElement("sbFileName",sbFileName);
             xmlwriter.writeTextElement("scenePath",scenePath);
+            xmlwriter.writeTextElement("videoFormat",videoFormat);
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
             xmlwriter.writeTextElement("activePen",QString::number(activePen));
@@ -781,6 +791,8 @@ void MainWindow::readStoryboardXML()
                 sbFileName = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "scenePath")
                 scenePath = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "videoFormat")
+                videoFormat = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
                 lastNumber = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")

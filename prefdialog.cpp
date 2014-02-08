@@ -17,6 +17,13 @@ PrefDialog::PrefDialog(const int &fpsec, QDialog *parent) :
     if (fps == 30)
         cbFps->setCurrentIndex(2);
 
+    labVideoFormat= new QLabel(tr("Export to which video format?"));
+    cbVideoFormat= new QComboBox(this);
+    sl.clear();
+    sl << tr(".ogv") << tr(".mpg");
+    cbVideoFormat->addItems(sl);
+    cbVideoFormat->setCurrentIndex(0);
+
     labAutoNumber = new QLabel(tr("Autonumber Seq/sc/shot?"));
     cbAutoNumber = new QComboBox(this);
     sl.clear();
@@ -30,6 +37,8 @@ PrefDialog::PrefDialog(const int &fpsec, QDialog *parent) :
     buttonLayout = new QGridLayout();
     buttonLayout->addWidget(labFps,0,0);
     buttonLayout->addWidget(cbFps,0,1);
+    buttonLayout->addWidget(labVideoFormat,1,0);
+    buttonLayout->addWidget(cbVideoFormat,1,1);
     buttonLayout->addWidget(labAutoNumber,2,0);
     buttonLayout->addWidget(cbAutoNumber,2,1);
     buttonLayout->addWidget(btnCancel,3,0);

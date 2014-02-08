@@ -135,6 +135,7 @@ private:
     QString scenePath;                  // path to scenes images + thumbs
     QString sceneDir;                   // name of directory of scene
     QString prefPath;                   // path to use for new storyboards
+    QString videoFormat;                // preferred video format in export video
 
     QStringList scenePaths;             // List with scene paths to sub-dirs
     QStringList sceneList;              // List with scenes in project
