@@ -61,6 +61,7 @@ void MainWindow::setupNewSceneConnect()
 
 void MainWindow::setupAllConnects()
 {
+    connect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     connect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
     connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
@@ -89,6 +90,7 @@ void MainWindow::setupAllConnects()
 
 void MainWindow::disconnectAllConnects()
 {
+    disconnect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
     disconnect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
     disconnect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     disconnect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
@@ -118,13 +120,14 @@ void MainWindow::disconnectAllConnects()
 void MainWindow::initVars()
 {       // initiates vars, EXCEPT projFileName and projFilePath
     updateInterval = 2013;      // millisecs. to be set as preference TODO
-    fps = 25;                   // can be changed from loadSettings...
+    fps = 25;                   // can be changed from loadSettings
+    autoNumber = true;          // can be changed from loadSettings
+    videoFormat = ".ogv";       // can be changed from loadsettings
     scenePath = "";             // path to scenes images + thumbs
     sbFileName = "";            // storyboard filename, absolute path
-    videoFormat = "ogg";
+    audioFileName = "";         // audio filenam, absolute path
     scenePaths.clear();         // List with scene paths to sub-dirs
     sceneList.clear();          // List with scenes in project
-    autoNumber = true;
     sceneDir = "";              // name of directory of scene
     padInfo.clear();            // fileName, comment, shot name etc
     padInfoList.clear();        // list of stringlists with padInfo
@@ -269,7 +272,7 @@ void MainWindow::saveSettings()
 
 void MainWindow::setPrefs()
 {
-    prefs = new PrefDialog(fps);
+    prefs = new PrefDialog(scenePath);
     prefs->setModal(true);
     prefs->show();
     connect(prefs->btnCancel,SIGNAL(clicked()),this,SLOT(cancelPrefs()));
@@ -406,6 +409,18 @@ void MainWindow::openScene()
     int i;
     i = ui->cbScenes->findText(sc);
     ui->cbScenes->setCurrentIndex(i);
+}
+
+void MainWindow::addAudio()
+{
+    audioFileName = QFileDialog::getOpenFileName(this, tr("Select audio file"),
+                                                    projFilePath,
+                                                    tr("Audio files (*.ogg *.mp3 *.wav)"));
+    QFile f(audioFileName);
+    if (f.exists())
+        writeStoryboardXML();
+    else
+        audioFileName = "";
 }
 
 void MainWindow::saveImages()
@@ -730,6 +745,7 @@ void MainWindow::writeStoryboardXML()
             xmlwriter.writeTextElement("sbFileName",sbFileName);
             xmlwriter.writeTextElement("scenePath",scenePath);
             xmlwriter.writeTextElement("videoFormat",videoFormat);
+            xmlwriter.writeTextElement("audioFileName",audioFileName);
             xmlwriter.writeTextElement("lastNumber",QString::number(lastNumber));
             xmlwriter.writeTextElement("activePad",QString::number(activePad));
             xmlwriter.writeTextElement("activePen",QString::number(activePen));
@@ -793,6 +809,8 @@ void MainWindow::readStoryboardXML()
                 scenePath = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "videoFormat")
                 videoFormat = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "audioFileName")
+                audioFileName = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "lastNumber")
                 lastNumber = xmlreader.readElementText().toInt();
             else if (xmlreader.isStartElement() && xmlreader.name() == "activePad")
@@ -1120,6 +1138,7 @@ void MainWindow::disableStoryPad()
     ui->menuSettings->setEnabled(false);
     ui->menuSketchpad->setEnabled(false);
     ui->action_Save_Storyboard->setEnabled(false);
+    ui->action_Add_audio->setEnabled(false);
 }
 
 void MainWindow::enableStoryPad()
@@ -1138,6 +1157,7 @@ void MainWindow::enableStoryPad()
     ui->menuSketchpad->setEnabled(true);
     ui->menuSettings->setEnabled(true);
     ui->action_Save_Storyboard->setEnabled(true);
+    ui->action_Add_audio->setEnabled(true);
 }
 
 void MainWindow::disableScene()

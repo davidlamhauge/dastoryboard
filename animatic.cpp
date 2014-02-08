@@ -1,7 +1,6 @@
 #include "animatic.h"
 
 animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
-//    animatic::animatic(const int &fpsec, const QString &projPath, const QString &scDir, QWidget *parent) :
     QDialog(parent)
 {
     sc = new QGraphicsScene(QRectF(0,0,640,480));
@@ -50,7 +49,18 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
 
     btnReadyMode();
 }
+/*
+    QSettings settings("dalanima/dastoryboard","dastoryboard");
+    settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
+    if (settings.contains("projFileName")){             // if projFileName exists...
+        scenePath = settings.value("scenePath").toString();
+        sceneDir = settings.value("sceneDir").toString();
+        projFilePath = settings.value("projFilePath").toString();
+        fps = settings.value("Fps").toInt();
+        autoNumber = settings.value("autoNumber").toBool();
+        videoFormat = settings.value("videoFormat").toString();
 
+*/
 void animatic::initConnects()
 {
     connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
@@ -70,14 +80,18 @@ void animatic::initComboBox()
 
 void animatic::renderVideo()
 {
+//        QTime t;                              // for checking time accuracy (1)
+//        t.start();                            // for checking time accuracy (2)
     btnExport->setEnabled(false);
     btnQuit->setEnabled(false);
     btnFromStart->setEnabled(false);
+
     // Make directory for images to convert later
     proc.start("mkdir",QStringList() << scenePath + "tmp/");
     while (proc.state() > 0)
         sleep(2);
 //    qDebug() << t.elapsed() << " ms, directory tmp made";     // for checking time accuracy (3)
+
     // Make images in numeric order
     int teller = 1;
 
@@ -92,8 +106,7 @@ void animatic::renderVideo()
         for (int j = 0;j < infoList[i][frames].toInt();j++){
             if (j == 0){ // IF it is the first drawing
                 msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                 fname= scenePath + "tmp/" + sceneDir +
-                        tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0');
+                 fname = scenePath + "tmp/" + sceneDir + QString("_%1.png").arg(QString::number(teller),5,'0');
                 if (image.save(fname))
                     teller += 1;
                 else{
@@ -103,8 +116,7 @@ void animatic::renderVideo()
             }else{
                 msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
                 proc.start("cp",QStringList() << fname
-                           << scenePath + "tmp/" + sceneDir +
-                           tr("_%1.png","DO NOT TRANSLATE").arg(QString::number(teller),5,'0'));
+                           << scenePath + "tmp/" + sceneDir +  QString("_%1.png").arg(QString::number(teller),5,'0'));
                 while (proc.state() > 0)
                     sleep(2);
                 teller += 1;
@@ -112,28 +124,47 @@ void animatic::renderVideo()
         }
     }
 //    qDebug() << t.elapsed() << " ms, files made";     // for checking time accuracy (3)
+
+    // Add parameters to a stringlist
     QStringList sl;
     sl << "-i" << scenePath + "tmp/" + sceneDir + "_%5d.png";
+    QFile f(audioFileName);
+    if (f.exists())
+        sl << "-i" << audioFileName;
     QString sr;
-    sl << "-r" << sr.setNum(fps) ;
+    sl << "-r" << sr.setNum(fps);
+
+//    sl << "-loglevel" << "info";
+
     sl << scenePath + sceneDir + videoFormat;
-    msgBox.setText(tr("Video is generated - Please wait...\n"
-                      "This message box will close when finished."));
+
+    // start process to export video
     proc.start("ffmpeg",sl);
+    if (proc.state() > 0){      // if process is STARTING or RUNNING:
+        msgBox.setText(tr("Video is generating!\n"
+                          "- Please wait...- it can take a while\n"
+                          "This message box will close when finished."));
     while (proc.state() > 0)
         sleep(4);
-//    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
     sl.clear();
     sl << "-r" << "-d" << scenePath + "tmp/";
     proc.start("rm",sl);
     msgBox.close();
+    }else{
+        sl.clear();
+        sl << "-r" << "-d" << scenePath + "tmp/";
+        proc.start("rm",sl);
+        QMessageBox msgBox;
+        msgBox.setText(tr("Video export failed!\nIs Ffmpeg installed and in the PATH?"));
+        msgBox.exec();
+    }
+//    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
     //
     btnExport->setEnabled(true);
     btnFromStart->setEnabled(true);
     btnQuit->setEnabled(true);
     btnQuit->setFocus();
-    //    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
-
+//    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
 }
 
 void animatic::btnPlayClicked()
@@ -183,8 +214,6 @@ void animatic::btnQuitClicked()
 
 void animatic::exportAnimatic()
 {
-//        QTime t;                              // for checking time accuracy (1)
-//        t.start();                            // for checking time accuracy (2)
     QFile f(scenePath + sceneDir + videoFormat);
     if (f.exists()){
         int ret = QMessageBox::warning(this, tr("Erase video-file"),
@@ -202,8 +231,8 @@ void animatic::exportAnimatic()
             renderVideo();
         default:;
         }
-    }
-
+    }else
+        renderVideo();
 }
 
 void animatic::readXml()
@@ -218,6 +247,8 @@ void animatic::readXml()
                 infos.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "videoFormat")
                 videoFormat = xmlreader.readElementText();
+            else if (xmlreader.isStartElement() && xmlreader.name() == "audioFileName")
+                audioFileName = xmlreader.readElementText();
             else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
                 infos.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "frames"){

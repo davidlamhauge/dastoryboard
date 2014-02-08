@@ -78,6 +78,7 @@ private:
     QString sceneDir;           // scene directory, without slashes
     QString videoFormat;        // .ogv or .mpg
     QString scenePath;          // path to scene inclusive the last '/'
+    QString audioFileName;      // absolute path to audiofile
 
     QStringList infos;                // fileName, comment, shot name etc
     QList<QStringList> infoList;     // list of stringlists with padInfo

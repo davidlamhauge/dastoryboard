@@ -415,7 +415,7 @@
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Pen</string>
+     <string>&amp;Pen</string>
     </property>
     <widget class="QMenu" name="menuLoad_Pen">
      <property name="title">
@@ -451,11 +451,12 @@
    </widget>
    <widget class="QMenu" name="menuScene">
     <property name="title">
-     <string>Scene</string>
+     <string>&amp;Scene</string>
     </property>
     <addaction name="action_New_Scene"/>
     <addaction name="separator"/>
     <addaction name="actionRun_Scene"/>
+    <addaction name="action_Add_audio"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuScene"/>
@@ -697,6 +698,14 @@
    </property>
    <property name="shortcut">
     <string>F2</string>
+   </property>
+  </action>
+  <action name="action_Add_audio">
+   <property name="text">
+    <string>&amp;Add audio</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+A</string>
    </property>
   </action>
  </widget>

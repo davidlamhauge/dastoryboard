@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+
 public:
      explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -51,6 +52,7 @@ private slots:
     void openStoryboard();      // opens existing storyboard, and reads xml-file
     void newScene();            // new scene created and initialised
     void openScene();           // opens existing scene, and reads xml-file
+    void addAudio();            // add audiofile to the storyboard
     void writeProjXML();        // writes .projdastoryboard info to xml-file
     void writeStoryboardXML();  // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
@@ -132,6 +134,7 @@ private:
     QString projFileName;               // project filename, absolute path
     QString projFilePath;               // filepath, including the last '/'
     QString sbFileName;                 // storyboard filename, absolute path
+    QString audioFileName;              // full path to audiofile
     QString scenePath;                  // path to scenes images + thumbs
     QString sceneDir;                   // name of directory of scene
     QString prefPath;                   // path to use for new storyboards

@@ -7,12 +7,17 @@
 #include <QComboBox>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QSettings>
+#include <QFile>
+#include <QXmlStreamReader>
+#include <QTextCodec>
+
 
 class PrefDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PrefDialog(const int &fpsec,QDialog *parent = 0);
+    explicit PrefDialog(const QString &scPath, QDialog *parent = 0);
 
     QLabel *labFps;
     QComboBox *cbFps;
@@ -33,8 +38,17 @@ signals:
     
 public slots:
 private:
-    int fps;
-    
+    void loadSettings();    // to get fps and autonumber
+    void readXml();         // to get videoFormat
+
+    QString sceneDir;       // name of scene directory
+    QString scenePath;      // absolute path to scene
+
+    int fps;                // frames per second
+    QString videoFormat;    // .ogv or .mpg
+    bool autoNumber;        // true or false
+
+
 };
 
 #endif // PREFDIALOG_H
