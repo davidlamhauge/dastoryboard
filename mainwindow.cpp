@@ -62,6 +62,7 @@ void MainWindow::setupNewSceneConnect()
 void MainWindow::setupAllConnects()
 {
     connect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
+    connect(ui->action_Remove_audio,SIGNAL(triggered()),this,SLOT(rmAudio()));
     connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     connect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
     connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
@@ -91,6 +92,7 @@ void MainWindow::setupAllConnects()
 void MainWindow::disconnectAllConnects()
 {
     disconnect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
+    disconnect(ui->action_Remove_audio,SIGNAL(triggered()),this,SLOT(rmAudio()));
     disconnect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
     disconnect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
     disconnect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
@@ -413,14 +415,39 @@ void MainWindow::openScene()
 
 void MainWindow::addAudio()
 {
-    audioFileName = QFileDialog::getOpenFileName(this, tr("Select audio file"),
+    QString s = QFileDialog::getOpenFileName(this, tr("Select audio file"),
                                                     projFilePath,
                                                     tr("Audio files (*.ogg *.mp3 *.wav)"));
-    QFile f(audioFileName);
-    if (f.exists())
+    QFile f(s);
+    if (f.exists()){
+        audioFileName = s;
         writeStoryboardXML();
-    else
+        ui->action_Remove_audio->setEnabled(true);
+    }
+}
+
+void MainWindow::rmAudio()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Remove audiofile from storyboard"));
+    msgBox.setInformativeText(tr("Do you want to remove the audiofile\n"
+                                 "%1\n"
+                                 "from the storyboard?\n\n"
+                                 "It will not be erased from the harddisc").arg(audioFileName));
+    msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes );
+    msgBox.setDefaultButton(QMessageBox::No);
+    int ret = msgBox.exec();
+    switch (ret)
+    {
+    case QMessageBox::Yes:
         audioFileName = "";
+        ui->action_Remove_audio->setEnabled(false);
+        writeStoryboardXML();
+        break;
+    case QMessageBox::No:
+    default:
+        break;
+    }
 }
 
 void MainWindow::saveImages()
@@ -859,6 +886,10 @@ void MainWindow::readStoryboardXML()
                 padInfo.clear();
             }
         }
+        if (audioFileName.length() < 1)
+            ui->action_Remove_audio->setEnabled(false);
+        else
+            ui->action_Remove_audio->setEnabled(true);
         updateScenelist();
         board->setSceneRect(0,0,padThumbList.size()*170,140);
         ui->gvStoryboard->resize(padThumbList.size()*170,140);
@@ -1139,6 +1170,7 @@ void MainWindow::disableStoryPad()
     ui->menuSketchpad->setEnabled(false);
     ui->action_Save_Storyboard->setEnabled(false);
     ui->action_Add_audio->setEnabled(false);
+    ui->action_Remove_audio->setEnabled(false);
 }
 
 void MainWindow::enableStoryPad()
@@ -1158,6 +1190,7 @@ void MainWindow::enableStoryPad()
     ui->menuSettings->setEnabled(true);
     ui->action_Save_Storyboard->setEnabled(true);
     ui->action_Add_audio->setEnabled(true);
+    ui->action_Remove_audio->setEnabled(true);
 }
 
 void MainWindow::disableScene()

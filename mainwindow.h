@@ -53,6 +53,7 @@ private slots:
     void newScene();            // new scene created and initialised
     void openScene();           // opens existing scene, and reads xml-file
     void addAudio();            // add audiofile to the storyboard
+    void rmAudio();             // remove audiofile from the storyboard
     void writeProjXML();        // writes .projdastoryboard info to xml-file
     void writeStoryboardXML();  // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings

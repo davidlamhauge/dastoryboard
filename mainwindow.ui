@@ -457,6 +457,7 @@
     <addaction name="separator"/>
     <addaction name="actionRun_Scene"/>
     <addaction name="action_Add_audio"/>
+    <addaction name="action_Remove_audio"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuScene"/>
@@ -706,6 +707,14 @@
    </property>
    <property name="shortcut">
     <string>Alt+A</string>
+   </property>
+  </action>
+  <action name="action_Remove_audio">
+   <property name="text">
+    <string>&amp;Remove audio</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Z</string>
    </property>
   </action>
  </widget>
