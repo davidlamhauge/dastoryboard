@@ -18,7 +18,9 @@
 #include <QTime>
 #include <QEventLoop>
 #include <QComboBox>
+#include <QSpinBox>
 #include <QProcess>
+#include <QByteArray>
 
 class animatic : public QDialog
 {
@@ -35,8 +37,11 @@ public:
     QGraphicsScene *sc;
     QGraphicsView *view;
     QLabel *labStartPad;
-    QComboBox *startPad;
-    QPushButton *btnExport;
+    QComboBox *cbStartPad;
+    QLabel *labAudioOffset;
+    QSpinBox *sbAudioOffset;
+    QPushButton *btnExportVideo;
+    QPushButton *btnExportImages;
 
     QLabel *labFromStart;
     QPushButton *btnFromStart;
@@ -54,11 +59,14 @@ public slots:
     void btnPlayClicked();
     void btnStopClicked();
     void btnQuitClicked();
-    void exportAnimatic();          // export animatic to mp4 or avi
+    void exportAnimatic();      // export animatic to mp4 or avi
+    void exportImages();        // export images to scenepath/tmp
+    void writeStat();
 
 private:
     void initConnects();
     void initComboBox();
+    float calculateAudioOffset();
     void renderVideo();             // the actual rendering of the video
     void readXml();
     void btnReadyMode();
@@ -69,11 +77,12 @@ private:
 
     int fps;
     int framesTotal;                // frames in the animatic from start to end
+    float audioOffset;              // offset from beginning of audio-file
     bool run;
 
     QTimer *timer;
     QEventLoop *loop;
-    QProcess proc;
+    QProcess *proc;
     QString projFilePath;
     QString sceneDir;           // scene directory, without slashes
     QString videoFormat;        // .ogv or .mpg

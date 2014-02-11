@@ -8,10 +8,13 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     sc->setBackgroundBrush(grayBrush);
     view = new QGraphicsView(sc);
 
-    labStartPad = new QLabel(tr("From:"));
-    startPad = new QComboBox();
+    labStartPad = new QLabel(tr("Video start-pad:"));
+    cbStartPad = new QComboBox();
 
-    btnExport = new QPushButton(tr("Export video"));
+    btnExportVideo = new QPushButton(tr("Export video"));
+    btnExportImages = new QPushButton(tr("Export images"));
+//    labAudioOffset = new QLabel(tr("Audio Offset in frames:"));
+//    sbAudioOffset = new QSpinBox();
 
     btnFromStart = new QPushButton(tr("Play","Meaning: Play from chosen start"));
     btnStop = new QPushButton(tr("Stop"));
@@ -19,11 +22,14 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
 
     buttonlayout = new QGridLayout();
     buttonlayout->addWidget(labStartPad,0,0);
-    buttonlayout->addWidget(startPad,0,1);
-    buttonlayout->addWidget(btnExport,0,2);
-    buttonlayout->addWidget(btnFromStart,1,0);
-    buttonlayout->addWidget(btnStop,1,1);
-    buttonlayout->addWidget(btnQuit,1,2);
+    buttonlayout->addWidget(cbStartPad,0,1);
+    buttonlayout->addWidget(btnExportVideo,0,2);
+    buttonlayout->addWidget(btnExportImages,1,2);
+//    buttonlayout->addWidget(labAudioOffset,1,0);
+//    buttonlayout->addWidget(sbAudioOffset,1,1);
+    buttonlayout->addWidget(btnFromStart,2,0);
+    buttonlayout->addWidget(btnStop,2,1);
+    buttonlayout->addWidget(btnQuit,2,2);
 
     vertLayout = new QVBoxLayout();
     vertLayout->addWidget(view);
@@ -47,7 +53,12 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     initComboBox();
     initConnects();
 
+//    sbAudioOffset->setMinimum(1);
+//    sbAudioOffset->setMaximum(framesTotal);
+
     btnReadyMode();
+
+//    qDebug() << (float) 83/fps;
 }
 /*
     QSettings settings("dalanima/dastoryboard","dastoryboard");
@@ -66,115 +77,112 @@ void animatic::initConnects()
     connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
     connect(btnStop,SIGNAL(clicked()),this,SLOT(btnStopClicked()));
     connect(btnQuit,SIGNAL(clicked()),this,SLOT(btnQuitClicked()));
-    connect(btnExport,SIGNAL(clicked()),this,SLOT(exportAnimatic()));
+    connect(btnExportVideo,SIGNAL(clicked()),this,SLOT(exportAnimatic()));
+    connect(btnExportImages,SIGNAL(clicked()),this,SLOT(exportImages()));
 }
 
 void animatic::initComboBox()
 {
-    startPad->clear();
+    cbStartPad->clear();
     for (int i = 1;i < infoList.size()+1;i++){
-        startPad->addItem(QString::number(i));
+        cbStartPad->addItem(QString::number(i));
     }
-    startPad->setCurrentIndex(0);
+    cbStartPad->setCurrentIndex(0);
+}
+
+float animatic::calculateAudioOffset()
+{
+    float teller;
+    teller = 0;
+    if (cbStartPad->currentIndex() > 0){
+        for (int i = 0; i < cbStartPad->currentIndex() + 1;i++)
+            teller += infoList[i][frames].toFloat();
+    }
+    teller += (float) sbAudioOffset->value();
+    return teller;
 }
 
 void animatic::renderVideo()
 {
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
-    btnExport->setEnabled(false);
+    btnExportVideo->setEnabled(false);
     btnQuit->setEnabled(false);
     btnFromStart->setEnabled(false);
 
-    // Make directory for images to convert later
-    proc.start("mkdir",QStringList() << scenePath + "tmp/");
-    while (proc.state() > 0)
-        sleep(2);
-//    qDebug() << t.elapsed() << " ms, directory tmp made";     // for checking time accuracy (3)
-
+    proc = new QProcess(this);
     // Make images in numeric order
-    int teller = 1;
+    exportImages();                         // separate function for exporting images
 
-    QMessageBox msgBox;
-    msgBox.setWindowTitle(tr("Export to video..."));
-    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-    msgBox.show();
-
-    QString fname;
-    for (int i = 0; i < pixmapList.size();i++){
-        QImage image = pixmapList[i].toImage();
-        for (int j = 0;j < infoList[i][frames].toInt();j++){
-            if (j == 0){ // IF it is the first drawing
-                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                 fname = scenePath + "tmp/" + sceneDir + QString("_%1.png").arg(QString::number(teller),5,'0');
-                if (image.save(fname))
-                    teller += 1;
-                else{
-                    msgBox.setText(tr("Error while saving image..."));
-                    break;
-                }
-            }else{
-                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                proc.start("cp",QStringList() << fname
-                           << scenePath + "tmp/" + sceneDir +  QString("_%1.png").arg(QString::number(teller),5,'0'));
-                while (proc.state() > 0)
-                    sleep(2);
-                teller += 1;
-            }
-        }
-    }
 //    qDebug() << t.elapsed() << " ms, files made";     // for checking time accuracy (3)
 
     // Add parameters to a stringlist
     QStringList sl;
+    sl << "-loglevel" << "info";
     sl << "-i" << scenePath + "tmp/" + sceneDir + "_%5d.png";
     QFile f(audioFileName);
-    if (f.exists())
+    if (f.exists()){
+        /*
+        if (sbAudioOffset->value() > 1){    // for setting a audio offest. Does not work!
+            float f;                        // probably because of libav obstruction...
+            QString s;
+            f = (float) sbAudioOffset->value()/fps;
+            sl << "-itsoffset" << s.setNum(f);
+            qDebug() << sl << " efter offset";
+        }
+        */
         sl << "-i" << audioFileName;
+    }
     QString sr;
     sl << "-r" << sr.setNum(fps);
-
-//    sl << "-loglevel" << "info";
 
     sl << scenePath + sceneDir + videoFormat;
 
     // start process to export video
-    proc.start("ffmpeg",sl);
-    if (proc.state() > 0){      // if process is STARTING or RUNNING:
+    proc->start("ffmpeg",sl);
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Export to video..."));
+    msgBox.show();
+    if (proc->state() > 0){      // if process is STARTING or RUNNING:
+//        proc->setReadChannel(QProcess::StandardOutput);
+        connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(writeStat()));
         msgBox.setText(tr("Video is generating!\n"
                           "- Please wait...- it can take a while\n"
                           "This message box will close when finished."));
-    while (proc.state() > 0)
-        sleep(4);
-    sl.clear();
-    sl << "-r" << "-d" << scenePath + "tmp/";
-    proc.start("rm",sl);
-    msgBox.close();
+        while (proc->state() > 0){
+            sleep(4);
+        }
+        disconnect(proc,SIGNAL(readyRead()),this,SLOT(writeStat()));
+        msgBox.setText(tr("Deleting images..."));
+        sl.clear();
+        sl << "-r" << "-d" << scenePath + "tmp/";
+        proc->start("rm",sl);
+        msgBox.close();
     }else{
         sl.clear();
         sl << "-r" << "-d" << scenePath + "tmp/";
-        proc.start("rm",sl);
+        proc->start("rm",sl);
         QMessageBox msgBox;
         msgBox.setText(tr("Video export failed!\nIs Ffmpeg installed and in the PATH?"));
         msgBox.exec();
     }
 //    qDebug() << t.elapsed() << " ms, video produced";     // for checking time accuracy (3)
     //
-    btnExport->setEnabled(true);
+    btnExportVideo->setEnabled(true);
     btnFromStart->setEnabled(true);
     btnQuit->setEnabled(true);
     btnQuit->setFocus();
-//    qDebug() << t.elapsed() << " ms, files and dir deleted";     // for checking time accuracy (3)
+//    qDebug() << t.elapsed() << " ms, dir+files deleted";     // for checking time accuracy (3)
 }
 
 void animatic::btnPlayClicked()
 {
-    if (infoList.size() > 0 && proc.state() == 0){
+    if (infoList.size() > 0){
         btnPlayMode();
         run = true;
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
-        for (int i = startPad->currentIndex();i < infoList.size();i++){
+        for (int i = cbStartPad->currentIndex();i < infoList.size();i++){
             setWindowTitle(tr("Image number: %1").arg(infoList[i][shot]));
             sc->addPixmap(pixmapList[i]);                       // add pixmap
             sleep((1000/fps) * infoList[i][frames].toInt());    // sleep x millisecs
@@ -235,6 +243,51 @@ void animatic::exportAnimatic()
         renderVideo();
 }
 
+void animatic::exportImages()
+{
+    proc = new QProcess(this);
+    // Make directory for images to convert later
+    proc->start("mkdir",QStringList() << scenePath + "tmp/");
+    while (proc->state() > 0)
+        sleep(2);
+    int teller = 1;
+    QMessageBox msgBox;
+    msgBox.setWindowTitle(tr("Exporting images..."));
+    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+    msgBox.show();
+
+    QString fname;
+    for (int i = 0; i < pixmapList.size();i++){
+        QImage image = pixmapList[i].toImage();
+        for (int j = 0;j < infoList[i][frames].toInt();j++){
+            if (j == 0){ // IF it is the first drawing
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                 fname = scenePath + "tmp/" + sceneDir + QString("_%1.png").arg(QString::number(teller),5,'0');
+                if (image.save(fname))
+                    teller += 1;
+                else{
+                    msgBox.setText(tr("Error while saving image..."));
+                    break;
+                }
+            }else{
+                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                proc->start("cp",QStringList() << fname
+                           << scenePath + "tmp/" + sceneDir +  QString("_%1.png").arg(QString::number(teller),5,'0'));
+                while (proc->state() > 0)
+                    sleep(2);
+                teller += 1;
+            }
+        }
+    }
+    msgBox.close();
+}
+
+void animatic::writeStat()
+{
+    QString s = (QString) proc->readAllStandardOutput();
+    qDebug() << s << " debug";
+}
+
 void animatic::readXml()
 {
     framesTotal = 0;
@@ -285,7 +338,7 @@ void animatic::btnDisableAll()
     btnFromStart->setEnabled(false);
     btnStop->setEnabled(false);
     btnQuit->setEnabled(false);
-    btnExport->setEnabled(false);
+    btnExportVideo->setEnabled(false);
 }
 
 void animatic::btnEnableAll()
@@ -293,6 +346,6 @@ void animatic::btnEnableAll()
     btnFromStart->setEnabled(true);
     btnStop->setEnabled(true);
     btnQuit->setEnabled(true);
-    btnExport->setEnabled(true);
+    btnExportVideo->setEnabled(true);
 }
 
