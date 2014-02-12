@@ -13,8 +13,6 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
 
     btnExportVideo = new QPushButton(tr("Export video"));
     btnExportImages = new QPushButton(tr("Export images"));
-//    labAudioOffset = new QLabel(tr("Audio Offset in frames:"));
-//    sbAudioOffset = new QSpinBox();
 
     btnFromStart = new QPushButton(tr("Play","Meaning: Play from chosen start"));
     btnStop = new QPushButton(tr("Stop"));
@@ -25,8 +23,6 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     buttonlayout->addWidget(cbStartPad,0,1);
     buttonlayout->addWidget(btnExportVideo,0,2);
     buttonlayout->addWidget(btnExportImages,1,2);
-//    buttonlayout->addWidget(labAudioOffset,1,0);
-//    buttonlayout->addWidget(sbAudioOffset,1,1);
     buttonlayout->addWidget(btnFromStart,2,0);
     buttonlayout->addWidget(btnStop,2,1);
     buttonlayout->addWidget(btnQuit,2,2);
@@ -53,25 +49,9 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     initComboBox();
     initConnects();
 
-//    sbAudioOffset->setMinimum(1);
-//    sbAudioOffset->setMaximum(framesTotal);
-
     btnReadyMode();
-
-//    qDebug() << (float) 83/fps;
 }
-/*
-    QSettings settings("dalanima/dastoryboard","dastoryboard");
-    settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
-    if (settings.contains("projFileName")){             // if projFileName exists...
-        scenePath = settings.value("scenePath").toString();
-        sceneDir = settings.value("sceneDir").toString();
-        projFilePath = settings.value("projFilePath").toString();
-        fps = settings.value("Fps").toInt();
-        autoNumber = settings.value("autoNumber").toBool();
-        videoFormat = settings.value("videoFormat").toString();
 
-*/
 void animatic::initConnects()
 {
     connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
@@ -88,18 +68,6 @@ void animatic::initComboBox()
         cbStartPad->addItem(QString::number(i));
     }
     cbStartPad->setCurrentIndex(0);
-}
-
-float animatic::calculateAudioOffset()
-{
-    float teller;
-    teller = 0;
-    if (cbStartPad->currentIndex() > 0){
-        for (int i = 0; i < cbStartPad->currentIndex() + 1;i++)
-            teller += infoList[i][frames].toFloat();
-    }
-    teller += (float) sbAudioOffset->value();
-    return teller;
 }
 
 void animatic::renderVideo()
@@ -122,15 +90,6 @@ void animatic::renderVideo()
     sl << "-i" << scenePath + "tmp/" + sceneDir + "_%5d.png";
     QFile f(audioFileName);
     if (f.exists()){
-        /*
-        if (sbAudioOffset->value() > 1){    // for setting a audio offest. Does not work!
-            float f;                        // probably because of libav obstruction...
-            QString s;
-            f = (float) sbAudioOffset->value()/fps;
-            sl << "-itsoffset" << s.setNum(f);
-            qDebug() << sl << " efter offset";
-        }
-        */
         sl << "-i" << audioFileName;
     }
     QString sr;
@@ -144,7 +103,6 @@ void animatic::renderVideo()
     msgBox.setWindowTitle(tr("Export to video..."));
     msgBox.show();
     if (proc->state() > 0){      // if process is STARTING or RUNNING:
-//        proc->setReadChannel(QProcess::StandardOutput);
         connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(writeStat()));
         msgBox.setText(tr("Video is generating!\n"
                           "- Please wait...- it can take a while\n"

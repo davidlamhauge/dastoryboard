@@ -388,89 +388,89 @@
     </message>
     <message>
         <location filename="../mainwindow.cpp" line="35"/>
-        <location filename="../mainwindow.cpp" line="911"/>
+        <location filename="../mainwindow.cpp" line="913"/>
         <source>File: %1 not found!</source>
         <translation>Filen: %1 ikke fundet!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="240"/>
-        <location filename="../mainwindow.cpp" line="353"/>
+        <location filename="../mainwindow.cpp" line="241"/>
+        <location filename="../mainwindow.cpp" line="354"/>
         <source>dastoryboard filename</source>
         <translation>dastoryboard filnavn</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="241"/>
+        <location filename="../mainwindow.cpp" line="242"/>
         <source>dastoryboard files (*.dastoryboard)</source>
         <translation>dastoryboard filer (*.dastoryboard)</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui" line="626"/>
-        <location filename="../mainwindow.cpp" line="1032"/>
+        <location filename="../mainwindow.cpp" line="1034"/>
         <source>Erase drawing</source>
         <translation>Slet tegning</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1103"/>
+        <location filename="../mainwindow.cpp" line="1105"/>
         <source>About dastoryboard</source>
         <translation>Om dastoryboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1104"/>
+        <location filename="../mainwindow.cpp" line="1106"/>
         <source>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; is an Open Source storyboard software for your convenience. Please enjoy!</source>
         <translation>&lt;p&gt;&lt;b&gt;dastoryboard&lt;/b&gt; er et Open Source storyboard program, lavet til dig. God fornøjelse!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="459"/>
+        <location filename="../mainwindow.cpp" line="460"/>
         <source>File does no exist!</source>
         <translation>Filen eksisterer ikke!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="324"/>
+        <location filename="../mainwindow.cpp" line="325"/>
         <source>dastoryboard project filename</source>
         <translation>dastoryboard projekt filenavn</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="354"/>
+        <location filename="../mainwindow.cpp" line="355"/>
         <source>dastoryboard files (*.projdastoryboard)</source>
         <translation>dastoryboard filer (*.projdastoryboard)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="370"/>
+        <location filename="../mainwindow.cpp" line="371"/>
         <source>New Scene</source>
         <translation>Ny Scene</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="371"/>
+        <location filename="../mainwindow.cpp" line="372"/>
         <source>Scene name: (maximum 6 char.)</source>
         <translation>Scene navn: (maksimum 6 tegn.)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="374"/>
+        <location filename="../mainwindow.cpp" line="375"/>
         <source>Scene not created!</source>
         <translation>Scene ikke oprettet!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="376"/>
         <source>Scene name must not exceed 6 chars</source>
         <translation>Scene navn må ikke overstige 6 tegn</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="418"/>
+        <location filename="../mainwindow.cpp" line="419"/>
         <source>Select audio file</source>
         <translation>Vælg audio fil</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="420"/>
+        <location filename="../mainwindow.cpp" line="421"/>
         <source>Audio files (*.ogg *.mp3 *.wav)</source>
         <translation>Audio filer (*.ogg *.mp3 *.wav)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="432"/>
+        <location filename="../mainwindow.cpp" line="433"/>
         <source>Remove audiofile from storyboard</source>
         <translation>Fjern audio fil fra storyboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="433"/>
+        <location filename="../mainwindow.cpp" line="434"/>
         <source>Do you want to remove the audiofile
 %1
 from the storyboard?
@@ -483,76 +483,76 @@ fra storyboardet?
 Det vil ikke slette filen fra harddisken</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="488"/>
-        <location filename="../mainwindow.cpp" line="543"/>
-        <location filename="../mainwindow.cpp" line="663"/>
-        <location filename="../mainwindow.cpp" line="693"/>
+        <location filename="../mainwindow.cpp" line="489"/>
+        <location filename="../mainwindow.cpp" line="544"/>
+        <location filename="../mainwindow.cpp" line="664"/>
+        <location filename="../mainwindow.cpp" line="694"/>
         <source>%1 of %2</source>
         <translation>%1 af %2</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="498"/>
+        <location filename="../mainwindow.cpp" line="499"/>
         <source>%1:%2:%3</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>%1:%2:%3</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="501"/>
+        <location filename="../mainwindow.cpp" line="502"/>
         <source>dastoryboard</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>dastoryboard</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="929"/>
-        <location filename="../mainwindow.cpp" line="933"/>
-        <location filename="../mainwindow.cpp" line="937"/>
-        <location filename="../mainwindow.cpp" line="941"/>
-        <location filename="../mainwindow.cpp" line="945"/>
+        <location filename="../mainwindow.cpp" line="931"/>
+        <location filename="../mainwindow.cpp" line="935"/>
+        <location filename="../mainwindow.cpp" line="939"/>
+        <location filename="../mainwindow.cpp" line="943"/>
+        <location filename="../mainwindow.cpp" line="947"/>
         <source>QPushButton { background: %1 ; color: %2 }</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>QPushButton { background: %1 ; color: %2 }</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="932"/>
+        <location filename="../mainwindow.cpp" line="934"/>
         <source>F5@: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F5@: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="936"/>
+        <location filename="../mainwindow.cpp" line="938"/>
         <source>F6: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F6: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="940"/>
+        <location filename="../mainwindow.cpp" line="942"/>
         <source>F7: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F7: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="944"/>
+        <location filename="../mainwindow.cpp" line="946"/>
         <source>F8: %1px</source>
         <comment>DO NOT TRANSLATE THIS</comment>
         <translation>F8: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="928"/>
+        <location filename="../mainwindow.cpp" line="930"/>
         <source>Pen: %1px</source>
         <translation>Pen: %1px</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1033"/>
+        <location filename="../mainwindow.cpp" line="1035"/>
         <source>Do you want to erase the drawing?</source>
         <translation>Ønsker du at slette tegningen?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1050"/>
+        <location filename="../mainwindow.cpp" line="1052"/>
         <source>Delete drawing from harddisc</source>
         <translation>Slet tegning fra harddisk</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1051"/>
+        <location filename="../mainwindow.cpp" line="1053"/>
         <source>Do you want to delete the drawing?
 It can NOT be undone!
 </source>
@@ -560,27 +560,27 @@ It can NOT be undone!
 DEt kan ikke fortrydes!</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="1094"/>
+        <location filename="../mainwindow.cpp" line="1096"/>
         <source>You can&apos;t manually delete all drawings.</source>
         <translation>Du kan ikke manuelt slette alle tegningerne.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="460"/>
+        <location filename="../mainwindow.cpp" line="461"/>
         <source>It was not possible to save the storyboard image.Do you have write access to the directory?</source>
         <translation>Det var ikke muligt at gemme storyboard tegningen. Har du skrive rettigheder til mappen?</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="485"/>
+        <location filename="../mainwindow.cpp" line="486"/>
         <source>dastoryboard:     Project: %1     Scene: </source>
         <translation>dastoryboard:     Projekt: %1     Scene: </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="325"/>
+        <location filename="../mainwindow.cpp" line="326"/>
         <source>dastoryboard project files (*.projdastoryboard)</source>
         <translation>dastoryboard project filer (*.projdastoryboard)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="815"/>
+        <location filename="../mainwindow.cpp" line="816"/>
         <source>No filename chosen!</source>
         <translation>Intet filenavn valgt!</translation>
     </message>
@@ -656,39 +656,39 @@ DEt kan ikke fortrydes!</translation>
 <context>
     <name>animatic</name>
     <message>
-        <location filename="../animatic.cpp" line="11"/>
-        <source>From:</source>
-        <translation>Fra:</translation>
-    </message>
-    <message>
         <location filename="../animatic.cpp" line="14"/>
         <source>Export video</source>
         <translation>Eksporter video</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="16"/>
+        <location filename="../animatic.cpp" line="15"/>
+        <source>Export images</source>
+        <translation>Eksporter billeder</translation>
+    </message>
+    <message>
+        <location filename="../animatic.cpp" line="17"/>
         <source>Play</source>
         <comment>Meaning: Play from chosen start</comment>
         <translation>Afspil</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="17"/>
+        <location filename="../animatic.cpp" line="18"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="18"/>
+        <location filename="../animatic.cpp" line="19"/>
         <source>Quit</source>
         <translation>Afslut</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="33"/>
-        <location filename="../animatic.cpp" line="185"/>
+        <location filename="../animatic.cpp" line="35"/>
+        <location filename="../animatic.cpp" line="151"/>
         <source>View Animatic</source>
         <translation>Se Animatic</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="144"/>
+        <location filename="../animatic.cpp" line="107"/>
         <source>Video is generating!
 - Please wait...- it can take a while
 This message box will close when finished.</source>
@@ -697,48 +697,63 @@ This message box will close when finished.</source>
 Denne meddelelses boks lukker, når videoen er færdig.</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="158"/>
+        <location filename="../animatic.cpp" line="114"/>
+        <source>Deleting images...</source>
+        <translation>Fjerner tegninger...</translation>
+    </message>
+    <message>
+        <location filename="../animatic.cpp" line="124"/>
         <source>Video export failed!
 Is Ffmpeg installed and in the PATH?</source>
         <translation>Video eksport mislykkedes!
 Er Ffmpeg installeret og i din PATH?</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="178"/>
+        <location filename="../animatic.cpp" line="144"/>
         <source>Image number: %1</source>
         <translation>Billede nummer: %1</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="190"/>
+        <location filename="../animatic.cpp" line="156"/>
         <source>No images to show!!</source>
         <translation>Ingen billeder at vise!</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="100"/>
-        <location filename="../animatic.cpp" line="108"/>
-        <location filename="../animatic.cpp" line="117"/>
+        <location filename="../animatic.cpp" line="213"/>
+        <source>Exporting images...</source>
+        <translation>Eksporterer tegninger...</translation>
+    </message>
+    <message>
+        <location filename="../animatic.cpp" line="214"/>
+        <location filename="../animatic.cpp" line="222"/>
+        <location filename="../animatic.cpp" line="231"/>
         <source>Generating image %1 of %2</source>
         <translation>Genererer billede %1 af %2</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="113"/>
+        <location filename="../animatic.cpp" line="227"/>
         <source>Error while saving image...</source>
         <translation>Fejl under gemning af billedfil...</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="219"/>
+        <location filename="../animatic.cpp" line="185"/>
         <source>Erase video-file</source>
         <translation>Slet video fil</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="220"/>
+        <location filename="../animatic.cpp" line="11"/>
+        <source>Video start-pad:</source>
+        <translation>Video start ark:</translation>
+    </message>
+    <message>
+        <location filename="../animatic.cpp" line="186"/>
         <source>The file %1 exists!
 Do you want to overwrite it?</source>
         <translation>Filen %1 eksisterer allerede!
 Ønsker du at overskrive den?</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="99"/>
+        <location filename="../animatic.cpp" line="103"/>
         <source>Export to video...</source>
         <translation>Eksporter til video...</translation>
     </message>

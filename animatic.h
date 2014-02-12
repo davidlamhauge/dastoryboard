@@ -38,8 +38,6 @@ public:
     QGraphicsView *view;
     QLabel *labStartPad;
     QComboBox *cbStartPad;
-    QLabel *labAudioOffset;
-    QSpinBox *sbAudioOffset;
     QPushButton *btnExportVideo;
     QPushButton *btnExportImages;
 
@@ -66,7 +64,6 @@ public slots:
 private:
     void initConnects();
     void initComboBox();
-    float calculateAudioOffset();
     void renderVideo();             // the actual rendering of the video
     void readXml();
     void btnReadyMode();
