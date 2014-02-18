@@ -594,7 +594,8 @@ void MainWindow::showInfoDialog()
     infoDial->labImagesInfo->setText(s.setNum(padInfoList.count()));
     infoDial->labFramesInfo->setText(ui->labFramesCountValue->text());
     infoDial->labFpsInfo->setText(s.setNum(fps));
-    infoDial->labDurationInfo->setText(ui->labTimeValue->text());
+    infoDial->labDurationInfo->setText(tr("%1 (mm:ss:ff)","mm:ss:ff = minutes:seconds:frames")
+                                       .arg(ui->labTimeValue->text()));
     infoDial->labAudioInfo->setText(audioFileName);
     infoDial->setModal(true);
     infoDial->show();
