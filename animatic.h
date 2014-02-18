@@ -60,6 +60,7 @@ public slots:
     void exportAnimatic();      // export animatic to mp4 or avi
     void exportImages();        // export images to scenepath/tmp
     void writeStat();
+    void calculateAudioOffset();    // calculates the float audioOffset
 
 private:
     void initConnects();

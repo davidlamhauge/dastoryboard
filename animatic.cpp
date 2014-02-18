@@ -36,6 +36,7 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
 
     fps = fpsec;
     run = false;
+    audioOffset = 0;
 
     timer = new QTimer();
     loop = new QEventLoop();
@@ -59,6 +60,7 @@ void animatic::initConnects()
     connect(btnQuit,SIGNAL(clicked()),this,SLOT(btnQuitClicked()));
     connect(btnExportVideo,SIGNAL(clicked()),this,SLOT(exportAnimatic()));
     connect(btnExportImages,SIGNAL(clicked()),this,SLOT(exportImages()));
+    connect(cbStartPad,SIGNAL(currentIndexChanged(int)),this,SLOT(calculateAudioOffset()));
 }
 
 void animatic::initComboBox()
@@ -138,16 +140,30 @@ void animatic::btnPlayClicked()
     if (infoList.size() > 0){
         btnPlayMode();
         run = true;
+        QStringList sl;
+        if (audioFileName.length() > 0){
+            proc = new QProcess(this);
+            sl << "-nodisp";
+            QString s;
+            sl << "-ss" << s.setNum(audioOffset);
+            sl << "-i" << audioFileName;
+            proc->start("ffplay",sl);
+        }
 //        QTime t;                              // for checking time accuracy (1)
 //        t.start();                            // for checking time accuracy (2)
         for (int i = cbStartPad->currentIndex();i < infoList.size();i++){
             setWindowTitle(tr("Image number: %1").arg(infoList[i][shot]));
             sc->addPixmap(pixmapList[i]);                       // add pixmap
             sleep((1000/fps) * infoList[i][frames].toInt());    // sleep x millisecs
-            if (run == false)                                   // break if run == false
+            if (run == false){                                  // break if run == false
+                if (audioFileName.length() > 0)
+                    proc->close();
                 break;
+            }
         }
 //        qDebug() << t.elapsed() << " ms";     // for checking time accuracy (3)
+        if (audioFileName.length() > 0)
+            proc->close();
         setWindowTitle(tr("View Animatic"));
         sc->clear();
         btnReadyMode();
@@ -244,6 +260,15 @@ void animatic::writeStat()
 {
     QString s = (QString) proc->readAllStandardOutput();
     qDebug() << s << " debug";
+}
+
+void animatic::calculateAudioOffset()
+{
+    audioOffset = 0;
+    if (cbStartPad->currentIndex() > 0){
+        for (int i = 0; i < cbStartPad->currentIndex();i++)
+            audioOffset += (float) infoList[i][frames].toInt()/fps;
+    }
 }
 
 void animatic::readXml()

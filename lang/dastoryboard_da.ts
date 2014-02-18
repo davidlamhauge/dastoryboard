@@ -683,12 +683,12 @@ DEt kan ikke fortrydes!</translation>
     </message>
     <message>
         <location filename="../animatic.cpp" line="35"/>
-        <location filename="../animatic.cpp" line="151"/>
+        <location filename="../animatic.cpp" line="167"/>
         <source>View Animatic</source>
         <translation>Se Animatic</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="107"/>
+        <location filename="../animatic.cpp" line="109"/>
         <source>Video is generating!
 - Please wait...- it can take a while
 This message box will close when finished.</source>
@@ -697,46 +697,46 @@ This message box will close when finished.</source>
 Denne meddelelses boks lukker, når videoen er færdig.</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="114"/>
+        <location filename="../animatic.cpp" line="116"/>
         <source>Deleting images...</source>
         <translation>Fjerner tegninger...</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="124"/>
+        <location filename="../animatic.cpp" line="126"/>
         <source>Video export failed!
 Is Ffmpeg installed and in the PATH?</source>
         <translation>Video eksport mislykkedes!
 Er Ffmpeg installeret og i din PATH?</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="144"/>
+        <location filename="../animatic.cpp" line="155"/>
         <source>Image number: %1</source>
         <translation>Billede nummer: %1</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="156"/>
+        <location filename="../animatic.cpp" line="172"/>
         <source>No images to show!!</source>
         <translation>Ingen billeder at vise!</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="213"/>
+        <location filename="../animatic.cpp" line="229"/>
         <source>Exporting images...</source>
         <translation>Eksporterer tegninger...</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="214"/>
-        <location filename="../animatic.cpp" line="222"/>
-        <location filename="../animatic.cpp" line="231"/>
+        <location filename="../animatic.cpp" line="230"/>
+        <location filename="../animatic.cpp" line="238"/>
+        <location filename="../animatic.cpp" line="247"/>
         <source>Generating image %1 of %2</source>
         <translation>Genererer billede %1 af %2</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="227"/>
+        <location filename="../animatic.cpp" line="243"/>
         <source>Error while saving image...</source>
         <translation>Fejl under gemning af billedfil...</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="185"/>
+        <location filename="../animatic.cpp" line="201"/>
         <source>Erase video-file</source>
         <translation>Slet video fil</translation>
     </message>
@@ -746,14 +746,14 @@ Er Ffmpeg installeret og i din PATH?</translation>
         <translation>Video start ark:</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="186"/>
+        <location filename="../animatic.cpp" line="202"/>
         <source>The file %1 exists!
 Do you want to overwrite it?</source>
         <translation>Filen %1 eksisterer allerede!
 Ønsker du at overskrive den?</translation>
     </message>
     <message>
-        <location filename="../animatic.cpp" line="103"/>
+        <location filename="../animatic.cpp" line="105"/>
         <source>Export to video...</source>
         <translation>Eksporter til video...</translation>
     </message>
