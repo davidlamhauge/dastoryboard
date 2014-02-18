@@ -17,13 +17,15 @@ SOURCES += main.cpp\
         sketchpad.cpp \
     penchooser.cpp \
     prefdialog.cpp \
-    animatic.cpp
+    animatic.cpp \
+    infodialog.cpp
 
 HEADERS  += mainwindow.h \
         sketchpad.h \
     penchooser.h \
     prefdialog.h \
-    animatic.h
+    animatic.h \
+    infodialog.h
 
 FORMS    += mainwindow.ui
 

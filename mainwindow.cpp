@@ -87,6 +87,8 @@ void MainWindow::setupAllConnects()
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
     connect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    connect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
+
 }
 
 void MainWindow::disconnectAllConnects()
@@ -117,6 +119,7 @@ void MainWindow::disconnectAllConnects()
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
     disconnect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    disconnect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
 }
 
 void MainWindow::initVars()
@@ -580,6 +583,21 @@ void MainWindow::runAnimatic()
     anim->setModal(true);
     anim->show();
     connect(anim,SIGNAL(aniClose()),this,SLOT(restartTimer()));
+}
+
+void MainWindow::showInfoDialog()
+{
+    QString s;
+    infoDial = new infodialog();
+    infoDial->labProjInfo->setText(projFileName);
+    infoDial->labSceneInfo->setText(sceneDir);
+    infoDial->labImagesInfo->setText(s.setNum(padInfoList.count()));
+    infoDial->labFramesInfo->setText(ui->labFramesCountValue->text());
+    infoDial->labFpsInfo->setText(s.setNum(fps));
+    infoDial->labDurationInfo->setText(ui->labTimeValue->text());
+    infoDial->labAudioInfo->setText(audioFileName);
+    infoDial->setModal(true);
+    infoDial->show();
 }
 
 void MainWindow::restartTimer()

@@ -4,6 +4,7 @@
 #include "penchooser.h"
 #include "prefdialog.h"
 #include "animatic.h"
+#include "infodialog.h"
 
 #include <QList>
 #include <QtGui>
@@ -86,6 +87,7 @@ private slots:
     void centerStoryboard();    // centers storyboard around the active pads thumb
     void changeImage();
     void runAnimatic();         // opens window to run animatic
+    void showInfoDialog();      // opens infoDialog window;
     void restartTimer();        // restarts timer after animatic
 
 private:
@@ -157,6 +159,7 @@ private:
     penChooser *pc;
     PrefDialog *prefs;
     animatic *anim;
+    infodialog *infoDial;
 };
 
 #endif // MAINWINDOW_H

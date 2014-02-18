@@ -447,6 +447,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionShow_project_info"/>
     <addaction name="action_About"/>
    </widget>
    <widget class="QMenu" name="menuScene">
@@ -715,6 +716,14 @@
    </property>
    <property name="shortcut">
     <string>Alt+Z</string>
+   </property>
+  </action>
+  <action name="actionShow_project_info">
+   <property name="text">
+    <string>Show project info</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
    </property>
   </action>
  </widget>
