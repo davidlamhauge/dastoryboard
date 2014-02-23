@@ -25,6 +25,9 @@ dastoryboard
 # Documents
 *.odt
 *.pdf
+READM*
+*.TXT
+*~
 
 # Qt-es
 
