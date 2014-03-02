@@ -88,6 +88,7 @@ void MainWindow::setupAllConnects()
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
     connect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    connect(ui->actionExport_pdf,SIGNAL(triggered()),this,SLOT(exportPdf()));
     connect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
 
 }
@@ -120,6 +121,7 @@ void MainWindow::disconnectAllConnects()
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
 
     disconnect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    disconnect(ui->actionExport_pdf,SIGNAL(triggered()),this,SLOT(exportPdf()));
     disconnect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
 }
 
@@ -577,15 +579,22 @@ void MainWindow::changeImage()
 
 void MainWindow::runAnimatic()
 {
-    textOutput *t = new textOutput(scenePath,this);
-//    t->show();
-    t->close();
     writeStoryboardXML();
     updateTimer->stop();
     anim = new animatic(fps, scenePath, this);
     anim->setModal(true);
     anim->show();
     connect(anim,SIGNAL(aniClose()),this,SLOT(restartTimer()));
+}
+
+void MainWindow::exportPdf()
+{
+    textOutput *t = new textOutput(scenePath,this);
+    QMessageBox msgBox;
+    msgBox.setText(tr("Storyboard has been exported to pdf!"));
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.exec();
+    t->close();
 }
 
 void MainWindow::showInfoDialog()

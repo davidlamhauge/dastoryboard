@@ -409,6 +409,8 @@
     <addaction name="action_Open_Storyboard"/>
     <addaction name="action_Save_Storyboard"/>
     <addaction name="separator"/>
+    <addaction name="actionExport_pdf"/>
+    <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionE_xit"/>
@@ -724,6 +726,14 @@
    </property>
    <property name="shortcut">
     <string>F11</string>
+   </property>
+  </action>
+  <action name="actionExport_pdf">
+   <property name="text">
+    <string>Export pdf</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
    </property>
   </action>
  </widget>
