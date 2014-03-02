@@ -15,17 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         sketchpad.cpp \
-    penchooser.cpp \
-    prefdialog.cpp \
-    animatic.cpp \
-    infodialog.cpp
+        penchooser.cpp \
+        animatic.cpp \
+        dialogs/prefdialog.cpp \
+        dialogs/infodialog.cpp \
+    textoutput.cpp
 
 HEADERS  += mainwindow.h \
         sketchpad.h \
-    penchooser.h \
-    prefdialog.h \
-    animatic.h \
-    infodialog.h
+        penchooser.h \
+        animatic.h \
+        dialogs/prefdialog.h \
+        dialogs/infodialog.h \
+    textoutput.h
 
 FORMS    += mainwindow.ui
 

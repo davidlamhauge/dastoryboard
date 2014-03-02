@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     projFileName = "";          // project filename, absolute path
     projFilePath = "";          // filepath, including the last '/'
     prefPath = "";
@@ -547,7 +548,6 @@ void MainWindow::updateImages() // updates storyboard thumbnails
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
         addThumbLabels();
-        ui->leComment->setText(padInfoList[activePad][comment]);
         ui->labSceneInfo->setText(padInfoList[activePad][scene]);
         ui->leShot->setText(padInfoList[activePad][shot]);
         ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
@@ -577,6 +577,9 @@ void MainWindow::changeImage()
 
 void MainWindow::runAnimatic()
 {
+    textOutput *t = new textOutput(scenePath,this);
+//    t->show();
+    t->close();
     writeStoryboardXML();
     updateTimer->stop();
     anim = new animatic(fps, scenePath, this);

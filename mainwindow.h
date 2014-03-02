@@ -2,13 +2,15 @@
 #define MAINWINDOW_H
 
 #include "penchooser.h"
-#include "prefdialog.h"
+#include "dialogs/prefdialog.h"
 #include "animatic.h"
-#include "infodialog.h"
+#include "dialogs/infodialog.h"
+#include "textoutput.h"
 
 #include <QList>
 #include <QtGui>
 #include <QMainWindow>
+
 
 
 class SketchPad;
