@@ -33,6 +33,12 @@ public:
      explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    enum numberingInfo {
+        autonumber  = 0,
+        autoDecimal = 1,
+        selfNumber  = 2
+    };
+
     enum padInfoLabels {
         fileName    = 0,
         comment     = 1,

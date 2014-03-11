@@ -361,6 +361,8 @@ void MainWindow::openStoryboard()
         tr("dastoryboard files (*.projdastoryboard)"));
     if (!projFileName.isEmpty()){
         projFilePath = projFileName.left(projFileName.lastIndexOf("/") + 1);
+        setupAllConnects();
+        setupNewSceneConnect();
         enableScene();
         enableStoryPad();
         initStoryboard();
@@ -1204,6 +1206,8 @@ void MainWindow::disableStoryPad()
     ui->action_Save_Storyboard->setEnabled(false);
     ui->action_Add_audio->setEnabled(false);
     ui->action_Remove_audio->setEnabled(false);
+    ui->actionExport_pdf->setEnabled(false);
+    ui->actionShow_project_info->setEnabled(false);
 }
 
 void MainWindow::enableStoryPad()
@@ -1224,6 +1228,8 @@ void MainWindow::enableStoryPad()
     ui->action_Save_Storyboard->setEnabled(true);
     ui->action_Add_audio->setEnabled(true);
     ui->action_Remove_audio->setEnabled(true);
+    ui->actionExport_pdf->setEnabled(true);
+    ui->actionShow_project_info->setEnabled(true);
 }
 
 void MainWindow::disableScene()
