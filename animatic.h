@@ -26,7 +26,7 @@ class animatic : public QDialog
 {
     Q_OBJECT
 public:
-    explicit animatic(const int &fpsec, const QString &scPath, QWidget *parent = 0);
+    explicit animatic(const int &fpsec, const QString &scPath, QWidget *parent = nullptr);
 
     enum padInfoLabels {
         fileName    = 0,

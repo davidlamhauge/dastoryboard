@@ -3,13 +3,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sketchpad.h"
+#include <QGraphicsPixmapItem>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     projFileName = "";          // project filename, absolute path
     projFilePath = "";          // filepath, including the last '/'
     prefPath = "";
@@ -149,7 +153,7 @@ void MainWindow::initScenes()
     ui->gvSketchPad->setFixedSize(642,482);
     ui->gvSketchPad->setScene(pad);
     board = new QGraphicsScene(this);
-    QBrush grayBrush(QColor(Qt::gray));
+    QBrush grayBrush(Qt::gray);
     board->setBackgroundBrush(grayBrush);
     ui->gvStoryboard->setScene(board);
     ui->gvStoryboard->show();
@@ -209,7 +213,7 @@ void MainWindow::initPad()
     padThumbList.append(imageThumb);    // append pixmap to List...
     QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
     board->addItem(pixItem);        //...and add it to storyboard as an Item..!
-    pixItem->setPos(((activePad+1) *170) - 165 , 3); // place pixItem in storyboard
+    pixItem->setPos(((activePad + 1) * PAD_WIDTH) - 165 , 3); // place pixItem in storyboard
 
     startUpdateImageTimer(updateInterval);
 }
@@ -480,7 +484,7 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
                      + padInfoList[i][shot] + ",("
                      + padInfoList[i][frames] + ")</div>");
         board->addItem(txt);
-        txt->setPos(((i + 1)*170) - 165 , 3);
+        txt->setPos(((i + 1)*PAD_WIDTH) - 165 , 3);
     }
     ui->gvStoryboard->update();
 }
@@ -488,6 +492,7 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
 void MainWindow::updateInfoLabels()
 {
     if (padInfoList.size() > 0){
+        qDebug() << ui->gvStoryboard->items().size();
         QStringList sl = projFileName.split('/');
         QString s = sl.last();
         s.chop(17);
@@ -545,9 +550,9 @@ void MainWindow::updateImages() // updates storyboard thumbnails
         imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
         padThumbList.replace(activePad,imageThumb); // update padThumbList
         QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
-        board->removeItem(board->itemAt(((activePad+1)*170) - 165 , 3));
+        board->removeItem(board->itemAt((activePad+1) * PAD_WIDTH - 165 , 3, transform));
         board->addItem(pixItem);
-        pixItem->setPos(((activePad + 1)*170) - 165 , 3);
+        pixItem->setPos(((activePad + 1)*PAD_WIDTH) - 165 , 3);
         pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
@@ -561,7 +566,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
 
 void MainWindow::centerStoryboard()
 {
-    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*170-165, 3, 160, 120),800,0);
+    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*PAD_WIDTH-165, 3, 160, 120),800,0);
 }
 
 void MainWindow::changeImage()
@@ -571,8 +576,8 @@ void MainWindow::changeImage()
         saveImages();
         QGraphicsItem *item;
         item = board->selectedItems().at(0);
-        int i = item->pos().x();        // find x-value
-        activePad = (i-5) / 170;
+        int i = static_cast<int>(item->pos().x());        // find x-value
+        activePad = (i-5) / PAD_WIDTH;
         padInfo = padInfoList.at(activePad);
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
@@ -632,8 +637,8 @@ void MainWindow::appendSketchPad()
     padInfo[scene] = sceneDir;
     ui->leShot->setText(padInfo[shot]);
     initPad();
-    board->setSceneRect(0,0,padThumbList.size()*170,140);
-    ui->gvStoryboard->resize(padThumbList.size()*170,140);
+    board->setSceneRect(0, 0, padThumbList.size() * PAD_WIDTH, PAD_HEIGHT);
+    ui->gvStoryboard->resize(padThumbList.size() * PAD_WIDTH, PAD_HEIGHT);
     updateImages();
     writeStoryboardXML();
 }
@@ -641,22 +646,22 @@ void MainWindow::appendSketchPad()
 void MainWindow::insertSketchPad()
 {
     if (board->selectedItems().size() == 1 &&
-            board->selectedItems().at(0)->x() < ((activePad+1) * 170) - 160){
+            board->selectedItems().at(0)->x() < ((activePad + 1) * PAD_WIDTH) - 160){
         updateImages();
         saveImages();
         QPixmap imageThumb;
         imageThumb = QPixmap::fromImage(sketchPad->image);
-        imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
+        imageThumb = imageThumb.scaled( 160, 120, Qt::KeepAspectRatio);
         padThumbList.insert(activePad+1, imageThumb);    // append pixmap to List...
         padInfoList.insert(activePad+1, padInfo);
         board->clear();
-        board->setSceneRect(0,0,padThumbList.size()*170,140);
-        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        board->setSceneRect(0, 0, padThumbList.size() * PAD_WIDTH, PAD_HEIGHT);
+        ui->gvStoryboard->resize(padThumbList.size() * PAD_WIDTH, PAD_HEIGHT);
         for (int i = 0;i < padThumbList.size();i++){
             imageThumb = padThumbList.at(i);
             QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
             board->addItem(pixItem);
-            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setPos((i+1) * PAD_WIDTH - 165, 3);
             pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         }
         lastNumber += 1;
@@ -666,7 +671,7 @@ void MainWindow::insertSketchPad()
         ui->leShot->setText(padInfo[shot]);
         sketchPad->clearImage();
         updateImages();
-        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        board->itemAt((activePad+1) * PAD_WIDTH - 155, 100, transform)->setSelected(true);
         writeStoryboardXML();
     }
 }
@@ -680,20 +685,20 @@ void MainWindow::movePadLeft()
         QPixmap imageThumb;
         QGraphicsPixmapItem *pixItem;
         board->clear();
-        board->setSceneRect(0,0,padThumbList.size()*170,140);
-        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        board->setSceneRect(0,0,padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
+        ui->gvStoryboard->resize(padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
         for (int i = 0;i < padThumbList.size();i++){
             imageThumb = padThumbList.at(i);
             pixItem = new QGraphicsPixmapItem(imageThumb);
             board->addItem(pixItem);
-            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setPos((i+1)*PAD_WIDTH - 165,3);
             pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         }
         activePad -= 1;
         addThumbLabels();
         updateInfoLabels();
         disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        board->itemAt((activePad+1)*PAD_WIDTH-155, 100, transform)->setSelected(true);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
         connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
@@ -710,20 +715,20 @@ void MainWindow::movePadRight()
         QPixmap imageThumb;
         QGraphicsPixmapItem *pixItem;
         board->clear();
-        board->setSceneRect(0,0,padThumbList.size()*170,140);
-        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        board->setSceneRect(0,0,padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
+        ui->gvStoryboard->resize(padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
         for (int i = 0;i < padThumbList.size();i++){
             imageThumb = padThumbList.at(i);
             pixItem = new QGraphicsPixmapItem(imageThumb);
             board->addItem(pixItem);
-            pixItem->setPos((i+1)*170 - 165,3);
+            pixItem->setPos((i+1)*PAD_WIDTH - 165,3);
             pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         }
         activePad += 1;
         addThumbLabels();
         updateInfoLabels();
         disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        board->itemAt((activePad+1)*PAD_WIDTH-155, 100, transform)->setSelected(true);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
         connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
@@ -914,7 +919,7 @@ void MainWindow::readStoryboardXML()
                 padThumbList.append(imageThumb);
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);                // place pixItem in storyboard
-                pixItem->setPos((padThumbList.size()*170) - 165 , 3);
+                pixItem->setPos((padThumbList.size()*PAD_WIDTH) - 165 , 3);
                 pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
                 update();
                 padInfoList.append(padInfo);
@@ -926,8 +931,8 @@ void MainWindow::readStoryboardXML()
         else
             ui->action_Remove_audio->setEnabled(true);
         updateScenelist();
-        board->setSceneRect(0,0,padThumbList.size()*170,140);
-        ui->gvStoryboard->resize(padThumbList.size()*170,140);
+        board->setSceneRect(0,0,padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
+        ui->gvStoryboard->resize(padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
         sPen = sPenList[activePen];
         sketchPad->setPenColor(sPen.penColor);
         sketchPad->setPenWidth(sPen.penWidth);
@@ -940,7 +945,7 @@ void MainWindow::readStoryboardXML()
         setBtnColors();
         updateImages();
         addThumbLabels();
-        board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+        board->itemAt((activePad+1)*PAD_WIDTH-155, 100, transform)->setSelected(true);
     }else{
         QMessageBox msgBox;
         msgBox.setText(tr("File: %1 not found!").arg(sbFileName));
@@ -1107,17 +1112,17 @@ void MainWindow::deleteDrawing()
             padInfo = padInfoList.at(activePad);
             sketchPad->image.load(scenePath + padInfo[fileName]);
             board->clear();
-            board->setSceneRect(0,0,padThumbList.size()*170,140);
-            ui->gvStoryboard->resize(padThumbList.size()*170,140);
+            board->setSceneRect(0,0,padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
+            ui->gvStoryboard->resize(padThumbList.size()*PAD_WIDTH,PAD_HEIGHT);
             for (int i = 0;i < padThumbList.size();i++){
                 imageThumb = padThumbList.at(i);
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
                 board->addItem(pixItem);
-                pixItem->setPos((i+1)*170 - 165,3);
+                pixItem->setPos((i+1) * PAD_WIDTH - 165,3);
                 pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
             }
             updateImages();
-            board->itemAt((activePad+1)*170-155,100)->setSelected(true);
+            board->itemAt((activePad + 1) * PAD_WIDTH - 155, 100, transform)->setSelected(true);
             startUpdateImageTimer(updateInterval);
             break;
         case QMessageBox::Cancel:

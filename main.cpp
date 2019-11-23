@@ -1,5 +1,5 @@
-#include <QtGui/QApplication>
 #include "mainwindow.h"
+#include <QApplication>
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>

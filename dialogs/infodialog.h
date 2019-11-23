@@ -11,7 +11,7 @@ class infodialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit infodialog(QWidget *parent = 0);
+    explicit infodialog(QWidget *parent = nullptr);
 
     QLabel *labHeader;          // header in htlm sized letters
 

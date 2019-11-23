@@ -11,7 +11,7 @@ class SketchPad : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SketchPad(QWidget *parent = 0);
+    explicit SketchPad(QWidget *parent = nullptr);
 
     void setPenColor(const QColor &newColor);
     void setPenWidth(int newWidth);

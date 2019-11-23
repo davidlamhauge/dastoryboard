@@ -1,7 +1,6 @@
 #ifndef PENCHOOSER_H
 #define PENCHOOSER_H
 
-#include <QDialog>
 #include <QColorDialog>
 #include <QLabel>
 #include <QPushButton>
@@ -14,7 +13,7 @@ class penChooser : public QDialog
 {
     Q_OBJECT
 public:
-    explicit penChooser(QDialog *parent = 0);
+    explicit penChooser(QDialog *parent = nullptr);
 
     QColorDialog *colordialog;
     QLabel *labWidth;

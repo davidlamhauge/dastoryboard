@@ -17,7 +17,7 @@ class PrefDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit PrefDialog(const QString &scPath, QDialog *parent = 0);
+    explicit PrefDialog(const QString &scPath, QDialog *parent = nullptr);
 
     QLabel *labFps;
     QComboBox *cbFps;

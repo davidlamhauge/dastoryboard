@@ -13,7 +13,7 @@ class textOutput : public QDialog
 {
     Q_OBJECT
 public:                 // 's' is the absolute path to the scene
-    explicit textOutput(const QString &s, QWidget *parent = 0);
+    explicit textOutput(const QString &s, QWidget *parent = nullptr);
 
     enum padInfoLabels {
         fileName    = 0,
