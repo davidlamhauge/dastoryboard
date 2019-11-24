@@ -40,18 +40,25 @@ public:
     };
 
     enum padInfoLabels {
-        fileName    = 0,
-        comment     = 1,
-        showComment = 2,
-        scene       = 3,
-        showScene   = 4,
-        shot        = 5,
-        showShot    = 6,
-        frames      = 7,
-        showFrames  = 8
+        fileName     = 0,
+        dialogue     = 1,
+        showDialogue = 2,
+        action       = 3,
+        showAction   = 4,
+        slug         = 5,
+        showSlug     = 6,
+        scene        = 7,
+        showScene    = 8,
+        shot         = 9,
+        showShot     = 10,
+        frames       = 11,
+        showFrames   = 12
     };
 
 public slots:
+
+signals:
+    void padChanged();
 
 protected:
     void closeEvent(QCloseEvent *e);
@@ -69,6 +76,7 @@ private slots:
     void setPrefs();            // set preferences via PrefDialog
     void okPrefs();
     void cancelPrefs();
+
     void penStd();              // select Standard Pen
     void penF5();               // select sPen F5                           F5
     void penF6();               // select sPen F6                           F6
@@ -80,16 +88,24 @@ private slots:
     void eraseF5();             // erases lines with sketchpen-color        Shift-F5
     void eraseAll();            // erases entire picture                    F9
     void deleteDrawing();       // erases drawing from board and harddisc   Del
+
     void about();
+
     void appendSketchPad();     // saves active pad and appends new         ALT+A
     void insertSketchPad();     // saves active pad and inserts new         ALT+I
     void movePadLeft();         // moves pad to the left, if possible       SHIFT+Left
     void movePadRight();        // moves pad to the right, if possible      SHIFT+RIGHT
+    void padHasChanged();
+
     void updateComment();       // udates comment for pad
+    void updateLineEdits();
+    void clearLineEdits();
+
     void updateScene();         // updates scene info
     void updateShot();          // updates shot info
     void updateFrames();        // updates shot and frames for pad struct
-    void updateScenelist();             // updates scene names to comboBox
+    void updateScenelist();     // updates scene names to comboBox
+
     void saveImages();          // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb

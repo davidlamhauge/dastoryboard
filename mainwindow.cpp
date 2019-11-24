@@ -87,6 +87,14 @@ void MainWindow::setupAllConnects()
     connect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
     connect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
 
+    connect(ui->leDialogue,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leAction,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leSlug,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
+    connect(this, &MainWindow::padChanged, this, &MainWindow::padHasChanged);
+
     // set pen width and color
     connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -120,6 +128,15 @@ void MainWindow::disconnectAllConnects()
     disconnect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
     disconnect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
     disconnect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
+
+    disconnect(ui->leDialogue,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leAction,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leSlug,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
+    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
+    disconnect(this, &MainWindow::padChanged, this, &MainWindow::padHasChanged);
+
     // set pen width and color
     disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
     disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
@@ -222,7 +239,11 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
 {           // initiates padinfo, and information about the pad
     padInfo.clear();
     padInfo.append(QString::number(lastNumber) + ".png");  // image filename!
-    padInfo.append("");
+    padInfo.append("");         // dialogue
+    padInfo.append("false");
+    padInfo.append("");         // action
+    padInfo.append("false");
+    padInfo.append("");         // slug
     padInfo.append("false");
     padInfo.append(sceneDir);
     padInfo.append("false");
@@ -230,19 +251,13 @@ void MainWindow::initPadInfo() /* sketchPad info as strings */
     padInfo.append("false");
     padInfo.append("50");
     padInfo.append("false");
-    padInfoList.replace(activePad,padInfo);
+    padInfoList.replace(activePad, padInfo);
             // update text and values in padInfo, when changes are made
-    disconnect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-    ui->leComment->clear();
+    ui->leDialogue->clear();
+    ui->leAction->clear();
+    ui->leSlug->clear();
     ui->leShot->clear();
     ui->sbFrames->setValue(50);
-    connect(ui->leComment,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 }
 
 QString MainWindow::getSbFileName()
@@ -492,7 +507,7 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
 void MainWindow::updateInfoLabels()
 {
     if (padInfoList.size() > 0){
-        qDebug() << ui->gvStoryboard->items().size();
+        qDebug() << padInfoList;
         QStringList sl = projFileName.split('/');
         QString s = sl.last();
         s.chop(17);
@@ -512,7 +527,7 @@ void MainWindow::updateInfoLabels()
         ui->labTimeValue->setText(tr("%1:%2:%3","DO NOT TRANSLATE THIS").arg(QString::number(mm),2,'0')
                                   .arg(QString::number(ss),2,'0').arg(QString::number(ff),2,'0'));
     }else{
-        MainWindow::setWindowTitle(tr("dastoryboard","DO NOT TRANSLATE THIS"));
+        MainWindow::setWindowTitle("dastoryboard");
         ui->labSceneInfo->setText("");
         ui->labActivePadInfo->setText("");
         ui->labFramesCountValue->setText("");
@@ -561,6 +576,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
         ui->leShot->setText(padInfoList[activePad][shot]);
         ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
         sketchPad->update();
+        emit padChanged();
     }
 }
 
@@ -581,6 +597,8 @@ void MainWindow::changeImage()
         padInfo = padInfoList.at(activePad);
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
+        clearLineEdits();
+        updateLineEdits();
     }
 }
 
@@ -736,6 +754,11 @@ void MainWindow::movePadRight()
     }
 }
 
+void MainWindow::padHasChanged()
+{
+ //   updateLineEdits();
+}
+
 void MainWindow::writeProjXML()
 {
     if (!projFileName.isEmpty()){
@@ -834,8 +857,12 @@ void MainWindow::writeStoryboardXML()
                 padInfo = padInfoList[i];
                 xmlwriter.writeStartElement("sketchpad");  // sketchpad START
                 xmlwriter.writeTextElement("fileName",padInfo[fileName]);
-                xmlwriter.writeTextElement("comment",padInfo[comment]);
-                xmlwriter.writeTextElement("showComment",padInfo[showComment]);
+                xmlwriter.writeTextElement("dialogue",padInfo[dialogue]);
+                xmlwriter.writeTextElement("showDialogue",padInfo[showDialogue]);
+                xmlwriter.writeTextElement("action",padInfo[action]);
+                xmlwriter.writeTextElement("showAction",padInfo[showAction]);
+                xmlwriter.writeTextElement("slug",padInfo[slug]);
+                xmlwriter.writeTextElement("showSlug",padInfo[showSlug]);
                 xmlwriter.writeTextElement("scene",padInfo[scene]);
                 xmlwriter.writeTextElement("showScene",padInfo[showScene]);
                 xmlwriter.writeTextElement("shot",padInfo[shot]);
@@ -896,9 +923,17 @@ void MainWindow::readStoryboardXML()
             }
             else if (xmlreader.isStartElement() && xmlreader.name() == "fileName")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "comment")
+            else if (xmlreader.isStartElement() && xmlreader.name() == "dialogue")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showComment")
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showDialogue")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "action")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showAction")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "slug")
+                padInfo.append(xmlreader.readElementText());
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showSlug")
                 padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "scene")
                 padInfo.append(xmlreader.readElementText());
@@ -938,7 +973,9 @@ void MainWindow::readStoryboardXML()
         sketchPad->setPenWidth(sPen.penWidth);
         padInfo = padInfoList.at(activePad);            // load active padinfo
         sketchPad->image.load(scenePath + padInfo[fileName]);
-        ui->leComment->setText(padInfo[comment]);
+        ui->leDialogue->setText(padInfo[dialogue]);
+        ui->leAction->setText(padInfo[action]);
+        ui->leSlug->setText(padInfo[slug]);
         ui->labSceneInfo->setText(padInfo[scene]);
         ui->leShot->setText(padInfo[shot]);
         ui->sbFrames->setValue(padInfo[frames].toInt());
@@ -1147,7 +1184,25 @@ void MainWindow::about()
 
 void MainWindow::updateComment()
 {
-    padInfoList[activePad][comment] = ui->leComment->text();
+    qDebug() << padInfoList;
+
+    padInfoList[activePad][dialogue] = ui->leDialogue->text();
+    padInfoList[activePad][action] = ui->leAction->text();
+    padInfoList[activePad][slug] = ui->leSlug->text();
+}
+
+void MainWindow::updateLineEdits()
+{
+    ui->leDialogue->setText(padInfoList[activePad][dialogue]);
+    ui->leAction->setText(padInfoList[activePad][action]);
+    ui->leSlug->setText(padInfoList[activePad][slug]);
+}
+
+void MainWindow::clearLineEdits()
+{
+    ui->leDialogue->clear();
+    ui->leAction->clear();
+    ui->leSlug->clear();
 }
 
 void MainWindow::updateScene()
@@ -1204,7 +1259,9 @@ void MainWindow::disableStoryPad()
     ui->btnF6->setEnabled(false);
     ui->btnF7->setEnabled(false);
     ui->btnF8->setEnabled(false);
-    ui->leComment->setEnabled(false);
+    ui->leDialogue->setEnabled(false);
+    ui->leAction->setEnabled(false);
+    ui->leSlug->setEnabled(false);
     ui->menuLoad_Pen->setEnabled(false);
     ui->menuSettings->setEnabled(false);
     ui->menuSketchpad->setEnabled(false);
@@ -1226,7 +1283,9 @@ void MainWindow::enableStoryPad()
     ui->btnF7->setEnabled(true);
     ui->btnF8->setEnabled(true);
     ui->sbFrames->setEnabled(true);
-    ui->leComment->setEnabled(true);
+    ui->leDialogue->setEnabled(true);
+    ui->leAction->setEnabled(true);
+    ui->leSlug->setEnabled(true);
     ui->menuLoad_Pen->setEnabled(true);
     ui->menuSketchpad->setEnabled(true);
     ui->menuSettings->setEnabled(true);
