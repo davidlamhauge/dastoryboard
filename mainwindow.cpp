@@ -1001,22 +1001,32 @@ void MainWindow::setBtnColors()
             ui->btnStandardPen->setText(tr("Standard Pen: %1px").arg(QString::number(sPenList[i].penWidth)));
             ui->btnStandardPen->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
+            if (i == activePen)
+                ui->btnStandardPen->setText(tr("ACTIVE"));
         }else if (i == 1){
             ui->btnF5->setText(tr("F5 erasable: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
             ui->btnF5->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
+            if (i == activePen)
+                ui->btnF5->setText(tr("Erasable ACTIVE"));
         }else if (i == 2){
             ui->btnF6->setText(tr("F6: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
             ui->btnF6->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
+            if (i == activePen)
+                ui->btnF6->setText(tr("ACTIVE"));
         }else if (i == 3){
             ui->btnF7->setText(tr("F7: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
             ui->btnF7->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
+            if (i == activePen)
+                ui->btnF7->setText(tr("ACTIVE"));
         }else{
             ui->btnF8->setText(tr("F8: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
             ui->btnF8->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
+            if (i == activePen)
+                ui->btnF8->setText(tr("ACTIVE"));
         }
     }
 }
@@ -1062,36 +1072,47 @@ void MainWindow::cancelPenPick()
 void MainWindow::penStd()
 {
     sPen = sPenList[0];
+    activePen = 0;
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
+    setBtnColors();
 }
 
 void MainWindow::penF5()
 {
     sPen = sPenList[1];
+    activePen = 1;
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
+    setBtnColors();
 }
 
 void MainWindow::penF6()
 {
     sPen = sPenList[2];
+    activePen = 2;
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
+    setBtnColors();
 }
 
 void MainWindow::penF7()
 {
+    qDebug() << "F7 pen 3";
     sPen = sPenList[3];
+    activePen = 3;
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
+    setBtnColors();
 }
 
 void MainWindow::penF8()
 {
     sPen = sPenList[4];
+    activePen = 4;
     sketchPad->setPenColor(sPen.penColor);
     sketchPad->setPenWidth(sPen.penWidth);
+    setBtnColors();
 }
 
 void MainWindow::eraseF5()
