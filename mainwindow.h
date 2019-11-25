@@ -42,23 +42,18 @@ public:
     enum padInfoLabels {
         fileName     = 0,
         dialogue     = 1,
-        showDialogue = 2,
-        action       = 3,
-        showAction   = 4,
-        slug         = 5,
-        showSlug     = 6,
-        scene        = 7,
-        showScene    = 8,
-        shot         = 9,
-        showShot     = 10,
-        frames       = 11,
-        showFrames   = 12
+        action       = 2,
+        slug         = 3,
+        scene        = 4,
+        shot         = 5,
+        frames       = 6,
+        showFrames   = 7
     };
 
 public slots:
-
-signals:
-    void padChanged();
+    void updateCommentDialogue(QString string);
+    void updateCommentAction(QString string);
+    void updateCommentSlug(QString string);
 
 protected:
     void closeEvent(QCloseEvent *e);
@@ -95,9 +90,7 @@ private slots:
     void insertSketchPad();     // saves active pad and inserts new         ALT+I
     void movePadLeft();         // moves pad to the left, if possible       SHIFT+Left
     void movePadRight();        // moves pad to the right, if possible      SHIFT+RIGHT
-    void padHasChanged();
 
-    void updateComment();       // udates comment for pad
     void updateLineEdits();
     void clearLineEdits();
 

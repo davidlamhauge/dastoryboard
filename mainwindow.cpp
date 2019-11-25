@@ -49,101 +49,117 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::updateCommentDialogue(QString string)
+{
+    padInfoList[activePad][dialogue] = string;
+    qDebug() << activePad << " " << padInfoList;
+}
+
+void MainWindow::updateCommentAction(QString string)
+{
+    padInfoList[activePad][action] = string;
+    qDebug() << activePad << " " << padInfoList;
+}
+
+void MainWindow::updateCommentSlug(QString string)
+{
+    padInfoList[activePad][slug] = string;
+    qDebug() << activePad << " " << padInfoList;
+}
+
 void MainWindow::setupGlobalConnects()
 {
-    connect(ui->action_New_Storyboard,SIGNAL(triggered()),this,SLOT(newStoryboard()));
-    connect(ui->action_Open_Storyboard,SIGNAL(triggered()),this,SLOT(openStoryboard()));
-    connect(ui->action_Save_Storyboard,SIGNAL(triggered()),this,SLOT(writeStoryboardXML()));
-    connect(ui->actionPreferences,SIGNAL(triggered()),this,SLOT(setPrefs()));
-    connect(ui->actionE_xit,SIGNAL(triggered()),this,SLOT(close()));
-    connect(ui->action_About,SIGNAL(triggered()),this,SLOT(about()));
+    connect(ui->action_New_Storyboard, SIGNAL(triggered()),this,SLOT(newStoryboard()));
+    connect(ui->action_Open_Storyboard, SIGNAL(triggered()),this,SLOT(openStoryboard()));
+    connect(ui->action_Save_Storyboard, SIGNAL(triggered()),this,SLOT(writeStoryboardXML()));
+    connect(ui->actionPreferences, SIGNAL(triggered()),this,SLOT(setPrefs()));
+    connect(ui->actionE_xit, SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->action_About, SIGNAL(triggered()),this,SLOT(about()));
 }
 
 void MainWindow::setupNewSceneConnect()
 {
-    connect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
+    connect(ui->action_New_Scene, SIGNAL(triggered()),this,SLOT(newScene()));
 }
 
 void MainWindow::setupAllConnects()
 {
-    connect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
-    connect(ui->action_Remove_audio,SIGNAL(triggered()),this,SLOT(rmAudio()));
-    connect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
-    connect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
-    connect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
-    connect(ui->actionErase_Sketch_Pen,SIGNAL(triggered()),this,SLOT(eraseF5()));
-    connect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
-    connect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
-    connect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
-    connect(ui->btnStandardPen,SIGNAL(pressed()),this,SLOT(penStd()));
-    connect(ui->btnF5,SIGNAL(pressed()),this,SLOT(penF5()));
-    connect(ui->btnF6,SIGNAL(pressed()),this,SLOT(penF6()));
-    connect(ui->btnF7,SIGNAL(pressed()),this,SLOT(penF7()));
-    connect(ui->btnF8,SIGNAL(pressed()),this,SLOT(penF8()));
-    connect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
+    connect(ui->action_Add_audio, SIGNAL(triggered()),this,SLOT(addAudio()));
+    connect(ui->action_Remove_audio, SIGNAL(triggered()),this,SLOT(rmAudio()));
+    connect(ui->actionAppend_Sketchpad, SIGNAL(triggered()),this,SLOT(appendSketchPad()));
+    connect(ui->actionInsert_Sketchpad, SIGNAL(triggered()),this,SLOT(insertSketchPad()));
+    connect(ui->actionLoad_Pen_1, SIGNAL(triggered()),this,SLOT(penF5()));
+    connect(ui->actionErase_Sketch_Pen, SIGNAL(triggered()),this,SLOT(eraseF5()));
+    connect(ui->actionLoad_Pen_2, SIGNAL(triggered()),this,SLOT(penF6()));
+    connect(ui->actionLoad_Pen_3, SIGNAL(triggered()),this,SLOT(penF7()));
+    connect(ui->actionLoad_Pen_4, SIGNAL(triggered()),this,SLOT(penF8()));
+    connect(ui->btnStandardPen, SIGNAL(pressed()),this,SLOT(penStd()));
+    connect(ui->btnF5, SIGNAL(pressed()),this,SLOT(penF5()));
+    connect(ui->btnF6, SIGNAL(pressed()),this,SLOT(penF6()));
+    connect(ui->btnF7, SIGNAL(pressed()),this,SLOT(penF7()));
+    connect(ui->btnF8, SIGNAL(pressed()),this,SLOT(penF8()));
+    connect(ui->actionCenter_Storyboard, SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
-    connect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
-    connect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
-    connect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
-    connect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
+    connect(ui->actionErase_All, SIGNAL(triggered()),this,SLOT(eraseAll()));
+    connect(ui->actionDelete_drawing, SIGNAL(triggered()),this,SLOT(deleteDrawing()));
+    connect(ui->actionMovePadLeft, SIGNAL(triggered()),this,SLOT(movePadLeft()));
+    connect(ui->actionMovePadRight, SIGNAL(triggered()),this,SLOT(movePadRight()));
 
-    connect(ui->leDialogue,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leAction,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leSlug,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    connect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    connect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    connect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-    connect(this, &MainWindow::padChanged, this, &MainWindow::padHasChanged);
+    connect(ui->leDialogue, &QLineEdit::textEdited, this, &MainWindow::updateCommentDialogue);
+    connect(ui->leAction, &QLineEdit::textEdited, this, &MainWindow::updateCommentAction);
+    connect(ui->leSlug, &QLineEdit::textEdited, this, &MainWindow::updateCommentSlug);
+    connect(ui->leShot, SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    connect(ui->sbFrames, SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    connect(board, SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 
     // set pen width and color
-    connect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
-    connect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
+    connect(ui->actionSet_Pen_Color, SIGNAL(triggered()),this,SLOT(penPick()));
+    connect(ui->actionSet_Pen_width, SIGNAL(triggered()),this,SLOT(penPick()));
 
-    connect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
-    connect(ui->actionExport_pdf,SIGNAL(triggered()),this,SLOT(exportPdf()));
-    connect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
+    connect(ui->actionRun_Scene, SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    connect(ui->actionExport_pdf, SIGNAL(triggered()),this,SLOT(exportPdf()));
+    connect(ui->actionShow_project_info, SIGNAL(triggered()),this,SLOT(showInfoDialog()));
 
 }
 
 void MainWindow::disconnectAllConnects()
 {
-    disconnect(ui->action_Add_audio,SIGNAL(triggered()),this,SLOT(addAudio()));
-    disconnect(ui->action_Remove_audio,SIGNAL(triggered()),this,SLOT(rmAudio()));
-    disconnect(ui->action_New_Scene,SIGNAL(triggered()),this,SLOT(newScene()));
-    disconnect(ui->actionAppend_Sketchpad,SIGNAL(triggered()),this,SLOT(appendSketchPad()));
-    disconnect(ui->actionInsert_Sketchpad,SIGNAL(triggered()),this,SLOT(insertSketchPad()));
-    disconnect(ui->actionLoad_Pen_1,SIGNAL(triggered()),this,SLOT(penF5()));
-    disconnect(ui->actionErase_Sketch_Pen,SIGNAL(triggered()),this,SLOT(eraseF5()));
-    disconnect(ui->actionLoad_Pen_2,SIGNAL(triggered()),this,SLOT(penF6()));
-    disconnect(ui->actionLoad_Pen_3,SIGNAL(triggered()),this,SLOT(penF7()));
-    disconnect(ui->actionLoad_Pen_4,SIGNAL(triggered()),this,SLOT(penF8()));
-    disconnect(ui->btnStandardPen,SIGNAL(pressed()),this,SLOT(penStd()));
-    disconnect(ui->btnF5,SIGNAL(pressed()),this,SLOT(penF5()));
-    disconnect(ui->btnF6,SIGNAL(pressed()),this,SLOT(penF6()));
-    disconnect(ui->btnF7,SIGNAL(pressed()),this,SLOT(penF7()));
-    disconnect(ui->btnF8,SIGNAL(pressed()),this,SLOT(penF8()));
-    disconnect(ui->actionCenter_Storyboard,SIGNAL(triggered()),this,SLOT(centerStoryboard()));
+    disconnect(ui->action_Add_audio, SIGNAL(triggered()),this,SLOT(addAudio()));
+    disconnect(ui->action_Remove_audio, SIGNAL(triggered()),this,SLOT(rmAudio()));
+    disconnect(ui->action_New_Scene, SIGNAL(triggered()),this,SLOT(newScene()));
+    disconnect(ui->actionAppend_Sketchpad, SIGNAL(triggered()),this,SLOT(appendSketchPad()));
+    disconnect(ui->actionInsert_Sketchpad, SIGNAL(triggered()),this,SLOT(insertSketchPad()));
+    disconnect(ui->actionLoad_Pen_1, SIGNAL(triggered()),this,SLOT(penF5()));
+    disconnect(ui->actionErase_Sketch_Pen, SIGNAL(triggered()),this,SLOT(eraseF5()));
+    disconnect(ui->actionLoad_Pen_2, SIGNAL(triggered()),this,SLOT(penF6()));
+    disconnect(ui->actionLoad_Pen_3, SIGNAL(triggered()),this,SLOT(penF7()));
+    disconnect(ui->actionLoad_Pen_4, SIGNAL(triggered()),this,SLOT(penF8()));
+    disconnect(ui->btnStandardPen, SIGNAL(pressed()),this,SLOT(penStd()));
+    disconnect(ui->btnF5, SIGNAL(pressed()),this,SLOT(penF5()));
+    disconnect(ui->btnF6, SIGNAL(pressed()),this,SLOT(penF6()));
+    disconnect(ui->btnF7, SIGNAL(pressed()),this,SLOT(penF7()));
+    disconnect(ui->btnF8, SIGNAL(pressed()),this,SLOT(penF8()));
+    disconnect(ui->actionCenter_Storyboard, SIGNAL(triggered()),this,SLOT(centerStoryboard()));
 
-    disconnect(ui->actionErase_All,SIGNAL(triggered()),this,SLOT(eraseAll()));
-    disconnect(ui->actionDelete_drawing,SIGNAL(triggered()),this,SLOT(deleteDrawing()));
-    disconnect(ui->actionMovePadLeft,SIGNAL(triggered()),this,SLOT(movePadLeft()));
-    disconnect(ui->actionMovePadRight,SIGNAL(triggered()),this,SLOT(movePadRight()));
+    disconnect(ui->actionErase_All, SIGNAL(triggered()),this,SLOT(eraseAll()));
+    disconnect(ui->actionDelete_drawing, SIGNAL(triggered()),this,SLOT(deleteDrawing()));
+    disconnect(ui->actionMovePadLeft, SIGNAL(triggered()),this,SLOT(movePadLeft()));
+    disconnect(ui->actionMovePadRight, SIGNAL(triggered()),this,SLOT(movePadRight()));
 
-    disconnect(ui->leDialogue,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leAction,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leSlug,SIGNAL(textChanged(QString)),this,SLOT(updateComment()));
-    disconnect(ui->leShot,SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
-    disconnect(ui->sbFrames,SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
-    disconnect(board,SIGNAL(selectionChanged()),this,SLOT(changeImage()));
-    disconnect(this, &MainWindow::padChanged, this, &MainWindow::padHasChanged);
+    disconnect(ui->leDialogue, &QLineEdit::textEdited, this, &MainWindow::updateCommentDialogue);
+    disconnect(ui->leAction, &QLineEdit::textEdited, this, &MainWindow::updateCommentAction);
+    disconnect(ui->leSlug, &QLineEdit::textEdited, this, &MainWindow::updateCommentSlug);
+    disconnect(ui->leShot, SIGNAL(textChanged(QString)),this,SLOT(updateShot()));
+    disconnect(ui->sbFrames, SIGNAL(valueChanged(int)),this,SLOT(updateFrames()));
+    disconnect(board, SIGNAL(selectionChanged()),this,SLOT(changeImage()));
 
     // set pen width and color
-    disconnect(ui->actionSet_Pen_Color,SIGNAL(triggered()),this,SLOT(penPick()));
-    disconnect(ui->actionSet_Pen_width,SIGNAL(triggered()),this,SLOT(penPick()));
+    disconnect(ui->actionSet_Pen_Color, SIGNAL(triggered()),this,SLOT(penPick()));
+    disconnect(ui->actionSet_Pen_width, SIGNAL(triggered()),this,SLOT(penPick()));
 
-    disconnect(ui->actionRun_Scene,SIGNAL(triggered()),this,SLOT(runAnimatic()));
-    disconnect(ui->actionExport_pdf,SIGNAL(triggered()),this,SLOT(exportPdf()));
-    disconnect(ui->actionShow_project_info,SIGNAL(triggered()),this,SLOT(showInfoDialog()));
+    disconnect(ui->actionRun_Scene, SIGNAL(triggered()),this,SLOT(runAnimatic()));
+    disconnect(ui->actionExport_pdf, SIGNAL(triggered()),this,SLOT(exportPdf()));
+    disconnect(ui->actionShow_project_info, SIGNAL(triggered()),this,SLOT(showInfoDialog()));
 }
 
 void MainWindow::initVars()
@@ -507,7 +523,6 @@ void MainWindow::addThumbLabels()       // Adds labels to all thumbnails
 void MainWindow::updateInfoLabels()
 {
     if (padInfoList.size() > 0){
-        qDebug() << padInfoList;
         QStringList sl = projFileName.split('/');
         QString s = sl.last();
         s.chop(17);
@@ -567,7 +582,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
         QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
         board->removeItem(board->itemAt((activePad+1) * PAD_WIDTH - 165 , 3, transform));
         board->addItem(pixItem);
-        pixItem->setPos(((activePad + 1)*PAD_WIDTH) - 165 , 3);
+        pixItem->setPos(((activePad + 1) * PAD_WIDTH) - 165 , 3);
         pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
@@ -576,19 +591,17 @@ void MainWindow::updateImages() // updates storyboard thumbnails
         ui->leShot->setText(padInfoList[activePad][shot]);
         ui->sbFrames->setValue(padInfoList[activePad][frames].toInt());
         sketchPad->update();
-        emit padChanged();
     }
 }
 
 void MainWindow::centerStoryboard()
 {
-    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1)*PAD_WIDTH-165, 3, 160, 120),800,0);
+    ui->gvStoryboard->ensureVisible(QRectF((activePad + 1) * PAD_WIDTH - 165, 3, 160, 120),800,0);
 }
 
 void MainWindow::changeImage()
 {
     if (!board->selectedItems().isEmpty()){
-        updateImages();
         saveImages();
         QGraphicsItem *item;
         item = board->selectedItems().at(0);
@@ -597,7 +610,7 @@ void MainWindow::changeImage()
         padInfo = padInfoList.at(activePad);
         sketchPad->image.load(scenePath + padInfo[fileName]);
         updateImages();
-        clearLineEdits();
+        board->setFocusItem(board->itemAt((activePad + 1) * PAD_WIDTH - 165, 3, transform));
         updateLineEdits();
     }
 }
@@ -754,11 +767,6 @@ void MainWindow::movePadRight()
     }
 }
 
-void MainWindow::padHasChanged()
-{
- //   updateLineEdits();
-}
-
 void MainWindow::writeProjXML()
 {
     if (!projFileName.isEmpty()){
@@ -821,6 +829,7 @@ void MainWindow::readProjXML()
 
 void MainWindow::writeStoryboardXML()
 {
+    qDebug() << "Filename: " << sbFileName;
     if (!sbFileName.isEmpty()){
         saveImages();         // saves activeimages
         QFile file(sbFileName);
@@ -858,15 +867,10 @@ void MainWindow::writeStoryboardXML()
                 xmlwriter.writeStartElement("sketchpad");  // sketchpad START
                 xmlwriter.writeTextElement("fileName",padInfo[fileName]);
                 xmlwriter.writeTextElement("dialogue",padInfo[dialogue]);
-                xmlwriter.writeTextElement("showDialogue",padInfo[showDialogue]);
                 xmlwriter.writeTextElement("action",padInfo[action]);
-                xmlwriter.writeTextElement("showAction",padInfo[showAction]);
                 xmlwriter.writeTextElement("slug",padInfo[slug]);
-                xmlwriter.writeTextElement("showSlug",padInfo[showSlug]);
                 xmlwriter.writeTextElement("scene",padInfo[scene]);
-                xmlwriter.writeTextElement("showScene",padInfo[showScene]);
                 xmlwriter.writeTextElement("shot",padInfo[shot]);
-                xmlwriter.writeTextElement("showShot",padInfo[showShot]);
                 xmlwriter.writeTextElement("frames",padInfo[frames]);
                 xmlwriter.writeTextElement("showFrames",padInfo[showFrames]);
                 xmlwriter.writeEndElement();                // sketchpad STOP
@@ -917,7 +921,8 @@ void MainWindow::readStoryboardXML()
                 sPen.penColor.setRed(xmlreader.readElementText().toInt());
             else if (xmlreader.isStartElement() && xmlreader.name() == "green")
                 sPen.penColor.setGreen(xmlreader.readElementText().toInt());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "blue"){
+            else if (xmlreader.isStartElement() && xmlreader.name() == "blue")
+            {
                 sPen.penColor.setBlue(xmlreader.readElementText().toInt());
                 sPenList.append(sPen);
             }
@@ -925,27 +930,18 @@ void MainWindow::readStoryboardXML()
                 padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "dialogue")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showDialogue")
-                padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "action")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showAction")
                 padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "slug")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showSlug")
-                padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "scene")
-                padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showScene")
                 padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "shot")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showShot")
-                padInfo.append(xmlreader.readElementText());
             else if (xmlreader.isStartElement() && xmlreader.name() == "frames")
                 padInfo.append(xmlreader.readElementText());
-            else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames"){
+            else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames")
+            {
                 padInfo.append(xmlreader.readElementText());
                 sketchPad->image.load(scenePath + padInfo[fileName]);
                 QPixmap imageThumb;
@@ -1002,11 +998,11 @@ void MainWindow::setBtnColors()
         if (rgb > 350) c = QColor(Qt::black);
         else c = QColor(Qt::white);
         if (i == 0){
-            ui->btnStandardPen->setText(tr("Pen: %1px").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnStandardPen->setText(tr("Standard Pen: %1px").arg(QString::number(sPenList[i].penWidth)));
             ui->btnStandardPen->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else if (i == 1){
-            ui->btnF5->setText(tr("F5@: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
+            ui->btnF5->setText(tr("F5 erasable: %1px","DO NOT TRANSLATE THIS").arg(QString::number(sPenList[i].penWidth)));
             ui->btnF5->setStyleSheet(tr("QPushButton { background: %1 ; color: %2 }","DO NOT TRANSLATE THIS")
                                               .arg(sPenList[i].penColor.name()).arg(c.name()));
         }else if (i == 2){
@@ -1180,15 +1176,6 @@ void MainWindow::about()
     QMessageBox::about(this, tr("About dastoryboard"),
             tr("<p><b>dastoryboard</b> is an Open Source storyboard software "
                "for your convenience. Please enjoy!"));
-}
-
-void MainWindow::updateComment()
-{
-    qDebug() << padInfoList;
-
-    padInfoList[activePad][dialogue] = ui->leDialogue->text();
-    padInfoList[activePad][action] = ui->leAction->text();
-    padInfoList[activePad][slug] = ui->leSlug->text();
 }
 
 void MainWindow::updateLineEdits()
