@@ -829,7 +829,8 @@ void MainWindow::writeStoryboardXML()
     if (!sbFileName.isEmpty()){
         saveImages();         // saves activeimages
         QFile file(sbFileName);
-        if (file.open(QFile::ReadWrite)){
+        if (file.open(QFile::ReadWrite))
+        {
             saveSettings();
             QXmlStreamWriter xmlwriter(&file);
             xmlwriter.setAutoFormatting(true);
@@ -875,6 +876,7 @@ void MainWindow::writeStoryboardXML()
             xmlwriter.writeEndElement();         // sketchpads STOP
             xmlwriter.writeEndDocument();        // document and storyboard STOP
         }
+        file.resize(file.pos());
         updateInfoLabels();
     }else{
         QMessageBox msgBox;
