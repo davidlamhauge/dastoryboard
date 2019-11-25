@@ -148,8 +148,8 @@ private:
     int activePen;                      // pen number in sPenList (from 0 to 4)
     int lastNumber;                     // last number given to a sketchpad
     int updateInterval;                 // interval for updateTimer
-    const int PAD_WIDTH = 170;
-    const int PAD_HEIGHT = 140;
+    int padWidth = 170;
+    int padHeight = 140;
 
     bool autoNumber;
     QTimer *updateTimer;
