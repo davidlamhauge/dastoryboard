@@ -39,6 +39,7 @@ public:
     QLabel *labStartPad;
     QComboBox *cbStartPad;
     QPushButton *btnExportVideo;
+    QPushButton* btnExportAllImages;
     QPushButton *btnExportImages;
 
     QLabel *labFromStart;
@@ -58,6 +59,7 @@ public slots:
     void btnStopClicked();
     void btnQuitClicked();
     void exportAnimatic();      // export animatic to mp4 or avi
+    void exportKeys();
     void exportImages();        // export images to scenepath/tmp
     void writeStat();
     void calculateAudioOffset();    // calculates the float audioOffset
@@ -77,6 +79,7 @@ private:
     int framesTotal;                // frames in the animatic from start to end
     float audioOffset;              // offset from beginning of audio-file
     bool run;
+    bool exportAll = true;
 
     QTimer *timer;
     QEventLoop *loop;

@@ -1040,23 +1040,23 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::penPick()
 {
-    pc = new penChooser();
-    pc->colordialog->setCurrentColor(sketchPad->penColor());
-    pc->sbWidth->setValue(sketchPad->penWidth());
-    pc->cbPen->setCurrentIndex(0);
-    pc->setModal(true);
-    connect(pc->btnExit,SIGNAL(clicked()),this,SLOT(cancelPenPick()));
-    connect(pc->btnChange,SIGNAL(clicked()),this,SLOT(okPenPick()));
-    pc->show();
+    penchooser = new penChooser();
+    penchooser->colordialog->setCurrentColor(sketchPad->penColor());
+    penchooser->sbWidth->setValue(sketchPad->penWidth());
+    penchooser->cbPen->setCurrentIndex(0);
+    penchooser->setModal(true);
+    connect(penchooser->btnExit, SIGNAL(clicked()), this, SLOT(cancelPenPick()));
+    connect(penchooser->btnChange, SIGNAL(clicked()), this, SLOT(okPenPick()));
+    penchooser->show();
 }
 
 void MainWindow::okPenPick()
 {
-    activePen = pc->cbPen->currentIndex();
+    activePen = penchooser->cbPen->currentIndex();
     sPen = sPenList[activePen];
-    sPen.penColor = pc->colordialog->currentColor();
+    sPen.penColor = penchooser->colordialog->currentColor();
     sketchPad->setPenColor(sPen.penColor);
-    sPen.penWidth = pc->sbWidth->value();
+    sPen.penWidth = penchooser->sbWidth->value();
     sketchPad->setPenWidth(sPen.penWidth);
     sPenList.replace(activePen,sPen);
     setBtnColors();
@@ -1064,7 +1064,7 @@ void MainWindow::okPenPick()
 
 void MainWindow::cancelPenPick()
 {
-    pc->close();
+    penchooser->close();
 }
 
 void MainWindow::penStd()

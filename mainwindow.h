@@ -177,7 +177,7 @@ private:
 
     SketchPad *sketchPad;
     standardPen sPen;
-    penChooser *pc;
+    penChooser *penchooser;
     PrefDialog *prefs;
     animatic *anim;
     infodialog *infoDial;

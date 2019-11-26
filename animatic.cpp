@@ -4,7 +4,7 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     QDialog(parent)
 {
     sc = new QGraphicsScene(QRectF(0,0,640,480));
-    QBrush grayBrush(QColor(Qt::gray));
+    QBrush grayBrush(Qt::gray);
     sc->setBackgroundBrush(grayBrush);
     view = new QGraphicsView(sc);
 
@@ -12,7 +12,8 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     cbStartPad = new QComboBox();
 
     btnExportVideo = new QPushButton(tr("Export video"));
-    btnExportImages = new QPushButton(tr("Export images"));
+    btnExportAllImages = new QPushButton(tr("Export all Images"));
+    btnExportImages = new QPushButton(tr("Export key Images"));
 
     btnFromStart = new QPushButton(tr("Play","Meaning: Play from chosen start"));
     btnStop = new QPushButton(tr("Stop"));
@@ -22,6 +23,7 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     buttonlayout->addWidget(labStartPad,0,0);
     buttonlayout->addWidget(cbStartPad,0,1);
     buttonlayout->addWidget(btnExportVideo,0,2);
+    buttonlayout->addWidget(btnExportAllImages,1,1);
     buttonlayout->addWidget(btnExportImages,1,2);
     buttonlayout->addWidget(btnFromStart,2,0);
     buttonlayout->addWidget(btnStop,2,1);
@@ -55,12 +57,13 @@ animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
 
 void animatic::initConnects()
 {
-    connect(btnFromStart,SIGNAL(clicked()),this,SLOT(btnPlayClicked()));
-    connect(btnStop,SIGNAL(clicked()),this,SLOT(btnStopClicked()));
-    connect(btnQuit,SIGNAL(clicked()),this,SLOT(btnQuitClicked()));
-    connect(btnExportVideo,SIGNAL(clicked()),this,SLOT(exportAnimatic()));
-    connect(btnExportImages,SIGNAL(clicked()),this,SLOT(exportImages()));
-    connect(cbStartPad,SIGNAL(currentIndexChanged(int)),this,SLOT(calculateAudioOffset()));
+    connect(btnFromStart, SIGNAL(clicked()), this, SLOT(btnPlayClicked()));
+    connect(btnStop, SIGNAL(clicked()), this, SLOT(btnStopClicked()));
+    connect(btnQuit, SIGNAL(clicked()), this, SLOT(btnQuitClicked()));
+    connect(btnExportVideo, SIGNAL(clicked()), this, SLOT(exportAnimatic()));
+    connect(btnExportAllImages, SIGNAL(clicked()), this, SLOT(exportImages()));
+    connect(btnExportImages, SIGNAL(clicked()), this, SLOT(exportKeys()));
+    connect(cbStartPad, SIGNAL(currentIndexChanged(int)), this, SLOT(calculateAudioOffset()));
 }
 
 void animatic::initComboBox()
@@ -211,14 +214,23 @@ void animatic::exportAnimatic()
         case QMessageBox::Yes:;
             f.remove();
             renderVideo();
-        default:;
+            break;
+        default:
+            break;
         }
     }else
         renderVideo();
 }
 
-void animatic::exportImages()
+void animatic::exportKeys()
 {
+    qDebug() << infoList;
+    exportAll = false;
+    exportImages();
+}
+
+void animatic::exportImages()
+{    
     proc = new QProcess(this);
     // Make directory for images to convert later
     proc->start("mkdir",QStringList() << scenePath + "tmp/");
@@ -231,12 +243,13 @@ void animatic::exportImages()
     msgBox.show();
 
     QString fname;
+
     for (int i = 0; i < pixmapList.size();i++){
         QImage image = pixmapList[i].toImage();
         for (int j = 0;j < infoList[i][frames].toInt();j++){
             if (j == 0){ // IF it is the first drawing
                 msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                 fname = scenePath + "tmp/" + sceneDir + QString("_%1.png").arg(QString::number(teller),5,'0');
+                fname = scenePath + "tmp/" + sceneDir + QString("_%1.png").arg(QString::number(teller),5,'0');
                 if (image.save(fname))
                     teller += 1;
                 else{
@@ -244,21 +257,25 @@ void animatic::exportImages()
                     break;
                 }
             }else{
-                msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
-                proc->start("cp",QStringList() << fname
-                           << scenePath + "tmp/" + sceneDir +  QString("_%1.png").arg(QString::number(teller),5,'0'));
-                while (proc->state() > 0)
-                    sleep(2);
+                if (exportAll)
+                {
+                    msgBox.setText(tr("Generating image %1 of %2").arg(QString::number(teller)).arg(QString::number(framesTotal)));
+                    proc->start("cp",QStringList() << fname
+                                << scenePath + "tmp/" + sceneDir +  QString("_%1.png").arg(QString::number(teller),5,'0'));
+                    while (proc->state() > 0)
+                        sleep(2);
+                }
                 teller += 1;
             }
         }
     }
     msgBox.close();
+    exportAll = true;
 }
 
 void animatic::writeStat()
 {
-    QString s = (QString) proc->readAllStandardOutput();
+    QString s = static_cast<QString>(proc->readAllStandardOutput());
     qDebug() << s << " debug";
 }
 
@@ -267,7 +284,7 @@ void animatic::calculateAudioOffset()
     audioOffset = 0;
     if (cbStartPad->currentIndex() > 0){
         for (int i = 0; i < cbStartPad->currentIndex();i++)
-            audioOffset += (float) infoList[i][frames].toInt()/fps;
+            audioOffset += static_cast<float>(infoList[i][frames].toInt()/fps);
     }
 }
 
