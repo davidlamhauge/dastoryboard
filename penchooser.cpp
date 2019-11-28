@@ -5,6 +5,7 @@ penChooser::penChooser(QDialog *parent) :
 {
     colordialog = new QColorDialog();
     colordialog->setOption(QColorDialog::NoButtons);
+    colordialog->setOption(QColorDialog::DontUseNativeDialog);
 
     labWidth = new QLabel(tr("Pen width:"),this);
 
