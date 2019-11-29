@@ -65,12 +65,20 @@ private slots:
     void openScene();           // opens existing scene, and reads xml-file
     void addAudio();            // add audiofile to the storyboard
     void rmAudio();             // remove audiofile from the storyboard
+
     void writeProjXML();        // writes .projdastoryboard info to xml-file
     void writeStoryboardXML();  // writes .dastoryboard info to xml-file
     void saveSettings();        // saves settings
     void setPrefs();            // set preferences via PrefDialog
     void okPrefs();
     void cancelPrefs();
+
+    void padSizeVGA();
+    void padSizeSVGA();
+    void padSizeXGA();
+    void padSizenHD();
+    void padSizeqHD();
+    void padSize720p();
 
     void penStd();              // select Standard Pen
     void penF5();               // select sPen F5                           F5
@@ -99,6 +107,8 @@ private slots:
     void updateFrames();        // updates shot and frames for pad struct
     void updateScenelist();     // updates scene names to comboBox
 
+    QImage* resizeImageNoRatio(QImage* img, int width, int height);
+    QImage* resizeImageKeepRatio(QImage* img, int width, int height);
     void saveImages();          // saves activeImage + thumbnail
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb
@@ -120,9 +130,15 @@ private:
     void disableStoryPad();             // disables storypad + buttons etc
     void enableStoryPad();              // enables storypad + buttons etc
     void closeActiveStoryboard();       // clears lists etc, so a new storyboard can begin
+
     void disableScene();
     void enableScene();
+
     void startUpdateImageTimer(int i);  // starts timer for 'i' millisecs
+
+    void movePad(int move);
+    void reloadThumbs();
+
     void setPadSize(int w, int h);      // sets size to (w x h) pixels
     void resetPenList();                // resets sPenList to five gray pens
     void initStoryboard();              // initiaqtes a new storyboard
@@ -140,7 +156,6 @@ private:
     QString intToString(int i);
     int strToInt(QString s);
     bool stringToBool(QString s);
-    bool maybeSave();
 
     int fps;
     int activePad;                      // pad number in padInfoList
@@ -148,8 +163,11 @@ private:
     int activePen;                      // pen number in sPenList (from 0 to 4)
     int lastNumber;                     // last number given to a sketchpad
     int updateInterval;                 // interval for updateTimer
+
     int padWidth = 170;
     int padHeight = 140;
+    int canvasW = 640;
+    int canvasH = 480;
 
     bool autoNumber;
     QTimer *updateTimer;

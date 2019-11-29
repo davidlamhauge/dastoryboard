@@ -3,7 +3,7 @@
 animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     QDialog(parent)
 {
-    sc = new QGraphicsScene(QRectF(0,0,640,480));
+    sc = new QGraphicsScene(QRectF(0, 0, 640, 480));
     QBrush grayBrush(Qt::gray);
     sc->setBackgroundBrush(grayBrush);
     view = new QGraphicsView(sc);
