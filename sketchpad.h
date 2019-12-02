@@ -21,6 +21,10 @@ public:
     QColor penColor() const { return myPenColor; }
     int penWidth() const { return myPenWidth; }
 
+    QImage getImage() { return image; }
+    void load(QString filename) { image.load(filename); }
+    void save(QString filename) { image.save(filename); }
+
     QString filePath() const {return myFilePath; }
     QString fileName() const {return myFileName; }
     QString comment() const {return myComment; }
@@ -32,7 +36,7 @@ public:
     int frames() const {return myFrames; }
     bool showFrames() const {return myShowFrames; }
 
-    QImage image;           // 640x480 pix storyboard pad
+    void resize(QSize size);
 
 signals:
     
@@ -48,6 +52,8 @@ protected:
     void resizeEvent(QResizeEvent *e);
 
 private:
+    QImage image;         // storyboard pad
+
     void drawLineTo(const QPoint &endPoint);
     void resizeImage(QImage *image, const QSize &newSize);
 

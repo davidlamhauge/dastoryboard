@@ -1,12 +1,17 @@
 #include <QtGui>
 
 #include "sketchpad.h"
+#include <QLayout>
 
 SketchPad::SketchPad(QWidget *parent) :
     QWidget(parent)
 {
-    QSize sz; sz.setWidth(640); sz.setHeight(480);
-    resizeImage(&image,sz);
+    QSettings settings("dalanima/dastoryboard", "dastoryboard");
+    int w = settings.value("canvasWidth").toInt();
+    int h = settings.value("canvasHeight").toInt();
+    setBaseSize(w + 2, h + 2);
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    resizeImage(&image, QSize(w, h));
 }
 
 void SketchPad::setPenColor(const QColor &newColor)
@@ -39,6 +44,13 @@ void SketchPad::initPad(QString path, int name)
     sketching = false;
     myPenWidth = 4;
     myPenColor = Qt::gray;
+}
+
+void SketchPad::resize(QSize size)
+{
+    image = image.scaled(size);
+    update();
+    qDebug() << "Basesize: " << baseSize() << " Image W after  scaled: " << image.width();
 }
 
 void SketchPad::clearImage()
@@ -108,8 +120,8 @@ void SketchPad::paintEvent(QPaintEvent *e)
 void SketchPad::resizeEvent(QResizeEvent *e)
 {
     if (width() > image.width() || height() > image.height()) {
-        int newWidth = qMax(width() + 128, image.width());
-        int newHeight = qMax(height() + 128, image.height());
+        int newWidth = qMax(width(), image.width());
+        int newHeight = qMax(height(), image.height());
         resizeImage(&image, QSize(newWidth, newHeight));
         update();
     }
@@ -140,4 +152,5 @@ void SketchPad::resizeImage(QImage *image, const QSize &newSize)
     QPainter painter(&newImage);
     painter.drawImage(QPoint(0, 0), *image);
     *image = newImage;
+    qDebug() << newSize << " Image W after: " << image->width();
 }

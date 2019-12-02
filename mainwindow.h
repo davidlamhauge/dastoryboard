@@ -113,6 +113,8 @@ private slots:
     void updateImages();        // repaints storyboard
     void centerStoryboard();    // centers storyboard around the active pads thumb
     void changeImage();
+    void resizeAllDrawings(int w, int h);
+
     void runAnimatic();         // opens window to run animatic
     void exportPdf();           // exports storyboard to pdf
     void showInfoDialog();      // opens infoDialog window;
@@ -139,7 +141,7 @@ private:
     void movePad(int move);
     void reloadThumbs();
 
-    void setPadSize(int w, int h);      // sets size to (w x h) pixels
+    bool setPadSize(int w, int h);      // sets size to (w x h) pixels
     void resetPenList();                // resets sPenList to five gray pens
     void initStoryboard();              // initiaqtes a new storyboard
     void initPad();                     // initiates the new pad
@@ -166,8 +168,8 @@ private:
 
     int padWidth = 170;
     int padHeight = 140;
-    int canvasW = 640;
-    int canvasH = 480;
+    int canvasW;
+    int canvasH;
 
     bool autoNumber;
     QTimer *updateTimer;

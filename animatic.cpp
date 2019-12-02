@@ -1,9 +1,15 @@
 #include "animatic.h"
 
+#include <QSettings>
+
 animatic::animatic(const int &fpsec, const QString &scPath, QWidget *parent) :
     QDialog(parent)
 {
-    sc = new QGraphicsScene(QRectF(0, 0, 640, 480));
+    QSettings settings("dalanima/dastorybpard", "dastoryboard");
+    int w = settings.value("canvasWidth").toInt();
+    int h = settings.value("canvasHeight").toInt();
+
+    sc = new QGraphicsScene(QRectF(0, 0, w, h));
     QBrush grayBrush(Qt::gray);
     sc->setBackgroundBrush(grayBrush);
     view = new QGraphicsView(sc);

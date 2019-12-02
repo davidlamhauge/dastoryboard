@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QDir>
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     projFileName = "";          // project filename, absolute path
     projFilePath = "";          // filepath, including the last '/'
     prefPath = "";
+    QSettings settings("dalanima/dastoryboard", "dastoryboard");
+    canvasW = settings.value("canvasWidth").toInt();
+    canvasH = settings.value("canvasHeight").toInt();
+    ui->gvSketchPad->setBaseSize(canvasW + 4, canvasH + 4);
     initVars();
     initScenes();
     setupGlobalConnects();
@@ -42,6 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
             msgBox.exec();
         }
     }
+    sketchPad->resize(QSize(canvasW, canvasH));
 }
 
 MainWindow::~MainWindow()
@@ -363,32 +369,74 @@ void MainWindow::cancelPrefs()
 
 void MainWindow::padSizeVGA()
 {
-    setPadSize(640, 480);
+    bool b = setPadSize(640, 480);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::padSizeSVGA()
 {
-    setPadSize(800, 600);
+    bool b = setPadSize(800, 600);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::padSizeXGA()
 {
-    setPadSize(1024, 768);
+    bool b = setPadSize(1024, 768);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::padSizenHD()
 {
-    setPadSize(640, 360);
+    bool b = setPadSize(640, 360);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::padSizeqHD()
 {
-    setPadSize(960, 540);
+    bool b = setPadSize(960, 540);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::padSize720p()
 {
-    setPadSize(1280, 720);
+    bool b = setPadSize(1280, 720);
+    if (b)
+    {
+        resizeAllDrawings(canvasW, canvasH);
+        sketchPad->load(scenePath + padInfo[fileName]);
+        ui->gvSketchPad->setAlignment(Qt::AlignCenter);
+        update();
+    }
 }
 
 void MainWindow::penStd()
@@ -478,15 +526,8 @@ void MainWindow::eraseAll()
                                    tr("Do you want to erase the drawing?"),
                                    QMessageBox::Ok | QMessageBox::Cancel,
                                    QMessageBox::Cancel);
-    switch (ret)
-    {
-       case QMessageBox::Ok:
+    if (ret == QMessageBox::Ok)
         sketchPad->clearImage();
-           break;
-       case QMessageBox::Cancel:
-       default:
-           break;
-    }
 }
 
 void MainWindow::deleteDrawing()
@@ -515,7 +556,7 @@ void MainWindow::deleteDrawing()
                 if (activePad + 1 > padThumbList.size())
                     activePad -= 1;
             padInfo = padInfoList.at(activePad);
-            sketchPad->image.load(scenePath + padInfo[fileName]);
+            sketchPad->load(scenePath + padInfo[fileName]);
 
             reloadThumbs();
 
@@ -553,7 +594,7 @@ void MainWindow::appendSketchPad()
     padInfo[scene] = sceneDir;
     ui->leShot->setText(padInfo[shot]);
     initPad();
-    board->setSceneRect(0, 0, padThumbList.size() * padWidth, padHeight);
+//    board->setSceneRect(0, 0, padThumbList.size() * padWidth, padHeight);
     ui->gvStoryboard->resize(padThumbList.size() * padWidth, padHeight);
     updateImages();
     centerStoryboard();
@@ -567,7 +608,7 @@ void MainWindow::insertSketchPad()
         updateImages();
         saveImages();
         QPixmap imageThumb;
-        imageThumb = QPixmap::fromImage(sketchPad->image);
+        imageThumb = QPixmap::fromImage(sketchPad->getImage());
         imageThumb = imageThumb.scaled( 160, 120, Qt::KeepAspectRatio);
         padThumbList.insert(activePad+1, imageThumb);    // append pixmap to List...
         padInfoList.insert(activePad+1, padInfo);
@@ -658,10 +699,10 @@ QImage *MainWindow::resizeImageKeepRatio(QImage *img, int width, int height)
 void MainWindow::saveImages()
 {
     // save sketchpad image
-    sketchPad->image.save(scenePath + padInfoList[activePad][fileName]);
+    sketchPad->save(scenePath + padInfoList[activePad][fileName]);
 
     // save thumbnail
-    QImage img = sketchPad->image;
+    QImage img = sketchPad->getImage();
     img = img.scaled(160, 120, Qt::KeepAspectRatio, Qt::FastTransformation);
     if (!img.save(scenePath + "t" + padInfoList[activePad][fileName])){
         QMessageBox::information(this, tr("File does no exist!"),
@@ -679,7 +720,7 @@ void MainWindow::updateImages() // updates storyboard thumbnails
             }
         }
         QPixmap imageThumb;
-        imageThumb = QPixmap::fromImage(sketchPad->image);
+        imageThumb = QPixmap::fromImage(sketchPad->getImage());
         imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
         padThumbList.replace(activePad,imageThumb); // update padThumbList
         QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
@@ -711,10 +752,32 @@ void MainWindow::changeImage()
         int i = static_cast<int>(item->pos().x());        // find x-value
         activePad = (i-5) / padWidth;
         padInfo = padInfoList.at(activePad);
-        sketchPad->image.load(scenePath + padInfo[fileName]);
+        sketchPad->load(scenePath + padInfo[fileName]);
         updateImages();
         board->setFocusItem(board->itemAt((activePad + 1) * padWidth - 165, 3, transform));
         updateLineEdits();
+    }
+}
+
+void MainWindow::resizeAllDrawings(int w, int h)
+{
+    QDir dir;
+    for (int i = 0; i < scenePaths.size(); i++)
+    {
+        QString path = scenePaths.at(i);
+        dir.setPath(path);
+        QStringList filelist = dir.entryList();
+        for (int j = 0; j < filelist.size(); j++)
+        {
+            QString filename = filelist.at(j);
+            if (filename.endsWith(".png") && !filename.startsWith("t"))
+            {
+                QImage img(path + filename);
+                img = img.scaled(w, h, Qt::KeepAspectRatio, Qt::FastTransformation);
+                bool b = img.save(path + filename);
+                Q_ASSERT(b);
+            }
+        }
     }
 }
 
@@ -782,8 +845,9 @@ void MainWindow::initVars()
 
 void MainWindow::initScenes()
 {
+    ui->gvSketchPad->setBaseSize(canvasW + 4, canvasH + 4);
     pad = new QGraphicsScene(this);
-    ui->gvSketchPad->setFixedSize(642,482);
+
     ui->gvSketchPad->setScene(pad);
     board = new QGraphicsScene(this);
     QBrush grayBrush(Qt::gray);
@@ -992,18 +1056,6 @@ void MainWindow::movePad(int move)
     padThumbList.swap(activePad, activePad + move);
 
     reloadThumbs();
-    /*
-    QPixmap imageThumb;
-    QGraphicsPixmapItem *pixItem;
-    board->clear();
-    for (int i = 0;i < padThumbList.size();i++){
-        imageThumb = padThumbList.at(i);
-        pixItem = new QGraphicsPixmapItem(imageThumb);
-        board->addItem(pixItem);
-        pixItem->setPos((i + 1) * padWidth - 165, 3);
-        pixItem->setFlag(QGraphicsItem::ItemIsSelectable);
-    }
-    */
     activePad = activePad + move;
     addThumbLabels();
     updateInfoLabels();
@@ -1029,7 +1081,7 @@ void MainWindow::reloadThumbs()
     }
 }
 
-void MainWindow::setPadSize(int w, int h)
+bool MainWindow::setPadSize(int w, int h)
 {
     QString message = tr("All Images in all scenes,\nwill automatically be resized to %1x%2!")
             .arg(QString::number(w)).arg(QString::number(h));
@@ -1042,11 +1094,19 @@ void MainWindow::setPadSize(int w, int h)
                                    QMessageBox::Cancel);
     if (ret == QMessageBox::Ok)
     {
+        saveImages();
         canvasW = w;
         canvasH = h;
-        ui->gvSketchPad->setFixedSize(canvasW + 2, canvasH + 2);
+        QSettings settings("dalanima/dastoryboard","dastoryboard");
+        settings.setValue("canvasWidth", canvasW);
+        settings.setValue("canvasHeight", canvasH);
+        ui->gvSketchPad->setBaseSize(canvasW + 4, canvasH + 4);
+        sketchPad->resize(QSize(canvasW, canvasH));
+
         update();
+        return true;
     }
+    return false;
 }
 
 void MainWindow::resetPenList()
@@ -1072,7 +1132,7 @@ void MainWindow::initStoryboard()
     activePen = 0;
     audioFileName = "";
     sketchPad = new SketchPad();
-    sketchPad->setFixedSize(canvasW, canvasH);
+    sketchPad->resize(QSize(canvasW, canvasH));
     sketchPad->initPad(scenePath,lastNumber);
     padInfoList.append(padInfo);
     initPadInfo();
@@ -1085,8 +1145,9 @@ void MainWindow::initStoryboard()
 void MainWindow::initPad()
 {
     sketchPad->clearImage();
+    sketchPad->resize(QSize(canvasW + 4, canvasH + 4));
     QPixmap imageThumb;
-    imageThumb = QPixmap::fromImage(sketchPad->image);
+    imageThumb = QPixmap::fromImage(sketchPad->getImage());
     imageThumb = imageThumb.scaled(160,120,Qt::KeepAspectRatio);
     padThumbList.append(imageThumb);    // append pixmap to List...
     QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
@@ -1137,7 +1198,6 @@ void MainWindow::updateInfoLabels()
         QString s = sl.last();
         s.chop(17);
         MainWindow::setWindowTitle(tr("dastoryboard:     Project: %1     Scene: ").arg(s) + sceneDir);
-        //MainWindow::setWindowFlags(Qt::);
         ui->labSceneInfo->setText(sceneDir);
         ui->labActivePadInfo->setText(tr("%1 of %2")
                                       .arg(padInfo[shot]).arg(padInfoList.size()));
@@ -1245,9 +1305,10 @@ void MainWindow::readStoryboardXML()
             else if (xmlreader.isStartElement() && xmlreader.name() == "showFrames")
             {
                 padInfo.append(xmlreader.readElementText());
-                sketchPad->image.load(scenePath + padInfo[fileName]);
+                sketchPad->resize(QSize(canvasW + 4, canvasH + 4));
+                sketchPad->load(scenePath + padInfo[fileName]);
                 QPixmap imageThumb;
-                imageThumb = QPixmap::fromImage(sketchPad->image);
+                imageThumb = QPixmap::fromImage(sketchPad->getImage());
                 imageThumb = imageThumb.scaled(160, 120, Qt::KeepAspectRatio);
                 padThumbList.append(imageThumb);
                 QGraphicsPixmapItem *pixItem = new QGraphicsPixmapItem(imageThumb);
@@ -1264,13 +1325,13 @@ void MainWindow::readStoryboardXML()
         else
             ui->action_Remove_audio->setEnabled(true);
         updateScenelist();
-        board->setSceneRect(0,0,padThumbList.size() * padWidth, padHeight);
+//        board->setSceneRect(0,0,padThumbList.size() * padWidth, padHeight);
         ui->gvStoryboard->resize(padThumbList.size() * padWidth, padHeight);
         sPen = sPenList[activePen];
         sketchPad->setPenColor(sPen.penColor);
         sketchPad->setPenWidth(sPen.penWidth);
         padInfo = padInfoList.at(activePad);            // load active padinfo
-        sketchPad->image.load(scenePath + padInfo[fileName]);
+        sketchPad->load(scenePath + padInfo[fileName]);
         ui->leDialogue->setText(padInfo[dialogue]);
         ui->leAction->setText(padInfo[action]);
         ui->leSlug->setText(padInfo[slug]);
@@ -1337,7 +1398,8 @@ QString MainWindow::loadSettings()
 {
     QSettings settings("dalanima/dastoryboard","dastoryboard");
     settings.setIniCodec(QTextCodec::codecForName("UTF-8"));
-    if (settings.contains("projFileName")){             // if projFileName exists...
+    if (settings.contains("projFileName"))
+    {             // if projFileName exists...
         scenePath = settings.value("scenePath").toString();
         sceneDir = settings.value("sceneDir").toString();
         projFilePath = settings.value("projFilePath").toString();
@@ -1348,8 +1410,7 @@ QString MainWindow::loadSettings()
         canvasH = settings.value("canvasHeight").toInt();
         return settings.value("projFileName").toString();
     }
-    else
-        return "";                                      // else return empty string
+    return "";                                      // else return empty string
 }
 
 QString MainWindow::getSbFileName()
