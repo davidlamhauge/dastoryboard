@@ -1,12 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QList>
-#include <QtGui>
 #include <QMainWindow>
-#include <QGraphicsScene>
-
-
 
 namespace Ui {
     class MainWindow;

@@ -1,12 +1,5 @@
-#include <QtGui>
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QGraphicsPixmapItem>
-#include <QFileDialog>
-#include <QInputDialog>
-#include <QMessageBox>
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

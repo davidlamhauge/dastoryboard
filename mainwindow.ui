@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1052</width>
-    <height>889</height>
+    <height>763</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,250 +24,294 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QGraphicsView" name="gvStoryboard">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>11</y>
-      <width>1036</width>
-      <height>140</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>140</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>16777215</width>
-      <height>140</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="Line" name="line_3">
-    <property name="geometry">
-     <rect>
-      <x>11</x>
-      <y>810</y>
-      <width>1036</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="gvSketchPad">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>150</y>
-      <width>640</width>
-      <height>480</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>640</width>
-      <height>480</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>640</width>
-      <height>480</height>
-     </size>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
-    <property name="geometry">
-     <rect>
-      <x>855</x>
-      <y>200</y>
-      <width>147</width>
-      <height>341</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLabel" name="labScene">
-         <property name="text">
-          <string>Scene</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labSceneInfo">
-         <property name="text">
-          <string notr="true">info</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QLabel" name="labShot">
-         <property name="text">
-          <string>Shot</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="leShot">
-         <property name="maxLength">
-          <number>10</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="labFrames">
-         <property name="text">
-          <string>Frames:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="sbFrames">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>999</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="labScenes">
-         <property name="text">
-          <string>Scenes:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cbScenes"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QLabel" name="labDialogue">
-         <property name="text">
-          <string>Comments:  (max 150 chars.)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="leDialogue">
-         <property name="maxLength">
-          <number>150</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labAction">
-         <property name="text">
-          <string>Action: (max 150 chars)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="leAction">
-         <property name="maxLength">
-          <number>150</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="labSlug">
-         <property name="text">
-          <string>Slug: (max 150 chars.)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="leSlug">
-         <property name="maxLength">
-          <number>150</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0">
-        <widget class="QLabel" name="labFrameCount">
-         <property name="text">
-          <string>Frames total:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="labActivePadInfo">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="labTimeValue">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="labTime">
-         <property name="text">
-          <string>Time:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="labActivePad">
-         <property name="text">
-          <string>Active pad:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="labFramesCountValue">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout_6">
+    <item>
+     <widget class="QGraphicsView" name="gvStoryboard">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>140</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>140</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>PEN</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QGraphicsView" name="gvSketchPad">
+          <property name="minimumSize">
+           <size>
+            <width>640</width>
+            <height>480</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>640</width>
+            <height>480</height>
+           </size>
+          </property>
+          <property name="mouseTracking">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="labScene">
+              <property name="text">
+               <string>Scene</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labSceneInfo">
+              <property name="text">
+               <string notr="true">info</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="labShot">
+              <property name="text">
+               <string>Shot</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="leShot">
+              <property name="maxLength">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="labFrames">
+              <property name="text">
+               <string>Frames:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sbFrames">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>999</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="labScenes">
+              <property name="text">
+               <string>Scenes:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbScenes"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QLabel" name="labDialogue">
+              <property name="text">
+               <string>Comments:  (max 150 chars.)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="leDialogue">
+              <property name="maxLength">
+               <number>150</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labAction">
+              <property name="text">
+               <string>Action: (max 150 chars)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="leAction">
+              <property name="maxLength">
+               <number>150</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="labSlug">
+              <property name="text">
+               <string>Slug: (max 150 chars.)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="leSlug">
+              <property name="maxLength">
+               <number>150</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="1" column="0">
+             <widget class="QLabel" name="labFrameCount">
+              <property name="text">
+               <string>Frames total:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="labActivePadInfo">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="labTimeValue">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="labTime">
+              <property name="text">
+               <string>Time:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="labActivePad">
+              <property name="text">
+               <string>Active pad:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="labFramesCountValue">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -282,68 +326,19 @@
     <property name="title">
      <string>&amp;File/Storyboard</string>
     </property>
-    <addaction name="action_New_Storyboard"/>
-    <addaction name="action_Open_Storyboard"/>
-    <addaction name="action_Save_Storyboard"/>
     <addaction name="separator"/>
-    <addaction name="actionExport_pdf"/>
-    <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
-    <addaction name="separator"/>
-    <addaction name="actionE_xit"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>&amp;Pen</string>
-    </property>
-    <widget class="QMenu" name="menuLoad_Pen">
-     <property name="title">
-      <string>Load Pen</string>
-     </property>
-     <addaction name="actionLoad_Pen_1"/>
-     <addaction name="actionLoad_Pen_2"/>
-     <addaction name="actionLoad_Pen_3"/>
-     <addaction name="actionLoad_Pen_4"/>
-    </widget>
-    <addaction name="actionSet_Pen_Color"/>
-    <addaction name="menuLoad_Pen"/>
-    <addaction name="actionErase_Sketch_Pen"/>
-   </widget>
-   <widget class="QMenu" name="menuSketchpad">
-    <property name="title">
-     <string>Sketchpad</string>
-    </property>
-    <addaction name="actionAppend_Sketchpad"/>
-    <addaction name="actionInsert_Sketchpad"/>
-    <addaction name="actionCenter_Storyboard"/>
-    <addaction name="actionErase_All"/>
-    <addaction name="actionDelete_drawing"/>
-    <addaction name="separator"/>
-    <addaction name="actionMovePadLeft"/>
-    <addaction name="actionMovePadRight"/>
-   </widget>
-   <widget class="QMenu" name="menu_Help">
-    <property name="title">
-     <string>&amp;Help</string>
-    </property>
-    <addaction name="actionShow_project_info"/>
-    <addaction name="action_About"/>
+    <addaction name="actionNew_Storyboard"/>
+    <addaction name="actionSave_Storyboard"/>
    </widget>
    <widget class="QMenu" name="menuScene">
     <property name="title">
      <string>&amp;Scene</string>
     </property>
-    <addaction name="action_New_Scene"/>
-    <addaction name="separator"/>
-    <addaction name="actionRun_Scene"/>
-    <addaction name="action_Add_audio"/>
-    <addaction name="action_Remove_audio"/>
+    <addaction name="actionNew_Scene"/>
+    <addaction name="actionSave_Scene"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menuScene"/>
-   <addaction name="menuSettings"/>
-   <addaction name="menuSketchpad"/>
-   <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="sizePolicy">
@@ -360,257 +355,36 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action_New_Storyboard">
+  <action name="actionNew_Storyboard">
    <property name="text">
-    <string>&amp;New Storyboard</string>
+    <string>New Storyboard</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="action_Save_Storyboard">
+  <action name="actionSave_Storyboard">
    <property name="text">
-    <string>&amp;Save Storyboard</string>
+    <string>Save Storyboard</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionE_xit">
+  <action name="actionNew_Scene">
    <property name="text">
-    <string>E&amp;xit</string>
+    <string>New Scene</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+X</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
-  <action name="actionSave_Pen_1">
+  <action name="actionSave_Scene">
    <property name="text">
-    <string>Save Pen 1</string>
+    <string>Save Scene</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F5</string>
-   </property>
-  </action>
-  <action name="actionSave_Pen_2">
-   <property name="text">
-    <string>Save Pen 2</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F6</string>
-   </property>
-  </action>
-  <action name="actionSave_Pen_3">
-   <property name="text">
-    <string>Save Pen 3</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F7</string>
-   </property>
-  </action>
-  <action name="actionSave_Pen_4">
-   <property name="text">
-    <string>Save Pen 4</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F8</string>
-   </property>
-  </action>
-  <action name="actionLoad_Pen_1">
-   <property name="text">
-    <string>Load Pen 1</string>
-   </property>
-   <property name="shortcut">
-    <string>F5</string>
-   </property>
-  </action>
-  <action name="actionLoad_Pen_2">
-   <property name="text">
-    <string>Load Pen 2</string>
-   </property>
-   <property name="shortcut">
-    <string>F6</string>
-   </property>
-  </action>
-  <action name="actionLoad_Pen_3">
-   <property name="text">
-    <string>Load Pen 3</string>
-   </property>
-   <property name="shortcut">
-    <string>F7</string>
-   </property>
-  </action>
-  <action name="actionLoad_Pen_4">
-   <property name="text">
-    <string>Load Pen 4</string>
-   </property>
-   <property name="shortcut">
-    <string>F8</string>
-   </property>
-  </action>
-  <action name="actionSet_Pen_width">
-   <property name="text">
-    <string>Set Pen Width</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+W</string>
-   </property>
-  </action>
-  <action name="actionSet_Pen_Color">
-   <property name="text">
-    <string>Set Pen Color and Width</string>
-   </property>
-   <property name="shortcut">
-    <string>F4</string>
-   </property>
-  </action>
-  <action name="actionSave_Settings">
-   <property name="text">
-    <string>Save Settings</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+S</string>
-   </property>
-  </action>
-  <action name="actionAppend_Sketchpad">
-   <property name="text">
-    <string>Append Sketchpad</string>
-   </property>
-   <property name="shortcut">
-    <string>+</string>
-   </property>
-  </action>
-  <action name="actionInsert_Sketchpad">
-   <property name="text">
-    <string>Insert Sketchpad</string>
-   </property>
-   <property name="shortcut">
-    <string>Ins</string>
-   </property>
-  </action>
-  <action name="action_Open_Storyboard">
-   <property name="text">
-    <string>&amp;Open Storyboard</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="action_About">
-   <property name="text">
-    <string>&amp;About</string>
-   </property>
-  </action>
-  <action name="actionErase_All">
-   <property name="text">
-    <string>Erase drawing</string>
-   </property>
-   <property name="shortcut">
-    <string>F9</string>
-   </property>
-  </action>
-  <action name="actionErase_Sketch_Pen">
-   <property name="text">
-    <string>Erase Sketch Pen</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+F5</string>
-   </property>
-  </action>
-  <action name="actionPreferences">
-   <property name="text">
-    <string>Preferences</string>
-   </property>
-   <property name="shortcut">
-    <string>F12</string>
-   </property>
-  </action>
-  <action name="actionCenter_Storyboard">
-   <property name="text">
-    <string>Center Storyboard</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+C</string>
-   </property>
-  </action>
-  <action name="action_New_Scene">
-   <property name="text">
-    <string>&amp;New Scene</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+N</string>
-   </property>
-  </action>
-  <action name="action_Open_Scene">
-   <property name="text">
-    <string>&amp;Open Scene</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+O</string>
-   </property>
-  </action>
-  <action name="actionDelete_drawing">
-   <property name="text">
-    <string>Delete drawing</string>
-   </property>
-   <property name="shortcut">
-    <string>Del</string>
-   </property>
-  </action>
-  <action name="actionMovePadLeft">
-   <property name="text">
-    <string>Move pad to the left</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+Left</string>
-   </property>
-  </action>
-  <action name="actionMovePadRight">
-   <property name="text">
-    <string>Move pad to the right</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+Right</string>
-   </property>
-  </action>
-  <action name="actionRun_Scene">
-   <property name="text">
-    <string>Run Scene</string>
-   </property>
-   <property name="shortcut">
-    <string>F2</string>
-   </property>
-  </action>
-  <action name="action_Add_audio">
-   <property name="text">
-    <string>&amp;Add audio</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+A</string>
-   </property>
-  </action>
-  <action name="action_Remove_audio">
-   <property name="text">
-    <string>&amp;Remove audio</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+Z</string>
-   </property>
-  </action>
-  <action name="actionShow_project_info">
-   <property name="text">
-    <string>Show project info</string>
-   </property>
-   <property name="shortcut">
-    <string>F11</string>
-   </property>
-  </action>
-  <action name="actionExport_pdf">
-   <property name="text">
-    <string>Export pdf</string>
-   </property>
-   <property name="shortcut">
-    <string>F3</string>
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
  </widget>
