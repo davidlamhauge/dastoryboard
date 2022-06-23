@@ -9,8 +9,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    init();
     ui->setupUi(this);
+
+    // position where we left it
+    QSize scr = QGuiApplication::primaryScreen()->availableSize();
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    qDebug() << settings.value("winsize") << " INIT BEF";
+    resize(settings.value("winSize", QSize(1040, 780)).toSize());
+    qDebug() << size() << " INIT AFT";
+    move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
+
+    init();
+    qDebug() << size();
 }
 
 MainWindow::~MainWindow()
@@ -27,11 +37,4 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
-    // position where we left it
-    QSize scr = QGuiApplication::primaryScreen()->availableSize();
-    QSettings settings("TeamLamhauge", "daStoryboard");
-    qDebug() << settings.value("winsize") << " INIT";
-    resize(settings.value("winSize", QSize(1040, 780)).toSize());
-    move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
-
 }
