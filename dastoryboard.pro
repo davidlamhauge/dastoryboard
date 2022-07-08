@@ -13,11 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+        startupmenu.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    startupmenu.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    startupmenu.ui
 
 TRANSLATIONS += \
     lang/dastoryboard_da.ts
