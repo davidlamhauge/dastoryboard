@@ -26,4 +26,11 @@ TRANSLATIONS += \
     lang/dastoryboard_da.ts
 
 RESOURCES += \
+    icons.qrc \
     lang.qrc
+
+DISTFILES += \
+    icons/lightblue.png \
+    icons/lightgray.png \
+    icons/lightgreen.png \
+    icons/lightred.png

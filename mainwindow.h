@@ -25,6 +25,7 @@ private:
 
     void init();
     void setupProject();
+    void resetPalette();
     void loadScene(QString scene);
 
 

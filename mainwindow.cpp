@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::setupProject);
+    connect(ui->btn0, &QPushButton::clicked, this, &MainWindow::resetPalette);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
@@ -83,6 +84,13 @@ void MainWindow::setupProject()
         ui->btnSaveProject->setEnabled(true);
         loadScene(mActiveSceneFull);
     }
+}
+
+void MainWindow::resetPalette()
+{
+    QColor col = QColor(230, 170, 170);
+    QString qss = QString("background-color: %1").arg(col.name());
+    ui->btn0->setStyleSheet(qss);
 }
 
 void MainWindow::loadScene(QString scene)
