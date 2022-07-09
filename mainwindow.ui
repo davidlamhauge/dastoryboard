@@ -64,12 +64,15 @@
             <property name="sizeAdjustPolicy">
              <enum>QAbstractScrollArea::AdjustToContents</enum>
             </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked</set>
+            </property>
             <item>
              <property name="text">
               <string>Light blue</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -77,7 +80,7 @@
               <string>Light green</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -85,7 +88,7 @@
               <string>Light red</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -93,7 +96,7 @@
               <string>Light yellow</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -101,7 +104,7 @@
               <string>Light brown</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -109,7 +112,7 @@
               <string>Light purple</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -117,7 +120,7 @@
               <string>White</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -125,7 +128,7 @@
               <string>Black</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -133,7 +136,7 @@
               <string>Light gray</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
             <item>
@@ -141,7 +144,7 @@
               <string>Dark gray</string>
              </property>
              <property name="flags">
-              <set>ItemIsSelectable|ItemIsEnabled</set>
+              <set>ItemIsSelectable|ItemIsEditable|ItemIsEnabled</set>
              </property>
             </item>
            </widget>
