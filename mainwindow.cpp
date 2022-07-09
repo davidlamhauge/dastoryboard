@@ -26,12 +26,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::setupProject);
-    connect(ui->btn0, &QPushButton::clicked, this, &MainWindow::resetPalette);
+    connect(ui->btnResetPalette, &QPushButton::clicked, this, &MainWindow::resetPalette);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
     ui->btnSaveStoryboard->setEnabled(false);
     ui->btnSaveProject->setEnabled(false);
+    ui->btnBG->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -60,15 +61,14 @@ void MainWindow::setupProject()
     mStartupMenu->exec();
 
     mActiveProjectFull = settings.value("project").toString();
-    mActiveSceneFull = settings.value("scene").toString();
-    QStringList a = mActiveSceneFull.split("/");
-    qDebug() << a;
+    mActiveStoryboardFull = settings.value("scene").toString();
+    QStringList a = mActiveStoryboardFull.split("/");
     mActiveProject = a.at(a.size() - 2);
-    mActiveScene = a.at(a.size() - 1);
+    mActiveStoryboard = a.at(a.size() - 1);
 
     if (settings.value("project").toString().isEmpty() ||
             settings.value("scene").toString().isEmpty() ||
-            !mActiveSceneFull.startsWith(mActiveProjectFull))
+            !mActiveStoryboardFull.startsWith(mActiveProjectFull))
     {
         QMessageBox msgBox;
         msgBox.setText(tr("Works only with Project and Storyboard chosen!\nStoryboard folder must be in Project folder!"));
@@ -77,20 +77,37 @@ void MainWindow::setupProject()
     else
     {
         setWindowTitle("daStoryboard - " + mActiveProject);
-        ui->labStoryboardInfo->setText(mActiveScene);
+        ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
         ui->btnAddStoryboard->setEnabled(true);
         ui->btnSaveStoryboard->setEnabled(true);
         ui->btnSaveProject->setEnabled(true);
-        loadScene(mActiveSceneFull);
+        loadScene(mActiveStoryboardFull);
     }
 }
 
 void MainWindow::resetPalette()
 {
-    QColor col = QColor(230, 170, 170);
-    QString qss = QString("background-color: %1").arg(col.name());
-    ui->btn0->setStyleSheet(qss);
+    ui->btn0->setStyleSheet(QString("background-color: %1").arg(mLIGHTBLUE.name()));
+    ui->lab0->setText(tr("Lighth blue"));
+    ui->btn1->setStyleSheet(QString("background-color: %1").arg(mLIGHTGREEN.name()));
+    ui->lab1->setText(tr("Lighth green"));
+    ui->btn2->setStyleSheet(QString("background-color: %1").arg(mLIGHTRED.name()));
+    ui->lab2->setText(tr("Lighth red"));
+    ui->btn3->setStyleSheet(QString("background-color: %1").arg(mLIGHTYELLOW.name()));
+    ui->lab3->setText(tr("Lighth yellow"));
+    ui->btn4->setStyleSheet(QString("background-color: %1").arg(mLIGHTBROWN.name()));
+    ui->lab4->setText(tr("Lighth brown"));
+    ui->btn5->setStyleSheet(QString("background-color: %1").arg(mLIGHTPURPLE.name()));
+    ui->lab5->setText(tr("Lighth purple"));
+    ui->btn6->setStyleSheet(QString("background-color: %1").arg(mWHITE.name()));
+    ui->lab6->setText(tr("White"));
+    ui->btn7->setStyleSheet(QString("background-color: %1").arg(mBLACK.name()));
+    ui->lab7->setText(tr("Black"));
+    ui->btn8->setStyleSheet(QString("background-color: %1").arg(mLIGHTGRAY.name()));
+    ui->lab8->setText(tr("Lighth gray"));
+    ui->btn9->setStyleSheet(QString("background-color: %1").arg(mDARKGRAY.name()));
+    ui->lab9->setText(tr("Dark gray"));
 }
 
 void MainWindow::loadScene(QString scene)

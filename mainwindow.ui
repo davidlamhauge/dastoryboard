@@ -415,6 +415,13 @@
               </item>
              </layout>
             </item>
+            <item>
+             <widget class="QPushButton" name="btnResetPalette">
+              <property name="text">
+               <string>Reset palette</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -481,6 +488,13 @@
             </property>
             <property name="mouseTracking">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="leAction">
+            <property name="maxLength">
+             <number>150</number>
             </property>
            </widget>
           </item>
@@ -597,13 +611,6 @@
                <widget class="QLabel" name="labAction">
                 <property name="text">
                  <string>Action: (max 150 chars)</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="leAction">
-                <property name="maxLength">
-                 <number>150</number>
                 </property>
                </widget>
               </item>
