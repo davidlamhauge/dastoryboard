@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDir>
+#include <QListWidgetItem>
 
 #include "startupmenu.h"
 
@@ -17,16 +18,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // position where we left it
     QSize scr = QGuiApplication::primaryScreen()->availableSize();
-    qDebug() << "scr: " << scr;
     QSettings settings("TeamLamhauge", "daStoryboard");
     resize(settings.value("winSize", QSize(1040, 780)).toSize());
     move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
+    qDebug() << "scr: " << scr << " size: " << size() << " pos: " << pos();
 
     init();
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::setupProject);
-    connect(ui->btnResetPalette, &QPushButton::clicked, this, &MainWindow::resetPalette);
+    connect(ui->btnResetPal, &QPushButton::clicked, this, &MainWindow::resetPalette);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
@@ -88,26 +89,25 @@ void MainWindow::setupProject()
 
 void MainWindow::resetPalette()
 {
-    ui->btn0->setStyleSheet(QString("background-color: %1").arg(mLIGHTBLUE.name()));
-    ui->lab0->setText(tr("Lighth blue"));
-    ui->btn1->setStyleSheet(QString("background-color: %1").arg(mLIGHTGREEN.name()));
-    ui->lab1->setText(tr("Lighth green"));
-    ui->btn2->setStyleSheet(QString("background-color: %1").arg(mLIGHTRED.name()));
-    ui->lab2->setText(tr("Lighth red"));
-    ui->btn3->setStyleSheet(QString("background-color: %1").arg(mLIGHTYELLOW.name()));
-    ui->lab3->setText(tr("Lighth yellow"));
-    ui->btn4->setStyleSheet(QString("background-color: %1").arg(mLIGHTBROWN.name()));
-    ui->lab4->setText(tr("Lighth brown"));
-    ui->btn5->setStyleSheet(QString("background-color: %1").arg(mLIGHTPURPLE.name()));
-    ui->lab5->setText(tr("Lighth purple"));
-    ui->btn6->setStyleSheet(QString("background-color: %1").arg(mWHITE.name()));
-    ui->lab6->setText(tr("White"));
-    ui->btn7->setStyleSheet(QString("background-color: %1").arg(mBLACK.name()));
-    ui->lab7->setText(tr("Black"));
-    ui->btn8->setStyleSheet(QString("background-color: %1").arg(mLIGHTGRAY.name()));
-    ui->lab8->setText(tr("Lighth gray"));
-    ui->btn9->setStyleSheet(QString("background-color: %1").arg(mDARKGRAY.name()));
-    ui->lab9->setText(tr("Dark gray"));
+    QList<QColor> colors;
+    colors << mLIGHTBLUE << mLIGHTGREEN << mLIGHTRED << mLIGHTYELLOW << mLIGHTBROWN
+           << mLIGHTPURPLE << mWHITE << mBLACK << mLIGHTGRAY << mDARKGRAY;
+    QStringList txt;
+    txt << tr("Lighth blue") << tr("Lighth green") << tr("Lighth red") << tr("Lighth yellow") << tr("Lighth brown")
+           << tr("Lighth purple") << tr("White") << tr("Black") << tr("Lighth gray") << tr("Dark gray");
+    QListWidgetItem* item;
+    ui->lwPalette->clear();
+    for (int i = 0; i < 10; i++)
+    {
+        item = new QListWidgetItem(txt.at(i));
+        item->setBackground(QBrush(colors.at(i)));
+        int gCol = qGray(colors.at(i).red(), colors.at(i).green(), colors.at(i).blue());
+        if (gCol > 127)
+            item->setForeground(QBrush(Qt::black));
+        else
+            item->setForeground(QBrush(Qt::white));
+        ui->lwPalette->addItem(item);
+    }
 }
 
 void MainWindow::loadScene(QString scene)

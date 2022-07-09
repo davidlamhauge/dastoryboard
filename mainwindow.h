@@ -39,15 +39,15 @@ private:
     QVector<QPixmap> mPixmaps;
 
     // palette default colors
-    const QColor mLIGHTBLUE = QColor(180, 180, 240);
-    const QColor mLIGHTGREEN = QColor(180, 240, 180);
+    const QColor mLIGHTBLUE = QColor(160, 215, 255);
+    const QColor mLIGHTGREEN = QColor(135, 255, 145);
     const QColor mLIGHTRED = QColor(240, 180, 180);
-    const QColor mLIGHTYELLOW = QColor(240, 240, 180);
-    const QColor mLIGHTBROWN = QColor(180, 140, 140);
-    const QColor mLIGHTPURPLE = QColor(240, 180, 240);
-    const QColor mWHITE = QColor(250, 250, 250);
+    const QColor mLIGHTYELLOW = QColor(255, 245, 116);
+    const QColor mLIGHTBROWN = QColor(200, 115, 50);
+    const QColor mLIGHTPURPLE = QColor(240, 155, 240);
+    const QColor mWHITE = QColor(255, 255, 255);
     const QColor mBLACK = QColor(10, 10, 10);
-    const QColor mLIGHTGRAY = QColor(220, 220, 220);
+    const QColor mLIGHTGRAY  = QColor(220, 220, 220);
     const QColor mDARKGRAY = QColor(150, 150, 150);
 
     StartupMenu* mStartupMenu = nullptr;
