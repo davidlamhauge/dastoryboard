@@ -16,6 +16,8 @@ StartupMenu::StartupMenu(QWidget *parent) :
     ui->labProject->setText(mProjectPath);
     mScenePath = settings.value("scene", "").toString();
     ui->labScene->setText(mScenePath);
+    settings.setValue("ratio", "Standard");
+    settings.setValue("fps", 25);
 
     if (mProjectPath.isEmpty() || mScenePath.isEmpty())
         ui->btnReady->setEnabled(false);
@@ -23,6 +25,9 @@ StartupMenu::StartupMenu(QWidget *parent) :
     connect(ui->btnSelectProject, &QPushButton::clicked, this, &StartupMenu::getProjectName);
     connect(ui->btnSelectScene, &QPushButton::clicked, this, &StartupMenu::getSceneName);
     connect(ui->btnReady, &QPushButton::clicked, this, &StartupMenu::close);
+    connect(ui->sbFPS, QOverload<int>::of(&QSpinBox::valueChanged), this, &StartupMenu::setFps);
+    connect(ui->rbHD, &QRadioButton::toggled, this, &StartupMenu::setRatio);
+    connect(ui->rbStandard, &QRadioButton::toggled, this, &StartupMenu::setRatio);
 }
 
 StartupMenu::~StartupMenu()
@@ -60,6 +65,21 @@ void StartupMenu::getSceneName()
         settings.setValue("scene", mScenePath);
         checkProgress();
     }
+}
+
+void StartupMenu::setFps(int fps)
+{
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    settings.setValue("fps", fps);
+}
+
+void StartupMenu::setRatio()
+{
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    if (ui->rbStandard->isChecked())
+        settings.setValue("ratio", "Standard");
+    else
+        settings.setValue("ratio", "HD");
 }
 
 void StartupMenu::checkProgress()

@@ -24,6 +24,9 @@ private:
     void getSceneName();
     void setSceneName(QString scene) { mScenePath = scene; }
 
+    void setFps(int fps);
+    void setRatio();
+
     void checkProgress();
 
     QString mProjectPath = "";

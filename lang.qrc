@@ -1,3 +1,5 @@
 <RCC>
-    <qresource prefix="/lang"/>
+    <qresource prefix="/lang">
+        <file>lang/dastoryboard_da.ts</file>
+    </qresource>
 </RCC>

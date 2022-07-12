@@ -6,8 +6,13 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QColorDialog>
 #include <QDir>
 #include <QListWidgetItem>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QScrollBar>
 
 #include "startupmenu.h"
 
@@ -18,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     init();
+
+    ui->lwPalette->installEventFilter(this);
+    mScene->installEventFilter(this);
 
     // position where we left it
 //    QSize scr = QGuiApplication::primaryScreen()->availableSize();
@@ -32,12 +40,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnSavePal, &QPushButton::clicked, this, &MainWindow::savePalette);
     connect(ui->btnLoadPal, &QPushButton::clicked, this, &MainWindow::loadPalette);
     connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
+    connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onCurrentRowChanged);
+    connect(ui->sbPenWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onPenWidthChanged);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
     ui->btnSaveStoryboard->setEnabled(false);
     ui->btnSaveProject->setEnabled(false);
-    ui->btnBG->setEnabled(false);
+
+    ui->btnLoadBG->setEnabled(false);
+    ui->btnRemoveBG->setEnabled(false);
+    ui->btnClearCanvas->setEnabled(false);
+    ui->btnAddStoryboardPad->setEnabled(false);
+    ui->cbBG->setEnabled(false);
+    ui->sbPenWidth->setValue(settings.value("penwidth", 5).toInt());
+    ui->gvStoryboard->setStyleSheet("QScrollBar:horizontal { height: 9px; }");
+    ui->gvSketchPad->setScene(mScene);
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +70,43 @@ MainWindow::~MainWindow()
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *e)
 {
+    if (obj == ui->lwPalette)
+    {
+        if (e->type() == QEvent::KeyPress)
+        {
+            QKeyEvent* k = static_cast<QKeyEvent*>(e);
+            if (k->key() == Qt::Key_Space)
+            {
+                changePaletteColor();
+                return true;
+            }
+        }
+    }
+    if (obj == mScene)
+    {
+        QGraphicsSceneMouseEvent* m = static_cast<QGraphicsSceneMouseEvent*>(e);
+        if (m->type() == QEvent::GraphicsSceneMousePress && !mPenIsPressed)
+        {
+            mPenIsPressed = true;
+            mPrevPoint = m->scenePos().toPoint();
+            mScene->addLine(QLine(m->lastScenePos().toPoint(), m->scenePos().toPoint()), mPen);
+            return true;
+        }
+        else if (m->type() == QEvent::GraphicsSceneMouseMove && mPenIsPressed)
+        {
+            mNextPoint = m->scenePos().toPoint();
+            mScene->addLine(QLine(mPrevPoint, mNextPoint), mPen);
+            mPrevPoint = mNextPoint;
+            return true;
+        }
+        else if (m->type() == QEvent::GraphicsSceneMouseRelease && mPenIsPressed)
+        {
+            mPenIsPressed = false;
+            mNextPoint = m->scenePos().toPoint();
+            mScene->addLine(QLine(mPrevPoint, mNextPoint), mPen);
+            return true;
+        }
+    }
     return QWidget::eventFilter(obj, e);
 }
 
@@ -61,8 +116,14 @@ void MainWindow::init()
            << mLIGHTPURPLE << mWHITE << mBLACK << mLIGHTGRAY << mDARKGRAY;
     mCurPalette = mOrgPalette;
     mActivePaletteList = mPaletteList;
+    mScene = new QGraphicsScene(ui->gvSketchPad->sceneRect());
 
     QSettings settings("TeamLamhauge", "daStoryboard");
+    mPen.setColor(settings.value("pencolor", QColor(Qt::black)).value<QColor>());
+    ui->labPencolor->setText("");
+    ui->labPencolor->setStyleSheet("QLabel { background-color : " + mPen.color().name() +  " ; }");
+    mPen.setWidth(settings.value("penwidth", 5).toInt());
+
     ui->lwPalette->clear();
     QListWidgetItem* item;
     for (int i = 0; i < 10; i++)
@@ -113,13 +174,6 @@ void MainWindow::setupProject()
     mStartupMenu = new StartupMenu();
     mStartupMenu->exec();
 
-    mActiveProjectFull = settings.value("project").toString();
-    mActiveStoryboardFull = settings.value("scene").toString();
-    QStringList a = mActiveStoryboardFull.split("/");
-    mActiveProject = a.at(a.size() - 2);
-    mActiveStoryboard = a.at(a.size() - 1);
-    QDir(mActiveProjectFull).mkdir("misc");
-
     if (settings.value("project").toString().isEmpty() ||
             settings.value("scene").toString().isEmpty() ||
             !mActiveStoryboardFull.startsWith(mActiveProjectFull))
@@ -130,12 +184,45 @@ void MainWindow::setupProject()
     }
     else
     {
+        mActiveProjectFull = settings.value("project").toString();
+        mActiveStoryboardFull = settings.value("scene").toString();
+        mFps = settings.value("fps", 25).toInt();
+        mRatio = settings.value("ratio", "Standard").toString();
+        if (mRatio == "Standard")
+        {
+            ui->gvSketchPad->setFixedSize(800, 600);
+            mScene->setSceneRect(0,0,800,600);
+            mSceneStoryboard = new QGraphicsScene(0, 0, 200, 150);
+        }
+        else
+        {
+            ui->gvSketchPad->setFixedSize(800, 450);
+            mScene->setSceneRect(0,0,800,450);
+            mSceneStoryboard = new QGraphicsScene(0, 0, 200, 112.5);
+        }
+        ui->gvStoryboard->setFixedHeight(ui->gvSketchPad->height() / 4 + 10);
+        ui->gvStoryboard->setScene(mSceneStoryboard);
+
+        QStringList a = mActiveStoryboardFull.split("/");
+        mActiveProject = a.at(a.size() - 2);
+        mActiveStoryboard = a.at(a.size() - 1);
+        QDir(mActiveProjectFull).mkdir("misc");
+        QDir(mActiveProjectFull).mkdir("backup");
+
         setWindowTitle("daStoryboard - " + mActiveProject);
+
         ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
         ui->btnAddStoryboard->setEnabled(true);
         ui->btnSaveStoryboard->setEnabled(true);
         ui->btnSaveProject->setEnabled(true);
+
+        ui->btnLoadBG->setEnabled(true);
+        ui->btnRemoveBG->setEnabled(true);
+        ui->btnClearCanvas->setEnabled(true);
+        ui->btnAddStoryboardPad->setEnabled(true);
+        ui->cbBG->setEnabled(true);
+
         loadScene(mActiveStoryboardFull);
     }
 }
@@ -155,6 +242,28 @@ void MainWindow::resetPalette()
         else
             item->setForeground(QBrush(Qt::white));
         ui->lwPalette->addItem(item);
+    }
+}
+
+void MainWindow::changePaletteColor()
+{
+    QListWidgetItem* item = ui->lwPalette->currentItem();
+    int i = ui->lwPalette->currentRow();
+    QColor color = QColorDialog::getColor();
+
+    if (color.isValid())
+    {
+        item->setBackground(QBrush(color));
+        int gCol = qGray(color.red(), color.green(), color.blue());
+        if (gCol > 127)
+            item->setForeground(QBrush(Qt::black));
+        else
+            item->setForeground(QBrush(Qt::white));
+        QSettings settings("TeamLamhauge", "daStoryboard");
+        settings.setValue("palette/" + QString::number(i),  QString(QString::number(color.red()) + "," +
+                                                                    QString::number(color.green()) + "," +
+                                                                    QString::number(color.blue()) + "," +
+                                                                    item->text()));
     }
 }
 
@@ -180,7 +289,9 @@ void MainWindow::savePalette()
             out << QString(QString::number(color.red()) + "," +
                            QString::number(color.green()) + "," +
                            QString::number(color.blue()) + "," +
-                           mActivePaletteList.at(i) + "\n");
+                           mActivePaletteList.at(i));
+            if (i != 9)
+                out << "\n";
         }
     }
 }
@@ -200,8 +311,7 @@ void MainWindow::loadPalette()
 
     QTextStream in(&file);
     QSettings settings("TeamLamhauge", "daStoryboard");
-    int i = 0;
-    while (i < 10)
+    for (int i = 0; i < 10; i++)
     {
         QListWidgetItem* item = ui->lwPalette->takeItem(i);
         QString line = in.readLine();
@@ -220,7 +330,6 @@ void MainWindow::loadPalette()
                                                                     QString::number(color.blue()) + "," +
                                                                     item->text()));
         mActivePaletteList.replace(i, list.at(3));
-        i++;
     }
 }
 
@@ -230,10 +339,28 @@ void MainWindow::onItemChanged(QListWidgetItem *item)
     mActivePaletteList.replace(row, item->text());
     QSettings settings("TeamLamhauge", "daStoryboard");
     QColor color = item->background().color();
+    mPen.setColor(color);
+    ui->labPencolor->setStyleSheet("QLabel { background-color : " + mPen.color().name() +  " ; }");
     settings.setValue("palette/" + QString::number(row),  QString(QString::number(color.red()) + "," +
                                                                   QString::number(color.green()) + "," +
                                                                   QString::number(color.blue()) + "," +
                                                                   mActivePaletteList.at(row)));
+}
+
+void MainWindow::onCurrentRowChanged(int row)
+{
+    QColor color = ui->lwPalette->item(row)->background().color();
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    settings.setValue("pencolor", color);
+    mPen.setColor(color);
+    ui->labPencolor->setStyleSheet("QLabel { background-color : " + color.name() +  " ; }");
+}
+
+void MainWindow::onPenWidthChanged(int w)
+{
+    mPen.setWidth(w);
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    settings.setValue("penwidth", w);
 }
 
 void MainWindow::loadScene(QString scene)

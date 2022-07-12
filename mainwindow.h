@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include "qlistwidget.h"
+#include "qpen.h"
+#include "QGraphicsScene"
 #include <QMainWindow>
 
 namespace Ui {
@@ -27,14 +29,17 @@ private:
     void setupProject();
 
     void resetPalette();
+    void changePaletteColor();
     void savePalette();
     void loadPalette();
     void onItemChanged(QListWidgetItem* item);
+    void onCurrentRowChanged(int row);
+    void onPenWidthChanged(int w);
 
     void loadScene(QString scene);
 
 
-    // SCENE member vars
+    // STORYBOARD member vars
     QString mActiveProjectFull = "";
     QString mActiveStoryboardFull = "";
     QString mActiveProject = "";
@@ -42,7 +47,11 @@ private:
     QString mMiscFolderFull = "";
     int mActiveStoryboardFrames = 0;
     int mActiveStoryboardPads = 0;
+    int mFps = 25;
+    QString mRatio = "Standard";
     QVector<QPixmap> mPixmaps;
+    QPen mPen;
+    bool mPenIsPressed = false;
 
     // palette default colors
     const QColor mLIGHTBLUE = QColor(160, 215, 255);
@@ -61,7 +70,10 @@ private:
     QList<QColor> mOrgPalette;
     QList<QColor> mCurPalette;
 
-
+    QGraphicsScene* mScene = nullptr;
+    QGraphicsScene* mSceneStoryboard = nullptr;
+    QPoint mPrevPoint;
+    QPoint mNextPoint;
     StartupMenu* mStartupMenu = nullptr;
 };
 

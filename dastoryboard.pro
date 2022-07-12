@@ -33,4 +33,5 @@ DISTFILES += \
     icons/lightblue.png \
     icons/lightgray.png \
     icons/lightgreen.png \
-    icons/lightred.png
+    icons/lightred.png \
+    lang/dastoryboard_da.ts
