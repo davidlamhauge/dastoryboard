@@ -3,6 +3,8 @@
 
 #include "qlistwidget.h"
 #include "qpen.h"
+#include "qtimer.h"
+#include <QLabel>
 #include "QGraphicsScene"
 #include <QMainWindow>
 
@@ -16,6 +18,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    struct strokes{
+        int first;
+        int last;
+    };
+
 public:
      explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -27,6 +34,8 @@ private:
 
     void init();
     void setupProject();
+    void addPad();
+    void removePad(int index);
 
     void resetPalette();
     void changePaletteColor();
@@ -37,7 +46,14 @@ private:
     void onPenWidthChanged(int w);
 
     void loadScene(QString scene);
+    void updateStoryboard();
+    void clearCanvas();
+    void clearSelected();
+    void clearButSelected();
 
+    void undoLast();
+    void redoLast();
+    void setUndoRedoButtons();
 
     // STORYBOARD member vars
     QString mActiveProjectFull = "";
@@ -46,10 +62,14 @@ private:
     QString mActiveStoryboard = "";
     QString mMiscFolderFull = "";
     int mActiveStoryboardFrames = 0;
-    int mActiveStoryboardPads = 0;
+    int mActiveStoryboardPad = 0;
     int mFps = 25;
     QString mRatio = "Standard";
-    QVector<QPixmap> mPixmaps;
+    QVector<QGraphicsScene*> mDrawingPads;
+    QVector<QPixmap> mStoryboardPads;
+    QList<QGraphicsItem*> mItemRedoList;
+    QList<strokes> entryList;
+    QList<strokes> redoEntryList;
     QPen mPen;
     bool mPenIsPressed = false;
 
@@ -71,10 +91,12 @@ private:
     QList<QColor> mCurPalette;
 
     QGraphicsScene* mScene = nullptr;
-    QGraphicsScene* mSceneStoryboard = nullptr;
-    QPoint mPrevPoint;
-    QPoint mNextPoint;
+    QPointF mPrevPoint;
+    QPointF mNextPoint;
+    strokes mEntry;
+    strokes mRedoEntry;
     StartupMenu* mStartupMenu = nullptr;
+    QTimer* updateTimer = nullptr;
 };
 
 #endif // MAINWINDOW_H

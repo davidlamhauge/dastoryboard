@@ -14,12 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+        preferencemanager.cpp \
         startupmenu.cpp
 
 HEADERS  += mainwindow.h \
+    preferencemanager.h \
     startupmenu.h
 
 FORMS    += mainwindow.ui \
+    preferencemanager.ui \
     startupmenu.ui
 
 TRANSLATIONS += \
