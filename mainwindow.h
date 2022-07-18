@@ -35,18 +35,22 @@ private:
     void init();
     void setupProject();
     void addPad();
-    void removePad(int index);
+    void removePad();
+    void swapPads(int active, int neighbor);
+    void onCellClicked(int row, int column);
 
     void resetPalette();
     void changePaletteColor();
     void savePalette();
     void loadPalette();
     void onItemChanged(QListWidgetItem* item);
-    void onCurrentRowChanged(int row);
+    void onPaletteRowChanged(int row);
     void onPenWidthChanged(int w);
 
     void loadScene(QString scene);
     void updateStoryboard();
+    void copyFrom_mScene(QGraphicsScene* scene);
+    void copyTo_mScene(QGraphicsScene* scene);
     void clearCanvas();
     void clearSelected();
     void clearButSelected();
@@ -63,6 +67,7 @@ private:
     QString mMiscFolderFull = "";
     int mActiveStoryboardFrames = 0;
     int mActiveStoryboardPad = 0;
+    int mSelectedPad = 0;       // the storyboard pad that is clicked
     int mFps = 25;
     QString mRatio = "Standard";
     QVector<QGraphicsScene*> mDrawingPads;
@@ -72,6 +77,7 @@ private:
     QList<strokes> redoEntryList;
     QPen mPen;
     bool mPenIsPressed = false;
+    bool mNeedSave = false;
 
     // palette default colors
     const QColor mLIGHTBLUE = QColor(160, 215, 255);

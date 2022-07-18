@@ -44,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnSavePal, &QPushButton::clicked, this, &MainWindow::savePalette);
     connect(ui->btnLoadPal, &QPushButton::clicked, this, &MainWindow::loadPalette);
     connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
-    connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onCurrentRowChanged);
+    connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
+    connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
     connect(ui->sbPenWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onPenWidthChanged);
     connect(ui->btnClearCanvas, &QPushButton::clicked, this, &MainWindow::clearCanvas);
     connect(ui->btnClearSelColor, &QPushButton::clicked, this, &MainWindow::clearSelected);
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnUndo, &QPushButton::clicked, this, &MainWindow::undoLast);
     connect(ui->btnRedo, &QPushButton::clicked, this, &MainWindow::redoLast);
     connect(ui->btnAddStoryboardPad, &QPushButton::clicked, this, &MainWindow::addPad);
+    connect(ui->btnRemoveStoryboardPad, &QPushButton::clicked, this, &MainWindow::removePad);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
@@ -64,7 +66,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->btnAddStoryboardPad->setEnabled(false);
     ui->cbBG->setEnabled(false);
     ui->sbPenWidth->setValue(settings.value("penwidth", 5).toInt());
-//    ui->gvStoryboard->setStyleSheet("QScrollBar:horizontal { height: 15px; }");
     ui->gvSketchPad->setScene(mScene);
 }
 
@@ -97,11 +98,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
         QGraphicsSceneMouseEvent* m = static_cast<QGraphicsSceneMouseEvent*>(e);
         if (m->type() == QEvent::GraphicsSceneMousePress && !mPenIsPressed)
         {
+            ui->twStoryboard->item(0, mActiveStoryboardPad)->setSelected(false);
             mPenIsPressed = true;
             mPrevPoint = m->scenePos();
             mEntry.first = mScene->items().size();
-            if (entryList.count() == 10)
-                entryList.removeFirst();
             return true;
         }
         else if (m->type() == QEvent::GraphicsSceneMouseMove && mPenIsPressed)
@@ -109,6 +109,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             mNextPoint = m->scenePos();
             mScene->addLine(QLineF(mPrevPoint, mNextPoint), mPen);
             mPrevPoint = mNextPoint;
+            mNeedSave = true;
             return true;
         }
         else if (m->type() == QEvent::GraphicsSceneMouseRelease && mPenIsPressed)
@@ -117,7 +118,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             mNextPoint = m->scenePos().toPoint();
             mScene->addLine(QLineF(mPrevPoint, mNextPoint), mPen);
             mEntry.last = mScene->items().size() - 1;
+            if (entryList.count() == 10)
+                entryList.removeFirst();
             entryList.append(mEntry);
+            mNeedSave = true;
             setUndoRedoButtons();
             return true;
         }
@@ -209,6 +213,7 @@ void MainWindow::setupProject()
         mItemRedoList.clear();
         mActiveProjectFull = settings.value("project").toString();
         mActiveStoryboardFull = settings.value("scene").toString();
+        mActiveStoryboardPad = 0;
         mFps = settings.value("fps", 25).toInt();
         mRatio = settings.value("ratio", "Standard").toString();
         if (mRatio == "Standard")
@@ -221,11 +226,13 @@ void MainWindow::setupProject()
             ui->gvSketchPad->setFixedSize(800, 450);
             mScene->setSceneRect(0,0,800,450);
         }
-        ui->twStoryboard->setRowHeight(0, ui->gvSketchPad->height() / 4  + 20);
-        ui->twStoryboard->setColumnCount(1);
-        mDrawingPads.append(mScene);
+        QGraphicsScene* sc = new QGraphicsScene;
+        copyFrom_mScene(sc);
+        mDrawingPads.append(sc);
 
-        mActiveStoryboardPad = 1;
+        ui->twStoryboard->setRowHeight(0, ui->gvSketchPad->height() / 4  + 20);
+        ui->twStoryboard->setColumnCount(mDrawingPads.size());
+
         QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
         qDebug() << pix.isNull();
         QDir(mActiveStoryboardFull).mkdir("backup");
@@ -240,7 +247,7 @@ void MainWindow::setupProject()
             mStoryboardPads.append(pix);
             QTableWidgetItem* item = new QTableWidgetItem();
             item->setIcon(icon);
-            ui->twStoryboard->setItem(0, mActiveStoryboardPad - 1, item);
+            ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
         }
 
         QStringList a = mActiveStoryboardFull.split("/");
@@ -271,16 +278,63 @@ void MainWindow::setupProject()
 
 void MainWindow::addPad()
 {
-    QGraphicsScene* scene = ui->gvSketchPad->scene();
-    mDrawingPads.append(scene);
+    // first copy active pad from mScene
+    QGraphicsScene* scene = mDrawingPads.at(mActiveStoryboardPad);
+    copyFrom_mScene(scene);
+
+    // then add new scene and column and make ready
+    QGraphicsScene* sceneNew = new QGraphicsScene;
+    mDrawingPads.append(sceneNew);
+    ui->twStoryboard->setColumnCount(mDrawingPads.size());
+
+    // then save new, empty pixmap to file
     mScene->clear();
-    mActiveStoryboardPad++;
-    // TODO
+    mActiveStoryboardPad += 1;
+    QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
+    if (!pix.isNull())
+    {
+        pix = pix.scaledToWidth(200);
+        QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
+        file.open(QIODevice::WriteOnly);
+        pix.save(&file, "PNG");
+        file.close();
+        QIcon icon(mActiveProjectFull + QString::number(mActiveStoryboardPad) + ".png");
+        mStoryboardPads.append(pix);
+        QTableWidgetItem* item = new QTableWidgetItem();
+        item->setIcon(icon);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
+    }
+    entryList.clear();
 }
 
-void MainWindow::removePad(int index)
+void MainWindow::removePad()
+{
+    if (1 == 1)
+    {
+
+    }
+}
+
+void MainWindow::swapPads(int active, int neighbor)
 {
 
+}
+
+void MainWindow::onCellClicked(int row, int column)
+{
+    Q_UNUSED(row);
+    if (mNeedSave)
+        updateStoryboard();
+    qDebug() << "cell clicked: " << column << " active " << mActiveStoryboardPad;
+    if (column != mActiveStoryboardPad)
+    {
+        QGraphicsScene* oldscene = mDrawingPads.at(mActiveStoryboardPad);
+        copyFrom_mScene(oldscene);
+        QGraphicsScene* scene = mDrawingPads.at(column);
+        qDebug() << "entries in clicked pad: "  << scene->items().count();
+        copyTo_mScene(scene);
+        mActiveStoryboardPad = column;
+    }
 }
 
 void MainWindow::resetPalette()
@@ -403,7 +457,7 @@ void MainWindow::onItemChanged(QListWidgetItem *item)
                                                                   mActivePaletteList.at(row)));
 }
 
-void MainWindow::onCurrentRowChanged(int row)
+void MainWindow::onPaletteRowChanged(int row)
 {
     QColor color = ui->lwPalette->item(row)->background().color();
     QSettings settings("TeamLamhauge", "daStoryboard");
@@ -435,21 +489,43 @@ void MainWindow::loadScene(QString scene)
 
 void MainWindow::updateStoryboard()
 {
+//    QGraphicsScene* scene = mDrawingPads.at(mActiveStoryboardPad);
+//    copyFrom_mScene(scene);
     QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-    if (!pix.isNull())
+    if (!pix.isNull()) // () && mNeedSave)
     {
+        mNeedSave = false;
         pix = pix.scaledToWidth(200);
-        mStoryboardPads.replace(mActiveStoryboardPad - 1, pix);
-        QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad - 1);
+        mStoryboardPads.replace(mActiveStoryboardPad, pix);
         QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
         file.open(QIODevice::WriteOnly);
         pix.save(&file, "PNG");
         file.close();
+
         QIcon icon(mActiveStoryboardFull + "/"  + QString::number(mActiveStoryboardPad) + ".png");
+        QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         item->setIcon(icon);
-        ui->twStoryboard->setItem(0, mActiveStoryboardPad - 1, item);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
         updateTimer->start(2000);
     }
+}
+
+void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
+{
+    scene->clear();
+    QList<QGraphicsItem*> items = mScene->items();
+    for (int i = 0; i < items.size(); i++)
+        if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
+            scene->addItem(line);
+}
+
+void MainWindow::copyTo_mScene(QGraphicsScene *scene)
+{
+    mScene->clear();
+    QList<QGraphicsItem*> items = scene->items();
+    for (int i = 0; i < items.size(); i++)
+        if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
+            mScene->addItem(line);
 }
 
 void MainWindow::clearCanvas()

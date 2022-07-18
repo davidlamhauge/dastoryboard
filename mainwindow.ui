@@ -48,8 +48,11 @@
       <property name="tabKeyNavigation">
        <bool>false</bool>
       </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>false</bool>
+      </property>
       <property name="dragEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <property name="dragDropOverwriteMode">
        <bool>false</bool>
@@ -70,7 +73,7 @@
        <number>1</number>
       </property>
       <property name="columnCount">
-       <number>12</number>
+       <number>1</number>
       </property>
       <attribute name="horizontalHeaderMinimumSectionSize">
        <number>200</number>
@@ -82,17 +85,6 @@
        <bool>false</bool>
       </attribute>
       <row/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
-      <column/>
       <column/>
      </widget>
     </item>
@@ -346,6 +338,13 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRemoveStoryboardPad">
+            <property name="text">
+             <string>Remove storyboard pad</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnAddStoryboardPad">
