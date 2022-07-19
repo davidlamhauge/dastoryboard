@@ -17,6 +17,8 @@
 #include <QTableWidgetItem>
 #include <QScrollBar>
 #include <QPixmap>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 #include "startupmenu.h"
 
@@ -39,10 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
     mScene->installEventFilter(this);
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
-    connect(ui->btnLoad, &QPushButton::clicked, this, &MainWindow::setupProject);
+    connect(ui->btnLoadProject, &QPushButton::clicked, this, &MainWindow::loadProject);
     connect(ui->btnResetPal, &QPushButton::clicked, this, &MainWindow::resetPalette);
     connect(ui->btnSavePal, &QPushButton::clicked, this, &MainWindow::savePalette);
     connect(ui->btnLoadPal, &QPushButton::clicked, this, &MainWindow::loadPalette);
+    connect(ui->btnSaveProject, &QPushButton::clicked, this, &MainWindow::saveProject);
+    connect(ui->btnNewProject, &QPushButton::clicked, this, &MainWindow::newProject);
     connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
     connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
     connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
@@ -133,7 +137,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
 void MainWindow::init()
 {
     mOrgPalette << mLIGHTBLUE << mLIGHTGREEN << mLIGHTRED << mLIGHTYELLOW << mLIGHTBROWN
-           << mLIGHTPURPLE << mWHITE << mBLACK << mLIGHTGRAY << mDARKGRAY;
+           << mLIGHTPURPLE << mBLACK << mLIGHTGRAY << mDARKGRAY << mWHITE ;
     mCurPalette = mOrgPalette;
     mActivePaletteList = mPaletteList;
     mScene = new QGraphicsScene(ui->gvSketchPad->sceneRect());
@@ -192,7 +196,7 @@ void MainWindow::init()
     }
 }
 
-void MainWindow::setupProject()
+void MainWindow::newProject()
 {
     QSettings settings("TeamLamhauge", "daStoryboard");
     mStartupMenu = new StartupMenu();
@@ -234,7 +238,6 @@ void MainWindow::setupProject()
         ui->twStoryboard->setColumnCount(mDrawingPads.size());
 
         QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-        qDebug() << pix.isNull();
         QDir(mActiveStoryboardFull).mkdir("backup");
         if (!pix.isNull())
         {
@@ -253,7 +256,6 @@ void MainWindow::setupProject()
         QStringList a = mActiveStoryboardFull.split("/");
         mActiveProject = a.at(a.size() - 2);
         mActiveStoryboard = a.at(a.size() - 1);
-        QDir(mActiveProjectFull).mkdir("misc");
 
         setWindowTitle("daStoryboard - " + mActiveProject);
 
@@ -272,7 +274,7 @@ void MainWindow::setupProject()
         updateTimer = new QTimer(this);
         connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
         updateTimer->start(3000);
-        loadScene(mActiveStoryboardFull);
+        loadProject();
     }
 }
 
@@ -325,14 +327,10 @@ void MainWindow::onCellClicked(int row, int column)
     Q_UNUSED(row);
     if (mNeedSave)
         updateStoryboard();
-    qDebug() << "cell clicked: " << column << " active " << mActiveStoryboardPad;
     if (column != mActiveStoryboardPad)
     {
-        QGraphicsScene* oldscene = mDrawingPads.at(mActiveStoryboardPad);
-        copyFrom_mScene(oldscene);
-        QGraphicsScene* scene = mDrawingPads.at(column);
-        qDebug() << "entries in clicked pad: "  << scene->items().count();
-        copyTo_mScene(scene);
+        copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+        copyTo_mScene(mDrawingPads.at(column));
         mActiveStoryboardPad = column;
     }
 }
@@ -357,23 +355,33 @@ void MainWindow::resetPalette()
 
 void MainWindow::changePaletteColor()
 {
-    QListWidgetItem* item = ui->lwPalette->currentItem();
-    int i = ui->lwPalette->currentRow();
-    QColor color = QColorDialog::getColor();
-
-    if (color.isValid())
+    if (ui->lwPalette->currentRow() == 9)
     {
-        item->setBackground(QBrush(color));
-        int gCol = qGray(color.red(), color.green(), color.blue());
-        if (gCol > 127)
-            item->setForeground(QBrush(Qt::black));
-        else
-            item->setForeground(QBrush(Qt::white));
-        QSettings settings("TeamLamhauge", "daStoryboard");
-        settings.setValue("palette/" + QString::number(i),  QString(QString::number(color.red()) + "," +
-                                                                    QString::number(color.green()) + "," +
-                                                                    QString::number(color.blue()) + "," +
-                                                                    item->text()));
+        QMessageBox msgBox;
+        msgBox.setText(tr("Eraser can't be changed! Only the width..."));
+        msgBox.exec();
+    }
+    else
+    {
+        QListWidgetItem* item = ui->lwPalette->currentItem();
+        int i = ui->lwPalette->currentRow();
+        QColor color = QColorDialog::getColor();
+
+        if (color.isValid())
+        {
+            item->setBackground(QBrush(color));
+            int gCol = qGray(color.red(), color.green(), color.blue());
+            if (gCol > 127)
+                item->setForeground(QBrush(Qt::black));
+            else
+                item->setForeground(QBrush(Qt::white));
+            QSettings settings("TeamLamhauge", "daStoryboard");
+            settings.setValue("palette/" + QString::number(i),  QString(QString::number(color.red()) + "," +
+                                                                        QString::number(color.green()) + "," +
+                                                                        QString::number(color.blue()) + "," +
+                                                                        item->text()));
+            mCurPalette.replace(i, color);
+        }
     }
 }
 
@@ -473,9 +481,11 @@ void MainWindow::onPenWidthChanged(int w)
     settings.setValue("penwidth", w);
 }
 
-void MainWindow::loadScene(QString scene)
+void MainWindow::loadProject()
 {
-    QDir scDir(scene);
+    updateTimer->stop();
+
+    QDir scDir("");
     scDir.setNameFilters(QStringList() << "*.png");
     QStringList list = scDir.entryList();
     if (!list.isEmpty())
@@ -485,12 +495,77 @@ void MainWindow::loadScene(QString scene)
     else
     {
     }
+    updateTimer->start(1000);
+}
+
+void MainWindow::saveProject()
+{
+    updateTimer->stop();
+    // first copy active pad from mScene
+    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+
+    QString filePath = mActiveProjectFull + "/" + mActiveProject + ".dsb";
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly))
+    {
+
+        QXmlStreamWriter stream(&file);
+        stream.setAutoFormatting(true);
+        stream.setAutoFormattingIndent(2);
+
+        // start dokument
+        stream.writeStartDocument();
+
+        // 'info' is basic information about the project
+        stream.writeStartElement("info");
+        stream.writeTextElement("project_name", mActiveProject);
+        stream.writeTextElement("project_path", mActiveProjectFull);
+        stream.writeEndElement();
+
+        // '
+        QDir scDir(mActiveProjectFull); // get storyboards
+        scDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+        QStringList list = scDir.entryList();
+        for(int i = 0; i < list.size();i++)
+        {
+            QString s = list.at(i);
+            stream.writeStartElement(s);
+
+            for (int j = 0; j < mDrawingPads.size(); j++)
+            {
+                stream.writeStartElement(QString::number(j));
+                QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
+                for (int k = 0; k < items.size(); k++)
+                {
+                    if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
+                    {
+                        stream.writeStartElement(QString::number(k));
+                        stream.writeTextElement("p1x", QString::number( line->line().p1().x()));
+                        stream.writeTextElement("p1y", QString::number( line->line().p1().y()));
+                        stream.writeTextElement("p2x", QString::number( line->line().p2().x()));
+                        stream.writeTextElement("p2x", QString::number( line->line().p2().y()));
+                        stream.writeTextElement("rgb", QString::number( line->pen().color().rgb()));
+                        stream.writeEndElement();
+                    }
+                }
+                stream.writeEndElement();
+            }
+            stream.writeEndElement();
+        }
+        stream.writeEndDocument();
+        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Couldn't open file...."));
+        msgBox.exec();
+    }
+    updateTimer->start(1000);
 }
 
 void MainWindow::updateStoryboard()
 {
-//    QGraphicsScene* scene = mDrawingPads.at(mActiveStoryboardPad);
-//    copyFrom_mScene(scene);
     QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
     if (!pix.isNull()) // () && mNeedSave)
     {
@@ -506,17 +581,19 @@ void MainWindow::updateStoryboard()
         QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
-        updateTimer->start(2000);
+        updateTimer->start(1000);
     }
 }
 
 void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
 {
+    qDebug() << "START Mscene items " << mScene->items().size() << " scene items: " << scene->items().count();
     scene->clear();
     QList<QGraphicsItem*> items = mScene->items();
     for (int i = 0; i < items.size(); i++)
         if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
             scene->addItem(line);
+    qDebug() << "DONE  Mscene items " << mScene->items().size() << " scene items: " << scene->items().count();
 }
 
 void MainWindow::copyTo_mScene(QGraphicsScene *scene)
