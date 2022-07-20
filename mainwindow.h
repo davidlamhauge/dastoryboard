@@ -34,6 +34,8 @@ private:
 
     void init();
     void newProject();
+    void loadProject();
+    void saveProject();
     void addPad();
     void removePad();
     void swapPads(int active, int neighbor);
@@ -46,9 +48,8 @@ private:
     void onItemChanged(QListWidgetItem* item);
     void onPaletteRowChanged(int row);
     void onPenWidthChanged(int w);
+    void onTimingChanged(int timing);
 
-    void loadProject();
-    void saveProject();
     void updateStoryboard();
     void copyFrom_mScene(QGraphicsScene* scene);
     void copyTo_mScene(QGraphicsScene* scene);
@@ -71,6 +72,7 @@ private:
     int mFps = 25;
     QString mRatio = "Standard";
     QVector<QGraphicsScene*> mDrawingPads;
+    QVector<int> mTiming;
     QVector<QPixmap> mStoryboardPads;
     QList<QGraphicsItem*> mItemRedoList;
     QList<strokes> entryList;

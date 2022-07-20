@@ -486,6 +486,12 @@
             </item>
             <item>
              <widget class="QSpinBox" name="sbFrames">
+              <property name="toolTip">
+               <string>Interval: 1-999</string>
+              </property>
+              <property name="suffix">
+               <string> fr.</string>
+              </property>
               <property name="minimum">
                <number>1</number>
               </property>

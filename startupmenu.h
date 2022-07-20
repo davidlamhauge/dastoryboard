@@ -19,10 +19,7 @@ private:
     Ui::StartupMenu *ui;
 
     void getProjectName();
-    void setProjectName(QString name) { mProjectPath = name; }
-
-    void getSceneName();
-    void setSceneName(QString scene) { mScenePath = scene; }
+    void getStoryboardName();
 
     void setFps(int fps);
     void setRatio();
@@ -30,7 +27,7 @@ private:
     void checkProgress();
 
     QString mProjectPath = "";
-    QString mScenePath = "";
+    QString mStoryBoardPath = "";
     QString mLastFolder = "";
 };
 

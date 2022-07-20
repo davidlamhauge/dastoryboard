@@ -19,6 +19,7 @@
 #include <QPixmap>
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
+#include <QDomDocument>
 
 #include "startupmenu.h"
 
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
     connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
     connect(ui->sbPenWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onPenWidthChanged);
+    connect(ui->sbFrames, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onTimingChanged);
     connect(ui->btnClearCanvas, &QPushButton::clicked, this, &MainWindow::clearCanvas);
     connect(ui->btnClearSelColor, &QPushButton::clicked, this, &MainWindow::clearSelected);
     connect(ui->btnClearButSelColor, &QPushButton::clicked, this, &MainWindow::clearButSelected);
@@ -214,9 +216,17 @@ void MainWindow::newProject()
     {
         mStoryboardPads.clear();
         mDrawingPads.clear();
+        mTiming.clear();
         mItemRedoList.clear();
         mActiveProjectFull = settings.value("project").toString();
         mActiveStoryboardFull = settings.value("scene").toString();
+        QStringList a = mActiveStoryboardFull.split("/");
+        mActiveProject = a.at(a.size() - 2);
+        settings.setValue("project_folder", mActiveProject);
+        mActiveStoryboard = a.at(a.size() - 1);
+
+        setWindowTitle("daStoryboard - " + mActiveProject);
+
         mActiveStoryboardPad = 0;
         mFps = settings.value("fps", 25).toInt();
         mRatio = settings.value("ratio", "Standard").toString();
@@ -233,6 +243,7 @@ void MainWindow::newProject()
         QGraphicsScene* sc = new QGraphicsScene;
         copyFrom_mScene(sc);
         mDrawingPads.append(sc);
+        mTiming.append(ui->sbFrames->value());
 
         ui->twStoryboard->setRowHeight(0, ui->gvSketchPad->height() / 4  + 20);
         ui->twStoryboard->setColumnCount(mDrawingPads.size());
@@ -253,12 +264,6 @@ void MainWindow::newProject()
             ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
         }
 
-        QStringList a = mActiveStoryboardFull.split("/");
-        mActiveProject = a.at(a.size() - 2);
-        mActiveStoryboard = a.at(a.size() - 1);
-
-        setWindowTitle("daStoryboard - " + mActiveProject);
-
         ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
         ui->btnAddStoryboard->setEnabled(true);
@@ -273,9 +278,168 @@ void MainWindow::newProject()
 
         updateTimer = new QTimer(this);
         connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
-        updateTimer->start(3000);
-        loadProject();
+        updateTimer->start(1000);
     }
+}
+
+void MainWindow::loadProject()
+{
+    if (updateTimer)
+        updateTimer->stop();
+/*
+    QString fileName;
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    mActiveProject = settings.value("project_folder", "").toString();
+    mActiveProjectFull = settings.value("project", "").toString();
+    mActiveStoryboardFull = settings.value("scene", "").toString();
+    if (mActiveProjectFull.isEmpty() ||
+            mActiveStoryboardFull.isEmpty() ||
+            mActiveProject.isEmpty() ||
+            !mActiveStoryboardFull.startsWith(mActiveProjectFull))
+    {
+        */
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open project file"),
+                                                    "",
+                                                    tr("Project Files (*.dsb)"));
+    /*    }
+    else
+    {
+        fileName = mActiveProjectFull + "/" + mActiveProject + ".dsb";
+    } */
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly | QFile::Text))
+    {
+        // reset local vars
+        mStoryboardPads.clear();
+        mDrawingPads.clear();
+        mTiming.clear();
+        mItemRedoList.clear();
+
+        // start DOM gymnastics...
+        QDomDocument doc;
+        doc.setContent(&file);
+        file.close();
+        QDomElement root = doc.documentElement();
+
+        QDomNode n = root.firstChild();
+        if (n.nodeName() == "info")
+        {
+            QDomElement e = n.toElement();
+
+            mActiveProject = e.attribute("project_name");
+            mActiveProjectFull = e.attribute("project_path");
+            int pads = e.attribute("pad_count").toInt();
+            ui->twStoryboard->clear();
+            ui->twStoryboard->setColumnCount(pads);
+            int width = e.attribute("pad_width").toInt();
+            int height = e.attribute("pad_height").toInt();
+//            qDebug() << width << " w * h " << height << " " << mActiveProject << " " << mActiveProjectFull << " " << pads;
+
+            for (int i = 0; i < pads; i++)
+            {
+                QGraphicsScene* scene = new QGraphicsScene();
+                scene->setSceneRect(QRectF(0, 0, width, height));
+                mDrawingPads.append(scene);
+                mTiming.append(50);
+            }
+        }
+
+        // now load Storyboards...
+        QDomNode stbPad = n.nextSibling();
+        QDomElement stbEle = stbPad.toElement();
+        QDomNode p = stbPad.firstChild();
+        QDomElement padEle = p.toElement();
+        mActiveStoryboard = stbPad.nodeName();
+        qDebug() << mActiveStoryboard << " stb * padName " << p.nodeName();
+//        qDebug() << "stbEle " << stbEle.nodeName() << " elements " << stbPad.nodeName();
+        while (!p.isNull())
+        {
+            QDomElement padEle = p.toElement();
+            qDebug() << mActiveStoryboard << " stb * padName " << padEle.nodeName();
+
+            p = p.nextSibling();
+        }
+
+    }
+    else
+    {
+    }
+    if (updateTimer)
+        updateTimer->start(1000);
+}
+
+void MainWindow::saveProject()
+{
+    updateTimer->stop();
+    // first copy active pad from mScene
+    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+
+    QString filePath = mActiveProjectFull + "/" + mActiveProject + ".dsb";
+    QFile file(filePath);
+    if (file.open(QIODevice::WriteOnly))
+    {
+
+        QXmlStreamWriter stream(&file);
+        stream.setAutoFormatting(true);
+
+        // start dokument
+        stream.writeStartDocument();
+
+        // Main tag
+        stream.writeStartElement("project");
+
+        // 'info' is basic information about the project
+        stream.writeStartElement("info");
+        stream.writeAttribute("project_name", mActiveProject);
+        stream.writeAttribute("project_path", mActiveProjectFull);
+        stream.writeAttribute("pad_count", QString::number(ui->twStoryboard->columnCount()));
+        stream.writeAttribute("pad_width", QString::number(mScene->width()));
+        stream.writeAttribute("pad_height", QString::number(mScene->height()));
+        stream.writeEndElement();
+
+        // 'folder' will be start tag for each storyboard
+        QDir scDir(mActiveProjectFull); // get storyboards
+        scDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
+        QStringList list = scDir.entryList();
+        for(int i = 0; i < list.size();i++)
+        {
+            QString s = list.at(i);
+            stream.writeStartElement(s);
+
+            for (int j = 0; j < mDrawingPads.size(); j++)
+            {
+                stream.writeStartElement(QString::number(j));
+                QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
+                stream.writeAttribute("timing", QString::number(mTiming.at(j)));
+                stream.writeAttribute("count", QString::number(items.count()));
+                for (int k = 0; k < items.size(); k++)
+                {
+                    if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
+                    {
+                        stream.writeStartElement(QString::number(k));
+                        stream.writeAttribute("p1x", QString::number( line->line().p1().x()));
+                        stream.writeAttribute("p1y", QString::number( line->line().p1().y()));
+                        stream.writeAttribute("p2x", QString::number( line->line().p2().x()));
+                        stream.writeAttribute("p2y", QString::number( line->line().p2().y()));
+                        stream.writeAttribute("rgb", QString::number( line->pen().color().rgb()));
+                        stream.writeEndElement(); // for scene item
+                    }
+                }
+                stream.writeEndElement(); // for scene
+            }
+            stream.writeEndElement(); // for folder
+        }
+        stream.writeEndElement(); // for Project
+        stream.writeEndDocument();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Couldn't open file...."));
+        msgBox.exec();
+    }
+    updateTimer->start(1000);
 }
 
 void MainWindow::addPad()
@@ -285,13 +449,15 @@ void MainWindow::addPad()
     copyFrom_mScene(scene);
 
     // then add new scene and column and make ready
+    mActiveStoryboardPad += 1;
     QGraphicsScene* sceneNew = new QGraphicsScene;
     mDrawingPads.append(sceneNew);
     ui->twStoryboard->setColumnCount(mDrawingPads.size());
+    mTiming.append(ui->sbFrames->value());
+    ui->sbFrames->setValue(50); // resets the value just appended
 
     // then save new, empty pixmap to file
     mScene->clear();
-    mActiveStoryboardPad += 1;
     QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
     if (!pix.isNull())
     {
@@ -330,8 +496,9 @@ void MainWindow::onCellClicked(int row, int column)
     if (column != mActiveStoryboardPad)
     {
         copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
-        copyTo_mScene(mDrawingPads.at(column));
         mActiveStoryboardPad = column;
+        copyTo_mScene(mDrawingPads.at(column));
+        ui->sbFrames->setValue(mTiming.at(column));
     }
 }
 
@@ -481,88 +648,12 @@ void MainWindow::onPenWidthChanged(int w)
     settings.setValue("penwidth", w);
 }
 
-void MainWindow::loadProject()
+void MainWindow::onTimingChanged(int timing)
 {
-    updateTimer->stop();
-
-    QDir scDir("");
-    scDir.setNameFilters(QStringList() << "*.png");
-    QStringList list = scDir.entryList();
-    if (!list.isEmpty())
-    {
-
-    }
-    else
-    {
-    }
-    updateTimer->start(1000);
+    mTiming.replace(mActiveStoryboardPad, timing);
+    qDebug() << "mTiming: " << mTiming;
 }
 
-void MainWindow::saveProject()
-{
-    updateTimer->stop();
-    // first copy active pad from mScene
-    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
-
-    QString filePath = mActiveProjectFull + "/" + mActiveProject + ".dsb";
-    QFile file(filePath);
-    if (file.open(QIODevice::WriteOnly))
-    {
-
-        QXmlStreamWriter stream(&file);
-        stream.setAutoFormatting(true);
-        stream.setAutoFormattingIndent(2);
-
-        // start dokument
-        stream.writeStartDocument();
-
-        // 'info' is basic information about the project
-        stream.writeStartElement("info");
-        stream.writeTextElement("project_name", mActiveProject);
-        stream.writeTextElement("project_path", mActiveProjectFull);
-        stream.writeEndElement();
-
-        // '
-        QDir scDir(mActiveProjectFull); // get storyboards
-        scDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-        QStringList list = scDir.entryList();
-        for(int i = 0; i < list.size();i++)
-        {
-            QString s = list.at(i);
-            stream.writeStartElement(s);
-
-            for (int j = 0; j < mDrawingPads.size(); j++)
-            {
-                stream.writeStartElement(QString::number(j));
-                QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
-                for (int k = 0; k < items.size(); k++)
-                {
-                    if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
-                    {
-                        stream.writeStartElement(QString::number(k));
-                        stream.writeTextElement("p1x", QString::number( line->line().p1().x()));
-                        stream.writeTextElement("p1y", QString::number( line->line().p1().y()));
-                        stream.writeTextElement("p2x", QString::number( line->line().p2().x()));
-                        stream.writeTextElement("p2x", QString::number( line->line().p2().y()));
-                        stream.writeTextElement("rgb", QString::number( line->pen().color().rgb()));
-                        stream.writeEndElement();
-                    }
-                }
-                stream.writeEndElement();
-            }
-            stream.writeEndElement();
-        }
-        stream.writeEndDocument();
-        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
-    }
-    else
-    {
-        QMessageBox msgBox;
-        msgBox.setText(tr("Couldn't open file...."));
-        msgBox.exec();
-    }
-    updateTimer->start(1000);
-}
 
 void MainWindow::updateStoryboard()
 {
@@ -587,13 +678,11 @@ void MainWindow::updateStoryboard()
 
 void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
 {
-    qDebug() << "START Mscene items " << mScene->items().size() << " scene items: " << scene->items().count();
     scene->clear();
     QList<QGraphicsItem*> items = mScene->items();
     for (int i = 0; i < items.size(); i++)
         if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
-            scene->addItem(line);
-    qDebug() << "DONE  Mscene items " << mScene->items().size() << " scene items: " << scene->items().count();
+            scene->addLine(line->line(), line->pen());
 }
 
 void MainWindow::copyTo_mScene(QGraphicsScene *scene)
@@ -602,7 +691,7 @@ void MainWindow::copyTo_mScene(QGraphicsScene *scene)
     QList<QGraphicsItem*> items = scene->items();
     for (int i = 0; i < items.size(); i++)
         if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
-            mScene->addItem(line);
+            mScene->addLine(line->line(), line->pen());
 }
 
 void MainWindow::clearCanvas()

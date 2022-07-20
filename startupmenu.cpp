@@ -14,16 +14,16 @@ StartupMenu::StartupMenu(QWidget *parent) :
     QSettings settings("TeamLamhauge", "daStoryboard");
     mProjectPath = settings.value("project", "").toString();
     ui->labProject->setText(mProjectPath);
-    mScenePath = settings.value("scene", "").toString();
-    ui->labScene->setText(mScenePath);
+    mStoryBoardPath = settings.value("scene", "").toString();
+    ui->labScene->setText(mStoryBoardPath);
     settings.setValue("ratio", "Standard");
     settings.setValue("fps", 25);
 
-    if (mProjectPath.isEmpty() || mScenePath.isEmpty())
+    if (mProjectPath.isEmpty() || mStoryBoardPath.isEmpty())
         ui->btnReady->setEnabled(false);
 
     connect(ui->btnSelectProject, &QPushButton::clicked, this, &StartupMenu::getProjectName);
-    connect(ui->btnSelectScene, &QPushButton::clicked, this, &StartupMenu::getSceneName);
+    connect(ui->btnSelectScene, &QPushButton::clicked, this, &StartupMenu::getStoryboardName);
     connect(ui->btnReady, &QPushButton::clicked, this, &StartupMenu::close);
     connect(ui->sbFPS, QOverload<int>::of(&QSpinBox::valueChanged), this, &StartupMenu::setFps);
     connect(ui->rbHD, &QRadioButton::toggled, this, &StartupMenu::setRatio);
@@ -51,18 +51,18 @@ void StartupMenu::getProjectName()
     }
 }
 
-void StartupMenu::getSceneName()
+void StartupMenu::getStoryboardName()
 {
-    mScenePath = QFileDialog::getExistingDirectory(this,
-                                                tr("Select/Create scene folder"),
+    mStoryBoardPath = QFileDialog::getExistingDirectory(this,
+                                                tr("Select/Create storyboard folder"),
                                                 mLastFolder,
                                                 QFileDialog::ShowDirsOnly);
-    if (!mScenePath.isEmpty())
+    if (!mStoryBoardPath.isEmpty())
     {
-        mLastFolder = mScenePath;
-        ui->labScene->setText(mScenePath);
+        mLastFolder = mStoryBoardPath;
+        ui->labScene->setText(mStoryBoardPath);
         QSettings settings("TeamLamhauge", "daStoryboard");
-        settings.setValue("scene", mScenePath);
+        settings.setValue("scene", mStoryBoardPath);
         checkProgress();
     }
 }
@@ -84,7 +84,7 @@ void StartupMenu::setRatio()
 
 void StartupMenu::checkProgress()
 {
-    if (mProjectPath != mScenePath && mScenePath.startsWith(mProjectPath))
+    if (mProjectPath != mStoryBoardPath && mStoryBoardPath.startsWith(mProjectPath))
         ui->btnReady->setEnabled(true);
     else
         ui->btnReady->setEnabled(false);
