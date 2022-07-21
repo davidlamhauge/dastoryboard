@@ -286,27 +286,11 @@ void MainWindow::loadProject()
 {
     if (updateTimer)
         updateTimer->stop();
-/*
-    QString fileName;
-    QSettings settings("TeamLamhauge", "daStoryboard");
-    mActiveProject = settings.value("project_folder", "").toString();
-    mActiveProjectFull = settings.value("project", "").toString();
-    mActiveStoryboardFull = settings.value("scene", "").toString();
-    if (mActiveProjectFull.isEmpty() ||
-            mActiveStoryboardFull.isEmpty() ||
-            mActiveProject.isEmpty() ||
-            !mActiveStoryboardFull.startsWith(mActiveProjectFull))
-    {
-        */
+
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open project file"),
                                                     "",
                                                     tr("Project Files (*.dsb)"));
-    /*    }
-    else
-    {
-        fileName = mActiveProjectFull + "/" + mActiveProject + ".dsb";
-    } */
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QFile::Text))
     {
@@ -334,7 +318,6 @@ void MainWindow::loadProject()
             ui->twStoryboard->setColumnCount(pads);
             int width = e.attribute("pad_width").toInt();
             int height = e.attribute("pad_height").toInt();
-//            qDebug() << width << " w * h " << height << " " << mActiveProject << " " << mActiveProjectFull << " " << pads;
 
             for (int i = 0; i < pads; i++)
             {
@@ -346,19 +329,24 @@ void MainWindow::loadProject()
         }
 
         // now load Storyboards...
-        QDomNode stbPad = n.nextSibling();
-        QDomElement stbEle = stbPad.toElement();
-        QDomNode p = stbPad.firstChild();
-        QDomElement padEle = p.toElement();
-        mActiveStoryboard = stbPad.nodeName();
-        qDebug() << mActiveStoryboard << " stb * padName " << p.nodeName();
-//        qDebug() << "stbEle " << stbEle.nodeName() << " elements " << stbPad.nodeName();
-        while (!p.isNull())
+        n = n.nextSibling();
+        while (!n.isNull())
         {
-            QDomElement padEle = p.toElement();
-            qDebug() << mActiveStoryboard << " stb * padName " << padEle.nodeName();
+            QDomElement s1 = n.toElement();
+            if (n.nodeName() == "storyboard")
+            {
+                mActiveStoryboard = s1.attribute("folder", "");
+                qDebug() << "storyboard: " << mActiveStoryboard;
+                QDomNode pad = n.firstChild();
+                while (!pad.isNull())
+                {
+                    QDomElement s2 = pad.toElement();
+                    qDebug() << "pad: " << pad.nodeName();
+                    pad = pad.nextSibling();
+                }
+            }
 
-            p = p.nextSibling();
+            n = n.nextSibling();
         }
 
     }
@@ -398,14 +386,15 @@ void MainWindow::saveProject()
         stream.writeAttribute("pad_height", QString::number(mScene->height()));
         stream.writeEndElement();
 
-        // 'folder' will be start tag for each storyboard
+        // 'storyboard' will be start tag for each storyboard
         QDir scDir(mActiveProjectFull); // get storyboards
         scDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
         QStringList list = scDir.entryList();
         for(int i = 0; i < list.size();i++)
         {
             QString s = list.at(i);
-            stream.writeStartElement(s);
+            stream.writeStartElement("storyboard");
+            stream.writeAttribute("folder", s);
 
             for (int j = 0; j < mDrawingPads.size(); j++)
             {
@@ -426,7 +415,7 @@ void MainWindow::saveProject()
                         stream.writeEndElement(); // for scene item
                     }
                 }
-                stream.writeEndElement(); // for scene
+                stream.writeEndElement(); // for pad
             }
             stream.writeEndElement(); // for folder
         }
