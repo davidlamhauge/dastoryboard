@@ -128,6 +128,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
                 entryList.removeFirst();
             entryList.append(mEntry);
             mNeedSave = true;
+            updateStoryboard(); // TODO
             setUndoRedoButtons();
             return true;
         }
@@ -276,16 +277,16 @@ void MainWindow::newProject()
         ui->btnAddStoryboardPad->setEnabled(true);
         ui->cbBG->setEnabled(true);
 
-        updateTimer = new QTimer(this);
-        connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
-        updateTimer->start(1000);
+//        updateTimer = new QTimer(this);
+//        connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
+//        updateTimer->start(500);
     }
 }
 
 void MainWindow::loadProject()
 {
-    if (updateTimer)
-        updateTimer->stop();
+//    if (updateTimer)
+//        updateTimer->stop();
 /*
     QString fileName;
     QSettings settings("TeamLamhauge", "daStoryboard");
@@ -329,49 +330,120 @@ void MainWindow::loadProject()
 
             mActiveProject = e.attribute("project_name");
             mActiveProjectFull = e.attribute("project_path");
-            int pads = e.attribute("pad_count").toInt();
-            ui->twStoryboard->clear();
-            ui->twStoryboard->setColumnCount(pads);
             int width = e.attribute("pad_width").toInt();
             int height = e.attribute("pad_height").toInt();
-//            qDebug() << width << " w * h " << height << " " << mActiveProject << " " << mActiveProjectFull << " " << pads;
+            mScene->setSceneRect(0, 0, width, height);
 
+            QSettings settings("TeamLamhauge", "daStoryboard");
+            if (height == 600)
+                settings.setValue("ratio", "Standard");
+            else
+                settings.setValue("ratio", "HD");
+
+            mRatio = settings.value("ratio", "Standard").toString();
+            if (mRatio == "Standard")
+                ui->gvSketchPad->setFixedSize(800, 600);
+            else
+                ui->gvSketchPad->setFixedSize(800, 450);
+
+
+        }
+        ui->gvSketchPad->setEnabled(true);
+
+        // now load Storyboards...
+        QDomNode stb = n.nextSibling();
+        while (!stb.isNull())
+        {   // in "storyboard"
+            QDomElement stbEle = stb.toElement();
+            int pads = stbEle.attribute("padCount").toInt();
+            mActiveStoryboard = stbEle.attribute("folder", "");
+            mActiveStoryboardFull = mActiveProjectFull + "/" + mActiveStoryboard;
             for (int i = 0; i < pads; i++)
             {
                 QGraphicsScene* scene = new QGraphicsScene();
-                scene->setSceneRect(QRectF(0, 0, width, height));
+                scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height())); // TODO
                 mDrawingPads.append(scene);
                 mTiming.append(50);
             }
+            ui->twStoryboard->clear();
+            ui->twStoryboard->setColumnCount(pads);
+
+            // now load pads
+            QDomNode pad = stb.firstChild();
+            mActiveStoryboardPad = -1;
+            while (!pad.isNull())
+            {   // in "pad"
+                QDomElement padEle = pad.toElement();
+                mActiveStoryboardPad++;
+                mScene->clear();
+
+                int timing = padEle.attribute("timing").toInt();
+                mTiming.append(timing);
+
+                // now load lines that make up the drawing
+                QDomNode line = pad.firstChild();
+                while (!line.isNull())
+                {   // in "line"
+                    QDomElement linesEle = line.toElement();
+                    int p1x = linesEle.attribute("p1x").toInt();
+                    int p1y = linesEle.attribute("p1y").toInt();
+                    int p2x = linesEle.attribute("p2x").toInt();
+                    int p2y = linesEle.attribute("p2y").toInt();
+                    int rgb = linesEle.attribute("rgb").toUInt();
+                    int w = linesEle.attribute("width").toInt();
+                    QColor col = QColor::fromRgb(rgb);
+                    mPen.setColor(col);
+                    mPen.setWidth(w);
+                    /*
+                    QPen pen(col);
+                    pen.setWidth(w);
+                    */
+//                    qDebug()<< "teller: " << mActiveStoryboardPad << " w " << w << " rgb red " << col.red();
+                    mScene->addLine(p1x, p1y, p2x, p2y, mPen);
+                    line = line.nextSibling();
+                }
+                QIcon icon(mActiveStoryboardFull + "/"  + QString::number(mActiveStoryboardPad) + ".png");
+                QTableWidgetItem* item = new QTableWidgetItem();
+                item->setIcon(icon);
+                ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
+                QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
+                mStoryboardPads.append(pix);
+                copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+
+                pad = pad.nextSibling();
+            }
+            // are there more storyboards?
+            stb = stb.nextSibling();
         }
-
-        // now load Storyboards...
-        QDomNode stbPad = n.nextSibling();
-        QDomElement stbEle = stbPad.toElement();
-        QDomNode p = stbPad.firstChild();
-        QDomElement padEle = p.toElement();
-        mActiveStoryboard = stbPad.nodeName();
-        qDebug() << mActiveStoryboard << " stb * padName " << p.nodeName();
-//        qDebug() << "stbEle " << stbEle.nodeName() << " elements " << stbPad.nodeName();
-        while (!p.isNull())
-        {
-            QDomElement padEle = p.toElement();
-            qDebug() << mActiveStoryboard << " stb * padName " << padEle.nodeName();
-
-            p = p.nextSibling();
-        }
-
     }
     else
     {
     }
-    if (updateTimer)
-        updateTimer->start(1000);
+
+    ui->labStoryboardInfo->setText(mActiveStoryboard);
+    ui->btnAddStoryboard->setEnabled(true);
+    ui->btnSaveStoryboard->setEnabled(true);
+    ui->btnSaveProject->setEnabled(true);
+
+    ui->btnLoadBG->setEnabled(true);
+    ui->btnRemoveBG->setEnabled(true);
+    ui->btnClearCanvas->setEnabled(true);
+    ui->btnAddStoryboardPad->setEnabled(true);
+    ui->cbBG->setEnabled(true);
+/*
+    if (!updateTimer)
+    {
+        updateTimer = new QTimer(this);
+        connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
+        updateTimer->start(500);
+    }
+    else
+        updateTimer->start(500); */
 }
 
 void MainWindow::saveProject()
 {
-    updateTimer->stop();
+//    updateTimer->stop();
     // first copy active pad from mScene
     copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
 
@@ -393,7 +465,6 @@ void MainWindow::saveProject()
         stream.writeStartElement("info");
         stream.writeAttribute("project_name", mActiveProject);
         stream.writeAttribute("project_path", mActiveProjectFull);
-        stream.writeAttribute("pad_count", QString::number(ui->twStoryboard->columnCount()));
         stream.writeAttribute("pad_width", QString::number(mScene->width()));
         stream.writeAttribute("pad_height", QString::number(mScene->height()));
         stream.writeEndElement();
@@ -405,32 +476,34 @@ void MainWindow::saveProject()
         for(int i = 0; i < list.size();i++)
         {
             QString s = list.at(i);
-            stream.writeStartElement(s);
+            stream.writeStartElement("storyboard");
+            stream.writeAttribute("padCount", QString::number(ui->twStoryboard->columnCount()));
+            stream.writeAttribute("folder", s);
 
             for (int j = 0; j < mDrawingPads.size(); j++)
             {
-                stream.writeStartElement(QString::number(j));
+                stream.writeStartElement("pad");
                 QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
                 stream.writeAttribute("timing", QString::number(mTiming.at(j)));
-                stream.writeAttribute("count", QString::number(items.count()));
                 for (int k = 0; k < items.size(); k++)
                 {
                     if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
                     {
-                        stream.writeStartElement(QString::number(k));
+                        stream.writeStartElement("line");
                         stream.writeAttribute("p1x", QString::number( line->line().p1().x()));
                         stream.writeAttribute("p1y", QString::number( line->line().p1().y()));
                         stream.writeAttribute("p2x", QString::number( line->line().p2().x()));
                         stream.writeAttribute("p2y", QString::number( line->line().p2().y()));
                         stream.writeAttribute("rgb", QString::number( line->pen().color().rgb()));
-                        stream.writeEndElement(); // for scene item
+                        stream.writeAttribute("width", QString::number(line->pen().width()));
+                        stream.writeEndElement(); // for line item
                     }
                 }
-                stream.writeEndElement(); // for scene
+                stream.writeEndElement(); // for pad
             }
-            stream.writeEndElement(); // for folder
+            stream.writeEndElement(); // for storyboard
         }
-        stream.writeEndElement(); // for Project
+        stream.writeEndElement(); // for project
         stream.writeEndDocument();
     }
     else
@@ -439,7 +512,7 @@ void MainWindow::saveProject()
         msgBox.setText(tr("Couldn't open file...."));
         msgBox.exec();
     }
-    updateTimer->start(1000);
+//    updateTimer->start(500);
 }
 
 void MainWindow::addPad()
@@ -500,6 +573,7 @@ void MainWindow::onCellClicked(int row, int column)
         copyTo_mScene(mDrawingPads.at(column));
         ui->sbFrames->setValue(mTiming.at(column));
     }
+    ui->gvSketchPad->setFocus();
 }
 
 void MainWindow::resetPalette()
@@ -672,7 +746,8 @@ void MainWindow::updateStoryboard()
         QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
-        updateTimer->start(1000);
+//        if (updateTimer)
+//            updateTimer->start(500);
     }
 }
 
@@ -777,6 +852,7 @@ void MainWindow::undoLast()
         }
         mRedoEntry.last = mItemRedoList.size() - 1;
         redoEntryList.append(mRedoEntry);
+        updateStoryboard();
         setUndoRedoButtons();
     }
 }
@@ -796,6 +872,7 @@ void MainWindow::redoLast()
         }
         mEntry.last = mScene->items().size() -1;
         entryList.append(mEntry);
+        updateStoryboard();
         setUndoRedoButtons();
     }
 }
