@@ -48,11 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnLoadPal, &QPushButton::clicked, this, &MainWindow::loadPalette);
     connect(ui->btnSaveProject, &QPushButton::clicked, this, &MainWindow::saveProject);
     connect(ui->btnNewProject, &QPushButton::clicked, this, &MainWindow::newProject);
-    connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
-    connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
-    connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
-    connect(ui->sbPenWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onPenWidthChanged);
-    connect(ui->sbFrames, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onTimingChanged);
     connect(ui->btnClearCanvas, &QPushButton::clicked, this, &MainWindow::clearCanvas);
     connect(ui->btnClearSelColor, &QPushButton::clicked, this, &MainWindow::clearSelected);
     connect(ui->btnClearButSelColor, &QPushButton::clicked, this, &MainWindow::clearButSelected);
@@ -60,6 +55,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btnRedo, &QPushButton::clicked, this, &MainWindow::redoLast);
     connect(ui->btnAddStoryboardPad, &QPushButton::clicked, this, &MainWindow::addPad);
     connect(ui->btnRemoveStoryboardPad, &QPushButton::clicked, this, &MainWindow::removePad);
+
+    connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
+    connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
+    connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
+    connect(ui->sbPenWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onPenWidthChanged);
+    connect(ui->sbFrames, QOverload<int>::of(&QSpinBox::valueChanged), this, &MainWindow::onTimingChanged);
+
+    connect(ui->leDialogue, &QLineEdit::textChanged, this, &MainWindow::updateDialogue);
+    connect(ui->leAction, &QLineEdit::textChanged, this, &MainWindow::updateAction);
+    connect(ui->leSlug, &QLineEdit::textChanged, this, &MainWindow::updateSlug);
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
@@ -115,7 +120,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             mNextPoint = m->scenePos();
             mScene->addLine(QLineF(mPrevPoint, mNextPoint), mPen);
             mPrevPoint = mNextPoint;
-            mNeedSave = true;
             return true;
         }
         else if (m->type() == QEvent::GraphicsSceneMouseRelease && mPenIsPressed)
@@ -127,8 +131,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
             if (entryList.count() == 10)
                 entryList.removeFirst();
             entryList.append(mEntry);
-            mNeedSave = true;
-            updateStoryboard(); // TODO
+            updateStoryboard();
             setUndoRedoButtons();
             return true;
         }
@@ -148,6 +151,10 @@ void MainWindow::init()
     ui->twStoryboard->horizontalHeader()->setFixedHeight(20);
     ui->twStoryboard->setRowHeight(0, 150);
     ui->twStoryboard->setColumnCount(0);
+    mActiveComments.d = ui->leDialogue->text();
+    mActiveComments.a = ui->leAction->text();
+    mActiveComments.s = ui->leSlug->text();
+    commentList.append(mActiveComments);
 
     QSettings settings("TeamLamhauge", "daStoryboard");
     mPen.setColor(settings.value("pencolor", QColor(Qt::black)).value<QColor>());
@@ -246,6 +253,14 @@ void MainWindow::newProject()
         mDrawingPads.append(sc);
         mTiming.append(ui->sbFrames->value());
 
+        ui->leDialogue->clear();
+        ui->leAction->clear();
+        ui->leSlug->clear();
+        mActiveComments.d = ui->leDialogue->text();
+        mActiveComments.a = ui->leAction->text();
+        mActiveComments.s = ui->leSlug->text();
+        commentList.append(mActiveComments);
+
         ui->twStoryboard->setRowHeight(0, ui->gvSketchPad->height() / 4  + 20);
         ui->twStoryboard->setColumnCount(mDrawingPads.size());
 
@@ -277,17 +292,12 @@ void MainWindow::newProject()
         ui->btnAddStoryboardPad->setEnabled(true);
         ui->cbBG->setEnabled(true);
 
-//        updateTimer = new QTimer(this);
-//        connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
-//        updateTimer->start(500);
     }
 }
 
 void MainWindow::loadProject()
 {
-//    if (updateTimer)
-//        updateTimer->stop();
-/*
+
     QString fileName;
     QSettings settings("TeamLamhauge", "daStoryboard");
     mActiveProject = settings.value("project_folder", "").toString();
@@ -298,16 +308,15 @@ void MainWindow::loadProject()
             mActiveProject.isEmpty() ||
             !mActiveStoryboardFull.startsWith(mActiveProjectFull))
     {
-        */
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open project file"),
-                                                    "",
-                                                    tr("Project Files (*.dsb)"));
-    /*    }
+        fileName = QFileDialog::getOpenFileName(this,
+                                                tr("Open project file"),
+                                                "",
+                                                tr("Project Files (*.dsb)"));
+    }
     else
     {
         fileName = mActiveProjectFull + "/" + mActiveProject + ".dsb";
-    } */
+    }
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QFile::Text))
     {
@@ -323,6 +332,7 @@ void MainWindow::loadProject()
         file.close();
         QDomElement root = doc.documentElement();
 
+        // first load info
         QDomNode n = root.firstChild();
         if (n.nodeName() == "info")
         {
@@ -350,8 +360,26 @@ void MainWindow::loadProject()
         }
         ui->gvSketchPad->setEnabled(true);
 
+        // now load palette
+
+        QDomNode pal = n.nextSibling();
+        QDomNode col = pal.firstChild();
+        while (!col.isNull())
+        {
+            QDomElement colEle = col.toElement();
+            int pos = colEle.attribute("pos").toInt();
+            int rgb = colEle.attribute("col").toUInt();
+            QString s = colEle.attribute("text");
+            QListWidgetItem* item = ui->lwPalette->takeItem(pos);
+            item->setBackground(QColor::fromRgb(rgb));
+            item->setText(s);
+            ui->lwPalette->insertItem(pos, item);
+
+            col = col.nextSibling();
+        }
+
         // now load Storyboards...
-        QDomNode stb = n.nextSibling();
+        QDomNode stb = pal.nextSibling();
         while (!stb.isNull())
         {   // in "storyboard"
             QDomElement stbEle = stb.toElement();
@@ -363,7 +391,6 @@ void MainWindow::loadProject()
                 QGraphicsScene* scene = new QGraphicsScene();
                 scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height())); // TODO
                 mDrawingPads.append(scene);
-                mTiming.append(50);
             }
             ui->twStoryboard->clear();
             ui->twStoryboard->setColumnCount(pads);
@@ -371,14 +398,21 @@ void MainWindow::loadProject()
             // now load pads
             QDomNode pad = stb.firstChild();
             mActiveStoryboardPad = -1;
+            commentList.clear();
             while (!pad.isNull())
             {   // in "pad"
                 QDomElement padEle = pad.toElement();
                 mActiveStoryboardPad++;
                 mScene->clear();
-
                 int timing = padEle.attribute("timing").toInt();
                 mTiming.append(timing);
+                ui->leDialogue->setText(padEle.attribute("dial"));
+                ui->leAction->setText(padEle.attribute("action"));
+                ui->leSlug->setText(padEle.attribute("slug"));
+                mActiveComments.d = ui->leDialogue->text();
+                mActiveComments.a = ui->leAction->text();
+                mActiveComments.s = ui->leSlug->text();
+                commentList.append(mActiveComments);
 
                 // now load lines that make up the drawing
                 QDomNode line = pad.firstChild();
@@ -394,11 +428,6 @@ void MainWindow::loadProject()
                     QColor col = QColor::fromRgb(rgb);
                     mPen.setColor(col);
                     mPen.setWidth(w);
-                    /*
-                    QPen pen(col);
-                    pen.setWidth(w);
-                    */
-//                    qDebug()<< "teller: " << mActiveStoryboardPad << " w " << w << " rgb red " << col.red();
                     mScene->addLine(p1x, p1y, p2x, p2y, mPen);
                     line = line.nextSibling();
                 }
@@ -420,6 +449,8 @@ void MainWindow::loadProject()
     {
     }
 
+    updateTimingLabel();
+
     ui->labStoryboardInfo->setText(mActiveStoryboard);
     ui->btnAddStoryboard->setEnabled(true);
     ui->btnSaveStoryboard->setEnabled(true);
@@ -430,20 +461,10 @@ void MainWindow::loadProject()
     ui->btnClearCanvas->setEnabled(true);
     ui->btnAddStoryboardPad->setEnabled(true);
     ui->cbBG->setEnabled(true);
-/*
-    if (!updateTimer)
-    {
-        updateTimer = new QTimer(this);
-        connect(updateTimer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateStoryboard));
-        updateTimer->start(500);
-    }
-    else
-        updateTimer->start(500); */
 }
 
 void MainWindow::saveProject()
 {
-//    updateTimer->stop();
     // first copy active pad from mScene
     copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
 
@@ -469,7 +490,24 @@ void MainWindow::saveProject()
         stream.writeAttribute("pad_height", QString::number(mScene->height()));
         stream.writeEndElement();
 
-        // 'folder' will be start tag for each storyboard
+        // 'palette' will be the start tag for the palette
+        stream.writeStartElement("palette");
+
+        // 'color' will be the start tag for each palette color
+        QListWidgetItem* item;
+        for (int i = 0; i < 10; i++)
+        {
+            stream.writeStartElement("color");
+            item = ui->lwPalette->item(i);
+            stream.writeAttribute("pos", QString::number(i));
+            stream.writeAttribute("col", QString::number(item->background().color().rgb()));
+            stream.writeAttribute("text", item->text());
+            stream.writeEndElement(); // for color
+        }
+
+        stream.writeEndElement(); // for palette
+
+        // 'storyboard' will be start tag for each storyboard
         QDir scDir(mActiveProjectFull); // get storyboards
         scDir.setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
         QStringList list = scDir.entryList();
@@ -485,6 +523,9 @@ void MainWindow::saveProject()
                 stream.writeStartElement("pad");
                 QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
                 stream.writeAttribute("timing", QString::number(mTiming.at(j)));
+                stream.writeAttribute("dial", ui->leDialogue->text());
+                stream.writeAttribute("action", ui->leAction->text());
+                stream.writeAttribute("slug", ui->leSlug->text());
                 for (int k = 0; k < items.size(); k++)
                 {
                     if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
@@ -512,7 +553,6 @@ void MainWindow::saveProject()
         msgBox.setText(tr("Couldn't open file...."));
         msgBox.exec();
     }
-//    updateTimer->start(500);
 }
 
 void MainWindow::addPad()
@@ -528,6 +568,14 @@ void MainWindow::addPad()
     ui->twStoryboard->setColumnCount(mDrawingPads.size());
     mTiming.append(ui->sbFrames->value());
     ui->sbFrames->setValue(50); // resets the value just appended
+
+    ui->leDialogue->clear();
+    ui->leAction->clear();
+    ui->leSlug->clear();
+    mActiveComments.d = ui->leDialogue->text();
+    mActiveComments.a = ui->leAction->text();
+    mActiveComments.s = ui->leSlug->text();
+    commentList.append(mActiveComments);
 
     // then save new, empty pixmap to file
     mScene->clear();
@@ -550,10 +598,17 @@ void MainWindow::addPad()
 
 void MainWindow::removePad()
 {
-    if (1 == 1)
-    {
-
-    }
+    int newPos = 0;
+    if (mActiveStoryboardPad == mDrawingPads.size() - 1)
+        newPos = mDrawingPads.size() - 1;
+    else
+        newPos = mActiveStoryboardPad;
+    mDrawingPads.remove(mActiveStoryboardPad);
+    mActiveComments = commentList.at(newPos);
+    updateCommentLineEdits(mActiveComments);
+    commentList.removeAt(mActiveStoryboardPad);
+    ui->twStoryboard->removeColumn(mActiveStoryboardPad);
+    copyTo_mScene(mDrawingPads.at(newPos));
 }
 
 void MainWindow::swapPads(int active, int neighbor)
@@ -564,14 +619,17 @@ void MainWindow::swapPads(int active, int neighbor)
 void MainWindow::onCellClicked(int row, int column)
 {
     Q_UNUSED(row);
-    if (mNeedSave)
-        updateStoryboard();
     if (column != mActiveStoryboardPad)
     {
         copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
         mActiveStoryboardPad = column;
         copyTo_mScene(mDrawingPads.at(column));
         ui->sbFrames->setValue(mTiming.at(column));
+        commentList.replace(mActiveStoryboardPad, mActiveComments);
+        mActiveComments = commentList.at(column);
+        updateCommentLineEdits(mActiveComments);
+        qDebug() << mActiveComments.d << " d * str " << commentList.count();
+        updateCommentLineEdits(mActiveComments);
     }
     ui->gvSketchPad->setFocus();
 }
@@ -725,16 +783,22 @@ void MainWindow::onPenWidthChanged(int w)
 void MainWindow::onTimingChanged(int timing)
 {
     mTiming.replace(mActiveStoryboardPad, timing);
-    qDebug() << "mTiming: " << mTiming;
+    updateTimingLabel();
 }
 
+void MainWindow::updateTimingLabel()
+{
+    int t = 0;
+    for (int i = 0; i < mTiming.size(); i++)
+        t = t + mTiming.at(i);
+    ui->labTimeValue->setText(QString::number(t));
+}
 
 void MainWindow::updateStoryboard()
 {
     QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-    if (!pix.isNull()) // () && mNeedSave)
+    if (!pix.isNull())
     {
-        mNeedSave = false;
         pix = pix.scaledToWidth(200);
         mStoryboardPads.replace(mActiveStoryboardPad, pix);
         QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
@@ -746,8 +810,6 @@ void MainWindow::updateStoryboard()
         QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
-//        if (updateTimer)
-//            updateTimer->start(500);
     }
 }
 
@@ -781,6 +843,7 @@ void MainWindow::clearCanvas()
         mScene->clear();
         entryList.clear();
         redoEntryList.clear();
+        updateStoryboard();
         setUndoRedoButtons();
     }
 }
@@ -806,6 +869,7 @@ void MainWindow::clearSelected()
         }
         entryList.clear();
         redoEntryList.clear();
+        updateStoryboard();
         setUndoRedoButtons();
     }
 }
@@ -831,6 +895,7 @@ void MainWindow::clearButSelected()
         }
         entryList.clear();
         redoEntryList.clear();
+        updateStoryboard();
         setUndoRedoButtons();
     }
 }
@@ -888,3 +953,11 @@ void MainWindow::setUndoRedoButtons()
     else
         ui->btnRedo->setEnabled(true);
 }
+
+void MainWindow::updateCommentLineEdits(MainWindow::comments c)
+{
+    ui->leDialogue->setText(c.d);
+    ui->leAction->setText(c.a);
+    ui->leSlug->setText(c.s);
+}
+

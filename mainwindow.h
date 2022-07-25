@@ -7,6 +7,7 @@
 #include <QLabel>
 #include "QGraphicsScene"
 #include <QMainWindow>
+#include <QDebug>
 
 namespace Ui {
     class MainWindow;
@@ -21,6 +22,12 @@ class MainWindow : public QMainWindow
     struct strokes{
         int first;
         int last;
+    };
+
+    struct comments{
+        QString d;
+        QString a;
+        QString s;
     };
 
 public:
@@ -49,6 +56,7 @@ private:
     void onPaletteRowChanged(int row);
     void onPenWidthChanged(int w);
     void onTimingChanged(int timing);
+    void updateTimingLabel();
 
     void updateStoryboard();
     void copyFrom_mScene(QGraphicsScene* scene);
@@ -61,6 +69,11 @@ private:
     void redoLast();
     void setUndoRedoButtons();
 
+    void updateDialogue(QString d) { mActiveComments.d = d; qDebug() << mActiveComments.d; };
+    void updateAction(QString a) { mActiveComments.a = a; };
+    void updateSlug(QString s) { mActiveComments.s = s; };
+    void updateCommentLineEdits(comments c);
+
     // STORYBOARD member vars
     QString mActiveProjectFull = "";
     QString mActiveStoryboardFull = "";
@@ -68,7 +81,6 @@ private:
     QString mActiveStoryboard = "";
     int mActiveStoryboardFrames = 0;
     int mActiveStoryboardPad = 0;
-    int mSelectedPad = 0;       // the storyboard pad that is clicked
     int mFps = 25;
     QString mRatio = "Standard";
     QVector<QGraphicsScene*> mDrawingPads;
@@ -77,9 +89,9 @@ private:
     QList<QGraphicsItem*> mItemRedoList;
     QList<strokes> entryList;
     QList<strokes> redoEntryList;
+    QList<comments> commentList;
     QPen mPen;
     bool mPenIsPressed = false;
-    bool mNeedSave = false;
 
     // palette default colors
     const QColor mLIGHTBLUE = QColor(160, 215, 255);
@@ -103,8 +115,8 @@ private:
     QPointF mNextPoint;
     strokes mEntry;
     strokes mRedoEntry;
+    comments mActiveComments;
     StartupMenu* mStartupMenu = nullptr;
-    QTimer* updateTimer = nullptr;
 };
 
 #endif // MAINWINDOW_H
