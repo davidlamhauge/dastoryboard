@@ -23,7 +23,7 @@ private:
     void setPreferredFps(int fps);
 
     int mFps = 25;
-
+    int mState = 0;
 };
 
 #endif // PREFERENCEMANAGER_H

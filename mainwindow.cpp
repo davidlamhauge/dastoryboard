@@ -21,7 +21,10 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 
+#include <QElapsedTimer>
+
 #include "startupmenu.h"
+#include "preferencemanager.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -66,6 +69,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->leAction, &QLineEdit::textChanged, this, &MainWindow::updateAction);
     connect(ui->leSlug, &QLineEdit::textChanged, this, &MainWindow::updateSlug);
 
+    connect(ui->btnPreferences, &QPushButton::clicked, this, &MainWindow::setPreferences);
+
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
     ui->btnSaveProject->setEnabled(false);
@@ -77,6 +82,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cbBG->setEnabled(false);
     ui->sbPenWidth->setValue(settings.value("penwidth", 5).toInt());
     ui->gvSketchPad->setScene(mScene);
+
+    mPrefs = new PreferenceManager();
+    int b = settings.value("loadLast", 0).toInt();
+    if (b == 2)
+    {
+        QString fileName = settings.value("project", "").toString();
+        QString pName = settings.value("project_folder", "").toString();
+        settings.setValue("lastProjPath", fileName);
+        fileName = fileName + "/" + pName + ".dsb";
+        if (QFile::exists(fileName))
+            autoLoad(fileName);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -156,6 +173,8 @@ void MainWindow::init()
     commentList.append(mActiveComments);
 
     QSettings settings("TeamLamhauge", "daStoryboard");
+    mLastProjPath = settings.value("lastProjPath", "").toString();
+
     mPen.setColor(settings.value("pencolor", QColor(Qt::black)).value<QColor>());
     ui->labPencolor->setText("");
     ui->labPencolor->setStyleSheet("QLabel { background-color : " + mPen.color().name() +  " ; }");
@@ -201,7 +220,6 @@ void MainWindow::init()
                                                                         mPaletteList.at(i)));
             mActivePaletteList.replace(i, list.at(3));
         }
-
     }
 }
 
@@ -295,26 +313,18 @@ void MainWindow::newProject()
 
 void MainWindow::loadProject()
 {
-
-    QString fileName;
-    QSettings settings("TeamLamhauge", "daStoryboard");
-    mActiveProject = settings.value("project_folder", "").toString();
-    mActiveProjectFull = settings.value("project", "").toString();
-    mActiveStoryboardFull = settings.value("scene", "").toString();
-    if (mActiveProjectFull.isEmpty() ||
-            mActiveStoryboardFull.isEmpty() ||
-            mActiveProject.isEmpty() ||
-            !mActiveStoryboardFull.startsWith(mActiveProjectFull))
-    {
-        fileName = QFileDialog::getOpenFileName(this,
+        QString fileName = QFileDialog::getOpenFileName(this,
                                                 tr("Open project file"),
-                                                "",
+                                                mLastProjPath,
                                                 tr("Project Files (*.dsb)"));
-    }
-    else
-    {
-        fileName = mActiveProjectFull + "/" + mActiveProject + ".dsb";
-    }
+        autoLoad(fileName);
+}
+
+void MainWindow::autoLoad(QString fileName)
+{
+    QElapsedTimer* timer = new QElapsedTimer;
+    timer->start();
+    QSettings settings("TeamLamhauge", "daStoryboard");
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly | QFile::Text))
     {
@@ -323,6 +333,7 @@ void MainWindow::loadProject()
         mDrawingPads.clear();
         mTiming.clear();
         mItemRedoList.clear();
+        ui->gvSketchPad->setEnabled(true);
 
         // start DOM gymnastics...
         QDomDocument doc;
@@ -338,11 +349,11 @@ void MainWindow::loadProject()
 
             mActiveProject = e.attribute("project_name");
             mActiveProjectFull = e.attribute("project_path");
+            settings.setValue("lastProjPath", mActiveProjectFull);
             int width = e.attribute("pad_width").toInt();
             int height = e.attribute("pad_height").toInt();
             mScene->setSceneRect(0, 0, width, height);
 
-            QSettings settings("TeamLamhauge", "daStoryboard");
             if (height == 600)
                 settings.setValue("ratio", "Standard");
             else
@@ -356,7 +367,6 @@ void MainWindow::loadProject()
 
 
         }
-        ui->gvSketchPad->setEnabled(true);
 
         // now load palette
 
@@ -442,9 +452,7 @@ void MainWindow::loadProject()
             // are there more storyboards?
             stb = stb.nextSibling();
         }
-    }
-    else
-    {
+
     }
 
     updateTimingLabel();
@@ -458,10 +466,13 @@ void MainWindow::loadProject()
     ui->btnClearCanvas->setEnabled(true);
     ui->btnAddStoryboardPad->setEnabled(true);
     ui->cbBG->setEnabled(true);
+    qDebug() << "ms: " << timer->elapsed();
 }
 
 void MainWindow::saveProject()
 {
+    QElapsedTimer* timer = new QElapsedTimer;
+    timer->start();
     // first copy active pad from mScene
     copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
 
@@ -552,6 +563,7 @@ void MainWindow::saveProject()
         msgBox.setText(tr("Couldn't open file...."));
         msgBox.exec();
     }
+    qDebug() << "ms: " << timer->elapsed();
 }
 
 void MainWindow::addPad()
@@ -972,5 +984,10 @@ void MainWindow::updateCommentLineEdits(MainWindow::comments c)
     const QSignalBlocker b3(ui->leSlug);
     ui->leSlug->setText(c.s);
     }
+}
+
+void MainWindow::setPreferences()
+{
+    mPrefs->exec();
 }
 

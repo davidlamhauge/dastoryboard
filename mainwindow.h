@@ -14,6 +14,7 @@ namespace Ui {
 }
 
 class StartupMenu;
+class PreferenceManager;
 
 class MainWindow : public QMainWindow
 {
@@ -42,6 +43,7 @@ private:
     void init();
     void newProject();
     void loadProject();
+    void autoLoad(QString fileName);
     void saveProject();
     void addPad();
     void removePad();
@@ -74,8 +76,11 @@ private:
     void updateSlug(QString s)     { mActiveComments.s = s; commentList.replace(mActiveStoryboardPad, mActiveComments); }
     void updateCommentLineEdits(comments c);
 
+    void setPreferences();
+
     // STORYBOARD member vars
     QString mActiveProjectFull = "";
+    QString mLastProjPath = "";
     QString mActiveStoryboardFull = "";
     QString mActiveProject = "";
     QString mActiveStoryboard = "";
@@ -117,6 +122,7 @@ private:
     strokes mRedoEntry;
     comments mActiveComments;
     StartupMenu* mStartupMenu = nullptr;
+    PreferenceManager* mPrefs = nullptr;
 };
 
 #endif // MAINWINDOW_H
