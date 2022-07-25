@@ -419,9 +419,6 @@ void MainWindow::autoLoad(QString fileName)
                 mActiveComments.a = padEle.attribute("action");
                 mActiveComments.s = padEle.attribute("slug");
                 commentList.append(mActiveComments);
-                ui->leDialogue->setText(mActiveComments.d);
-                ui->leAction->setText(mActiveComments.a);
-                ui->leSlug->setText(mActiveComments.s);
 
                 // now load lines that make up the drawing
                 QDomNode line = pad.firstChild();
@@ -438,6 +435,7 @@ void MainWindow::autoLoad(QString fileName)
                     mPen.setColor(col);
                     mPen.setWidth(w);
                     mScene->addLine(p1x, p1y, p2x, p2y, mPen);
+
                     line = line.nextSibling();
                 }
                 QIcon icon(mActiveStoryboardFull + "/"  + QString::number(mActiveStoryboardPad) + ".png");
@@ -457,6 +455,7 @@ void MainWindow::autoLoad(QString fileName)
     }
 
     updateTimingLabel();
+    updateCommentLineEdits(mActiveComments);
 
     ui->labStoryboardInfo->setText(mActiveStoryboard);
     ui->btnAddStoryboard->setEnabled(true);
