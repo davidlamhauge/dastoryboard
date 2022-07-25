@@ -239,6 +239,7 @@ void MainWindow::newProject()
     }
     else
     {
+        mScene->clear();
         mStoryboardPads.clear();
         mDrawingPads.clear();
         mTiming.clear();
@@ -466,7 +467,7 @@ void MainWindow::autoLoad(QString fileName)
     ui->btnClearCanvas->setEnabled(true);
     ui->btnAddStoryboardPad->setEnabled(true);
     ui->cbBG->setEnabled(true);
-    qDebug() << "ms: " << timer->elapsed();
+    qDebug() << "ms load: " << timer->elapsed();
 }
 
 void MainWindow::saveProject()
@@ -563,7 +564,7 @@ void MainWindow::saveProject()
         msgBox.setText(tr("Couldn't open file...."));
         msgBox.exec();
     }
-    qDebug() << "ms: " << timer->elapsed();
+    qDebug() << "ms save: " << timer->elapsed();
 }
 
 void MainWindow::addPad()

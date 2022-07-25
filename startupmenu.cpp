@@ -12,6 +12,7 @@ StartupMenu::StartupMenu(QWidget *parent) :
     ui->setupUi(this);
 
     QSettings settings("TeamLamhauge", "daStoryboard");
+    mLastFolder = settings.value("lastProjPath", "").toString();
     mProjectPath = settings.value("project", "").toString();
     ui->labProject->setText(mProjectPath);
     mStoryBoardPath = settings.value("scene", "").toString();
