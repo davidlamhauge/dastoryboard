@@ -15,7 +15,7 @@ StartupMenu::StartupMenu(QWidget *parent) :
     mProjectPath = settings.value("project", "").toString();
     ui->labProject->setText(mProjectPath);
     mStoryBoardPath = settings.value("scene", "").toString();
-    ui->labScene->setText(mStoryBoardPath);
+    ui->labStoryboard->setText(mStoryBoardPath);
     settings.setValue("ratio", "Standard");
     settings.setValue("fps", 25);
 
@@ -23,7 +23,7 @@ StartupMenu::StartupMenu(QWidget *parent) :
         ui->btnReady->setEnabled(false);
 
     connect(ui->btnSelectProject, &QPushButton::clicked, this, &StartupMenu::getProjectName);
-    connect(ui->btnSelectScene, &QPushButton::clicked, this, &StartupMenu::getStoryboardName);
+    connect(ui->btnSelectStoryboard, &QPushButton::clicked, this, &StartupMenu::getStoryboardName);
     connect(ui->btnReady, &QPushButton::clicked, this, &StartupMenu::close);
     connect(ui->sbFPS, QOverload<int>::of(&QSpinBox::valueChanged), this, &StartupMenu::setFps);
     connect(ui->rbHD, &QRadioButton::toggled, this, &StartupMenu::setRatio);
@@ -60,7 +60,7 @@ void StartupMenu::getStoryboardName()
     if (!mStoryBoardPath.isEmpty())
     {
         mLastFolder = mStoryBoardPath;
-        ui->labScene->setText(mStoryBoardPath);
+        ui->labStoryboard->setText(mStoryBoardPath);
         QSettings settings("TeamLamhauge", "daStoryboard");
         settings.setValue("scene", mStoryBoardPath);
         checkProgress();

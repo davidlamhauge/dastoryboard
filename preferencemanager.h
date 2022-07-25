@@ -16,7 +16,14 @@ public:
     ~PreferenceManager();
 
 private:
+
     Ui::PreferenceManager *ui;
+
+    void setLoadLastProject(int state);
+    void setPreferredFps(int fps);
+
+    int mFps = 25;
+
 };
 
 #endif // PREFERENCEMANAGER_H

@@ -29,14 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    init();
+
     // position where we left it
-//    QSize scr = QGuiApplication::primaryScreen()->availableSize();
+    QSize scr = QGuiApplication::primaryScreen()->availableSize();
     QSettings settings("TeamLamhauge", "daStoryboard");
     resize(settings.value("winSize", QSize(1040, 780)).toSize());
-//    move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
-    move(settings.value("winPos", QPoint(520, 390)).toPoint());
-
-    init();
+    move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
+//    move(settings.value("winPos", QPoint(520, 390)).toPoint());
 
     ui->lwPalette->installEventFilter(this);
     mScene->installEventFilter(this);
@@ -68,7 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->gvSketchPad->setEnabled(false);
     ui->btnAddStoryboard->setEnabled(false);
-    ui->btnSaveStoryboard->setEnabled(false);
     ui->btnSaveProject->setEnabled(false);
 
     ui->btnLoadBG->setEnabled(false);
@@ -142,8 +141,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
 
 void MainWindow::init()
 {
-    mOrgPalette << mLIGHTBLUE << mLIGHTGREEN << mLIGHTRED << mLIGHTYELLOW << mLIGHTBROWN
-           << mLIGHTPURPLE << mBLACK << mLIGHTGRAY << mDARKGRAY << mWHITE ;
+    mOrgPalette << mWHITE  << mLIGHTBLUE << mLIGHTGREEN << mLIGHTRED << mLIGHTYELLOW
+                << mLIGHTBROWN << mLIGHTPURPLE << mBLACK << mLIGHTGRAY << mDARKGRAY;
     mCurPalette = mOrgPalette;
     mActivePaletteList = mPaletteList;
     mScene = new QGraphicsScene(ui->gvSketchPad->sceneRect());
@@ -283,7 +282,6 @@ void MainWindow::newProject()
         ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
         ui->btnAddStoryboard->setEnabled(true);
-        ui->btnSaveStoryboard->setEnabled(true);
         ui->btnSaveProject->setEnabled(true);
 
         ui->btnLoadBG->setEnabled(true);
@@ -389,7 +387,7 @@ void MainWindow::loadProject()
             for (int i = 0; i < pads; i++)
             {
                 QGraphicsScene* scene = new QGraphicsScene();
-                scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height())); // TODO
+                scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height()));
                 mDrawingPads.append(scene);
             }
             ui->twStoryboard->clear();
@@ -406,13 +404,13 @@ void MainWindow::loadProject()
                 mScene->clear();
                 int timing = padEle.attribute("timing").toInt();
                 mTiming.append(timing);
-                ui->leDialogue->setText(padEle.attribute("dial"));
-                ui->leAction->setText(padEle.attribute("action"));
-                ui->leSlug->setText(padEle.attribute("slug"));
-                mActiveComments.d = ui->leDialogue->text();
-                mActiveComments.a = ui->leAction->text();
-                mActiveComments.s = ui->leSlug->text();
+                mActiveComments.d = padEle.attribute("dial");
+                mActiveComments.a = padEle.attribute("action");
+                mActiveComments.s = padEle.attribute("slug");
                 commentList.append(mActiveComments);
+                ui->leDialogue->setText(mActiveComments.d);
+                ui->leAction->setText(mActiveComments.a);
+                ui->leSlug->setText(mActiveComments.s);
 
                 // now load lines that make up the drawing
                 QDomNode line = pad.firstChild();
@@ -453,7 +451,6 @@ void MainWindow::loadProject()
 
     ui->labStoryboardInfo->setText(mActiveStoryboard);
     ui->btnAddStoryboard->setEnabled(true);
-    ui->btnSaveStoryboard->setEnabled(true);
     ui->btnSaveProject->setEnabled(true);
 
     ui->btnLoadBG->setEnabled(true);
@@ -515,7 +512,7 @@ void MainWindow::saveProject()
         {
             QString s = list.at(i);
             stream.writeStartElement("storyboard");
-            stream.writeAttribute("padCount", QString::number(ui->twStoryboard->columnCount()));
+            stream.writeAttribute("padCount", QString::number(mDrawingPads.size()));
             stream.writeAttribute("folder", s);
 
             for (int j = 0; j < mDrawingPads.size(); j++)
@@ -523,9 +520,10 @@ void MainWindow::saveProject()
                 stream.writeStartElement("pad");
                 QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
                 stream.writeAttribute("timing", QString::number(mTiming.at(j)));
-                stream.writeAttribute("dial", ui->leDialogue->text());
-                stream.writeAttribute("action", ui->leAction->text());
-                stream.writeAttribute("slug", ui->leSlug->text());
+                mActiveComments = commentList.at(j);
+                stream.writeAttribute("dial", mActiveComments.d);
+                stream.writeAttribute("action", mActiveComments.a);
+                stream.writeAttribute("slug", mActiveComments.s);
                 for (int k = 0; k < items.size(); k++)
                 {
                     if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
@@ -546,6 +544,7 @@ void MainWindow::saveProject()
         }
         stream.writeEndElement(); // for project
         stream.writeEndDocument();
+        mActiveComments = commentList.at(mActiveStoryboardPad);
     }
     else
     {
@@ -622,14 +621,14 @@ void MainWindow::onCellClicked(int row, int column)
     if (column != mActiveStoryboardPad)
     {
         copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
-        mActiveStoryboardPad = column;
         copyTo_mScene(mDrawingPads.at(column));
-        ui->sbFrames->setValue(mTiming.at(column));
         commentList.replace(mActiveStoryboardPad, mActiveComments);
         mActiveComments = commentList.at(column);
         updateCommentLineEdits(mActiveComments);
-        qDebug() << mActiveComments.d << " d * str " << commentList.count();
+        mActiveStoryboardPad = column;
+        ui->sbFrames->setValue(mTiming.at(column));
         updateCommentLineEdits(mActiveComments);
+        ui->labActivePadValue->setText(QString::number(mActiveStoryboardPad + 1));
     }
     ui->gvSketchPad->setFocus();
 }
@@ -654,7 +653,7 @@ void MainWindow::resetPalette()
 
 void MainWindow::changePaletteColor()
 {
-    if (ui->lwPalette->currentRow() == 9)
+    if (ui->lwPalette->currentRow() == 0)
     {
         QMessageBox msgBox;
         msgBox.setText(tr("Eraser can't be changed! Only the width..."));
@@ -791,7 +790,12 @@ void MainWindow::updateTimingLabel()
     int t = 0;
     for (int i = 0; i < mTiming.size(); i++)
         t = t + mTiming.at(i);
-    ui->labTimeValue->setText(QString::number(t));
+    ui->labFramesCountValue->setText(QString::number(t));
+    int sec = t / mFps;
+    int fr  = t - (sec * mFps);
+    QString code(QString::number(sec) + ":" + QString::number(fr));
+    ui->labTimeValue->setText(code);
+    ui->labActivePadValue->setText(QString::number(mActiveStoryboardPad + 1));
 }
 
 void MainWindow::updateStoryboard()
@@ -956,8 +960,17 @@ void MainWindow::setUndoRedoButtons()
 
 void MainWindow::updateCommentLineEdits(MainWindow::comments c)
 {
+    {
+    const QSignalBlocker b1(ui->leDialogue);
     ui->leDialogue->setText(c.d);
+    }
+    {
+    const QSignalBlocker b2(ui->leAction);
     ui->leAction->setText(c.a);
+    }
+    {
+    const QSignalBlocker b3(ui->leSlug);
     ui->leSlug->setText(c.s);
+    }
 }
 

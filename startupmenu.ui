@@ -72,9 +72,9 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QLabel" name="labSceneText">
+      <widget class="QLabel" name="labStoryboardText">
        <property name="text">
-        <string>Scene:</string>
+        <string>Storyboard:</string>
        </property>
       </widget>
      </item>
@@ -92,7 +92,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="labScene">
+      <widget class="QLabel" name="labStoryboard">
        <property name="text">
         <string notr="true">SceneNr</string>
        </property>
@@ -116,9 +116,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="btnSelectScene">
+      <widget class="QPushButton" name="btnSelectStoryboard">
        <property name="text">
-        <string>Select Scene</string>
+        <string>Select Storyboard</string>
        </property>
       </widget>
      </item>

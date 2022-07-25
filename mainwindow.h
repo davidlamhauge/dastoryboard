@@ -69,9 +69,9 @@ private:
     void redoLast();
     void setUndoRedoButtons();
 
-    void updateDialogue(QString d) { mActiveComments.d = d; qDebug() << mActiveComments.d; };
-    void updateAction(QString a) { mActiveComments.a = a; };
-    void updateSlug(QString s) { mActiveComments.s = s; };
+    void updateDialogue(QString d) { mActiveComments.d = d; commentList.replace(mActiveStoryboardPad, mActiveComments); }
+    void updateAction(QString a)   { mActiveComments.a = a; commentList.replace(mActiveStoryboardPad, mActiveComments); }
+    void updateSlug(QString s)     { mActiveComments.s = s; commentList.replace(mActiveStoryboardPad, mActiveComments); }
     void updateCommentLineEdits(comments c);
 
     // STORYBOARD member vars
@@ -94,6 +94,7 @@ private:
     bool mPenIsPressed = false;
 
     // palette default colors
+    const QColor mWHITE = QColor(255, 255, 255);
     const QColor mLIGHTBLUE = QColor(160, 215, 255);
     const QColor mLIGHTGREEN = QColor(135, 255, 145);
     const QColor mLIGHTRED = QColor(240, 180, 180);
@@ -103,9 +104,8 @@ private:
     const QColor mBLACK = QColor(10, 10, 10);
     const QColor mLIGHTGRAY  = QColor(220, 220, 220);
     const QColor mDARKGRAY = QColor(150, 150, 150);
-    const QColor mWHITE = QColor(255, 255, 255);
-    const QStringList mPaletteList = QStringList() << tr("Light blue") << tr("Light green") << tr("Light red") << tr("Light yellow") << tr("Light brown")
-                                      << tr("Light purple") << tr("Black") << tr("Light gray") << tr("Dark gray") << tr("ERASER White");
+    const QStringList mPaletteList = QStringList() << tr("ERASER White") << tr("Light blue") << tr("Light green") << tr("Light red") << tr("Light yellow")
+                                                   << tr("Light brown") << tr("Light purple") << tr("Black") << tr("Light gray") << tr("Dark gray");
     QStringList mActivePaletteList;
     QList<QColor> mOrgPalette;
     QList<QColor> mCurPalette;
