@@ -283,15 +283,10 @@ void MainWindow::newProject()
         ui->twStoryboard->setColumnCount(mDrawingPads.size());
 
         QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-        QDir(mActiveStoryboardFull).mkdir("backup");
         if (!pix.isNull())
         {
             pix = pix.scaledToWidth(200);
-            QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
-            file.open(QIODevice::WriteOnly);
-            pix.save(&file, "PNG");
-            file.close();
-            QIcon icon(mActiveProjectFull + QString::number(mActiveStoryboardPad) + ".png");
+            QIcon icon(pix);
             mStoryboardPads.append(pix);
             QTableWidgetItem* item = new QTableWidgetItem();
             item->setIcon(icon);
@@ -438,12 +433,14 @@ void MainWindow::autoLoad(QString fileName)
 
                     line = line.nextSibling();
                 }
-                QIcon icon(mActiveStoryboardFull + "/"  + QString::number(mActiveStoryboardPad) + ".png");
+                QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
+                mStoryboardPads.append(pix);
+                pix = pix.scaledToWidth(200);
+                qDebug() << "w: " << pix.width();
+                QIcon icon(pix);
                 QTableWidgetItem* item = new QTableWidgetItem();
                 item->setIcon(icon);
                 ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
-                QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-                mStoryboardPads.append(pix);
                 copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
 
                 pad = pad.nextSibling();
@@ -573,10 +570,11 @@ void MainWindow::addPad()
     copyFrom_mScene(scene);
 
     // then add new scene and column and make ready
-    mActiveStoryboardPad += 1;
     QGraphicsScene* sceneNew = new QGraphicsScene;
     mDrawingPads.append(sceneNew);
+    mActiveStoryboardPad = mDrawingPads.size() - 1;
     ui->twStoryboard->setColumnCount(mDrawingPads.size());
+    ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
     mTiming.append(ui->sbFrames->value());
     ui->sbFrames->setValue(50); // resets the value just appended
 
@@ -594,11 +592,7 @@ void MainWindow::addPad()
     if (!pix.isNull())
     {
         pix = pix.scaledToWidth(200);
-        QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
-        file.open(QIODevice::WriteOnly);
-        pix.save(&file, "PNG");
-        file.close();
-        QIcon icon(mActiveProjectFull + QString::number(mActiveStoryboardPad) + ".png");
+        QIcon icon(pix);
         mStoryboardPads.append(pix);
         QTableWidgetItem* item = new QTableWidgetItem();
         item->setIcon(icon);
@@ -816,13 +810,7 @@ void MainWindow::updateStoryboard()
     if (!pix.isNull())
     {
         pix = pix.scaledToWidth(200);
-        mStoryboardPads.replace(mActiveStoryboardPad, pix);
-        QFile file(mActiveStoryboardFull + "/" + QString::number(mActiveStoryboardPad) + ".png");
-        file.open(QIODevice::WriteOnly);
-        pix.save(&file, "PNG");
-        file.close();
-
-        QIcon icon(mActiveStoryboardFull + "/"  + QString::number(mActiveStoryboardPad) + ".png");
+        QIcon icon(pix);
         QTableWidgetItem* item = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
@@ -849,6 +837,7 @@ void MainWindow::copyTo_mScene(QGraphicsScene *scene)
 
 void MainWindow::clearCanvas()
 {
+    qDebug() << "entry list size: " << entryList.size();
     QMessageBox msgBox;
     msgBox.setText(tr("Are you sure? Can not be undone..."));
     msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
@@ -866,6 +855,7 @@ void MainWindow::clearCanvas()
 
 void MainWindow::clearSelected()
 {
+    qDebug() << "entry list size: " << entryList.size();
     QMessageBox msgBox;
     msgBox.setText(tr("Are you sure? Can not be undone..."));
     msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
@@ -892,6 +882,7 @@ void MainWindow::clearSelected()
 
 void MainWindow::clearButSelected()
 {
+    qDebug() << "entry list size: " << entryList.size();
     QMessageBox msgBox;
     msgBox.setText(tr("Are you sure? Can not be undone..."));
     msgBox.setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
