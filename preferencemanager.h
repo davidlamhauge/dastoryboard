@@ -21,9 +21,11 @@ private:
 
     void setLoadLastProject(int state);
     void setPreferredFps(int fps);
+    void setPreferredAutosaveInterval(int minutes);
 
     int mFps = 25;
     int mState = 0;
+    int mAutosaveInterval = 2;
 };
 
 #endif // PREFERENCEMANAGER_H

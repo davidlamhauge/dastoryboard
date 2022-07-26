@@ -22,6 +22,7 @@
 #include <QDomDocument>
 
 #include <QElapsedTimer>
+#include <QTimer>
 
 #include "startupmenu.h"
 #include "preferencemanager.h"
@@ -39,10 +40,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QSettings settings("TeamLamhauge", "daStoryboard");
     resize(settings.value("winSize", QSize(1040, 780)).toSize());
     move(settings.value("winPos", QPoint(scr.width()/2 - 1040/2, scr.height()/2 - 780/2)).toPoint());
-//    move(settings.value("winPos", QPoint(520, 390)).toPoint());
 
     ui->lwPalette->installEventFilter(this);
     mScene->installEventFilter(this);
+
+    mAutoSaveTimer = new QTimer(this);
+    int interval = settings.value("autosaveInterval", 2).toInt() * 60 * 1000;
+    mAutoSaveTimer->setInterval(interval);
+    connect(mAutoSaveTimer, &QTimer::timeout, this, &MainWindow::autoSaveInvoked);
 
     connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->btnLoadProject, &QPushButton::clicked, this, &MainWindow::loadProject);
@@ -84,8 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gvSketchPad->setScene(mScene);
 
     mPrefs = new PreferenceManager();
-    int b = settings.value("loadLast", 0).toInt();
-    if (b == 2)
+    int loadLast = settings.value("loadLast", 0).toInt();
+    if (loadLast == 2)
     {
         QString fileName = settings.value("project", "").toString();
         QString pName = settings.value("project_folder", "").toString();
@@ -141,6 +146,7 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
         else if (m->type() == QEvent::GraphicsSceneMouseRelease && mPenIsPressed)
         {
             mPenIsPressed = false;
+            mNeedSave = true;
             mNextPoint = m->scenePos().toPoint();
             mScene->addLine(QLineF(mPrevPoint, mNextPoint), mPen);
             mEntry.last = mScene->items().size() - 1;
@@ -303,8 +309,8 @@ void MainWindow::newProject()
         ui->btnClearCanvas->setEnabled(true);
         ui->btnAddStoryboardPad->setEnabled(true);
         ui->cbBG->setEnabled(true);
-
     }
+    mAutoSaveTimer->start();
 }
 
 void MainWindow::loadProject()
@@ -436,7 +442,6 @@ void MainWindow::autoLoad(QString fileName)
                 QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
                 mStoryboardPads.append(pix);
                 pix = pix.scaledToWidth(200);
-                qDebug() << "w: " << pix.width();
                 QIcon icon(pix);
                 QTableWidgetItem* item = new QTableWidgetItem();
                 item->setIcon(icon);
@@ -464,6 +469,21 @@ void MainWindow::autoLoad(QString fileName)
     ui->btnAddStoryboardPad->setEnabled(true);
     ui->cbBG->setEnabled(true);
     qDebug() << "ms load: " << timer->elapsed();
+    mAutoSaveTimer->start();
+}
+
+void MainWindow::autoSaveInvoked()
+{
+    if (mNeedSave)
+    {
+        saveProject();
+        QSettings settings("TeamLamhauge", "daStoryboard");
+        int interval = settings.value("autosaveInterval", 2).toInt() * 60 * 1000;
+        mAutoSaveTimer->stop();
+        mAutoSaveTimer->setInterval(interval);
+        mAutoSaveTimer->start();
+        mNeedSave = false;
+    }
 }
 
 void MainWindow::saveProject()

@@ -19,8 +19,12 @@ PreferenceManager::PreferenceManager(QWidget *parent) :
     mFps = settings.value("prefFps", 25).toInt();
     ui->sbFps->setValue(mFps);
 
+    mAutosaveInterval = settings.value("autosaveInterval", 2).toInt();
+    ui->sbAutosave->setValue(mAutosaveInterval);
+
     connect(ui->cbLoadLast, &QCheckBox::stateChanged, this, &PreferenceManager::setLoadLastProject);
     connect(ui->sbFps, QOverload<int>::of(&QSpinBox::valueChanged), this, &PreferenceManager::setPreferredFps);
+    connect(ui->sbAutosave, QOverload<int>::of(&QSpinBox::valueChanged), this, &PreferenceManager::setPreferredAutosaveInterval);
     connect(ui->btnDone, &QPushButton::clicked, this, &PreferenceManager::close);
 }
 
@@ -41,4 +45,11 @@ void PreferenceManager::setPreferredFps(int fps)
     mFps = fps;
     QSettings settings("TeamLamhauge", "daStoryboard");
     settings.setValue("prefFps", mFps);
+}
+
+void PreferenceManager::setPreferredAutosaveInterval(int minutes)
+{
+    mAutosaveInterval = minutes;
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    settings.setValue("autosaveInterval", mAutosaveInterval);
 }

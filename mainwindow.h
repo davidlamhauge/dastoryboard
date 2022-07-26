@@ -44,6 +44,7 @@ private:
     void newProject();
     void loadProject();
     void autoLoad(QString fileName);
+    void autoSaveInvoked();
     void saveProject();
     void addPad();
     void removePad();
@@ -97,6 +98,7 @@ private:
     QList<comments> commentList;
     QPen mPen;
     bool mPenIsPressed = false;
+    bool mNeedSave = false;
 
     // palette default colors
     const QColor mWHITE = QColor(255, 255, 255);
@@ -111,6 +113,8 @@ private:
     const QColor mDARKGRAY = QColor(150, 150, 150);
     const QStringList mPaletteList = QStringList() << tr("ERASER White") << tr("Light blue") << tr("Light green") << tr("Light red") << tr("Light yellow")
                                                    << tr("Light brown") << tr("Light purple") << tr("Black") << tr("Light gray") << tr("Dark gray");
+    const int mMAX_ENTRIES = 50;
+
     QStringList mActivePaletteList;
     QList<QColor> mOrgPalette;
     QList<QColor> mCurPalette;
@@ -123,6 +127,7 @@ private:
     comments mActiveComments;
     StartupMenu* mStartupMenu = nullptr;
     PreferenceManager* mPrefs = nullptr;
+    QTimer* mAutoSaveTimer = nullptr;
 };
 
 #endif // MAINWINDOW_H
