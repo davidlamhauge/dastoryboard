@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QAction>
 #include <QSettings>
 #include <QScreen>
 #include <QDebug>
@@ -14,6 +15,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QGraphicsLineItem>
+#include <QGraphicsPixmapItem>
 #include <QTableWidgetItem>
 #include <QScrollBar>
 #include <QPixmap>
@@ -49,21 +51,40 @@ MainWindow::MainWindow(QWidget *parent) :
     mAutoSaveTimer->setInterval(interval);
     connect(mAutoSaveTimer, &QTimer::timeout, this, &MainWindow::autoSaveInvoked);
 
-    connect(ui->btnExit, &QPushButton::clicked, this, &MainWindow::close);
-    connect(ui->btnLoadProject, &QPushButton::clicked, this, &MainWindow::loadProject);
-    connect(ui->btnResetPal, &QPushButton::clicked, this, &MainWindow::resetPalette);
-    connect(ui->btnSavePal, &QPushButton::clicked, this, &MainWindow::savePalette);
-    connect(ui->btnLoadPal, &QPushButton::clicked, this, &MainWindow::loadPalette);
-    connect(ui->btnSaveProject, &QPushButton::clicked, this, &MainWindow::saveProject);
-    connect(ui->btnNewProject, &QPushButton::clicked, this, &MainWindow::newProject);
-    connect(ui->btnClearCanvas, &QPushButton::clicked, this, &MainWindow::clearCanvas);
-    connect(ui->btnClearSelColor, &QPushButton::clicked, this, &MainWindow::clearSelected);
-    connect(ui->btnClearButSelColor, &QPushButton::clicked, this, &MainWindow::clearButSelected);
-    connect(ui->btnUndo, &QPushButton::clicked, this, &MainWindow::undoLast);
-    connect(ui->btnRedo, &QPushButton::clicked, this, &MainWindow::redoLast);
-    connect(ui->btnAddStoryboardPad, &QPushButton::clicked, this, &MainWindow::addPad);
-    connect(ui->btnRemoveStoryboardPad, &QPushButton::clicked, this, &MainWindow::removePad);
+    // menu 'file'...
+    connect(ui->actionOpen_project, &QAction::triggered, this, &MainWindow::loadProject);
+    connect(ui->actionSave_Project, &QAction::triggered, this, &MainWindow::saveProject);
+    connect(ui->actionNew_project, &QAction::triggered, this, &MainWindow::newProject);
+    connect(ui->actionPreferences, &QAction::triggered, this, &MainWindow::setPreferences);
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
 
+    // menu 'edit'...
+    connect(ui->actionUndo, &QAction::triggered, this, &MainWindow::undoLast);
+    connect(ui->actionRedo, &QAction::triggered, this, &MainWindow::redoLast);
+    connect(ui->actionClear_Pad, &QAction::triggered, this, &MainWindow::clearCanvas);
+    connect(ui->actionClear_selected_color, &QAction::triggered, this, &MainWindow::clearSelected);
+    connect(ui->actionKeep_only_selected_color, &QAction::triggered, this, &MainWindow::clearButSelected);
+
+    // menu 'storyboard'...
+    connect(ui->actionAdd_Pad, &QAction::triggered, this, &MainWindow::addPad);
+    connect(ui->actionRemove_Pad, &QAction::triggered, this, &MainWindow::removePad);
+    connect(ui->actionInsert_Pad, &QAction::triggered, this, &MainWindow::insertPad);
+    connect(ui->actionMove_Pad_back, &QAction::triggered, this, &MainWindow::movePadLeft);
+    connect(ui->actionMove_Pad_forward, &QAction::triggered, this, &MainWindow::movePadRight);
+    connect(ui->actionLoad_Background, &QAction::triggered, this, &MainWindow::loadBackground);
+    connect(ui->actionRemove_Background, &QAction::triggered, this, &MainWindow::removeBackground);
+    connect(ui->actionHide_Background, &QAction::triggered, this, &MainWindow::hideBackground);
+    ui->actionLoad_Background->setEnabled(false);
+    ui->actionRemove_Background->setEnabled(false);
+    ui->actionHide_Background->setEnabled(false);
+    ui->actionToggle_overlay->setEnabled(false);
+
+    // menu 'palette'...
+    connect(ui->actionSave_palette, &QAction::triggered, this, &MainWindow::savePalette);
+    connect(ui->actionLoad_palette, &QAction::triggered, this, &MainWindow::loadPalette);
+    connect(ui->actionReset_Palette, &QAction::triggered, this, &MainWindow::resetPalette);
+
+    // other signals...
     connect(ui->lwPalette, &QListWidget::itemChanged, this, &MainWindow::onItemChanged);
     connect(ui->lwPalette, &QListWidget::currentRowChanged, this, &MainWindow::onPaletteRowChanged);
     connect(ui->twStoryboard, &QTableWidget::cellClicked, this, &MainWindow::onCellClicked);
@@ -74,17 +95,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->leAction, &QLineEdit::textChanged, this, &MainWindow::updateAction);
     connect(ui->leSlug, &QLineEdit::textChanged, this, &MainWindow::updateSlug);
 
-    connect(ui->btnPreferences, &QPushButton::clicked, this, &MainWindow::setPreferences);
 
     ui->gvSketchPad->setEnabled(false);
-    ui->btnAddStoryboard->setEnabled(false);
-    ui->btnSaveProject->setEnabled(false);
 
-    ui->btnLoadBG->setEnabled(false);
-    ui->btnRemoveBG->setEnabled(false);
-    ui->btnClearCanvas->setEnabled(false);
-    ui->btnAddStoryboardPad->setEnabled(false);
-    ui->cbBG->setEnabled(false);
     ui->sbPenWidth->setValue(settings.value("penwidth", 5).toInt());
     ui->gvSketchPad->setScene(mScene);
 
@@ -154,7 +167,6 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *e)
                 entryList.removeFirst();
             entryList.append(mEntry);
             updateStoryboard();
-            setUndoRedoButtons();
             return true;
         }
     }
@@ -180,11 +192,13 @@ void MainWindow::init()
 
     QSettings settings("TeamLamhauge", "daStoryboard");
     mLastProjPath = settings.value("lastProjPath", "").toString();
+    mAutosave = settings.value("autosave", false).toBool();
 
     mPen.setColor(settings.value("pencolor", QColor(Qt::black)).value<QColor>());
     ui->labPencolor->setText("");
     ui->labPencolor->setStyleSheet("QLabel { background-color : " + mPen.color().name() +  " ; }");
     mPen.setWidth(settings.value("penwidth", 5).toInt());
+    ui->labPencolor->setFixedHeight(mPen.width());
 
     ui->lwPalette->clear();
     QListWidgetItem* item;
@@ -236,7 +250,7 @@ void MainWindow::newProject()
     mStartupMenu->exec();
 
     if (settings.value("project").toString().isEmpty() ||
-            settings.value("scene").toString().isEmpty() ||
+            settings.value("storyboard").toString().isEmpty() ||
             !mActiveStoryboardFull.startsWith(mActiveProjectFull))
     {
         QMessageBox msgBox;
@@ -251,11 +265,16 @@ void MainWindow::newProject()
         mTiming.clear();
         mItemRedoList.clear();
         mActiveProjectFull = settings.value("project").toString();
-        mActiveStoryboardFull = settings.value("scene").toString();
+        mActiveStoryboardFull = settings.value("storyboard").toString();
         QStringList a = mActiveStoryboardFull.split("/");
         mActiveProject = a.at(a.size() - 2);
         settings.setValue("project_folder", mActiveProject);
         mActiveStoryboard = a.at(a.size() - 1);
+        ui->cbStoryboards->addItem(mActiveStoryboard);
+        QDir dir(mActiveStoryboardFull);
+        dir.mkdir(mActiveStoryboardFull + "/" + "backup");
+        dir.mkdir(mActiveStoryboardFull + "/" + "bg");
+        dir.mkdir(mActiveStoryboardFull + "/" + "misc");
 
         setWindowTitle("daStoryboard - " + mActiveProject);
 
@@ -301,16 +320,9 @@ void MainWindow::newProject()
 
         ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
-        ui->btnAddStoryboard->setEnabled(true);
-        ui->btnSaveProject->setEnabled(true);
-
-        ui->btnLoadBG->setEnabled(true);
-        ui->btnRemoveBG->setEnabled(true);
-        ui->btnClearCanvas->setEnabled(true);
-        ui->btnAddStoryboardPad->setEnabled(true);
-        ui->cbBG->setEnabled(true);
     }
-    mAutoSaveTimer->start();
+    if (mAutosave)
+        mAutoSaveTimer->start();
 }
 
 void MainWindow::loadProject()
@@ -432,10 +444,18 @@ void MainWindow::autoLoad(QString fileName)
                     int p2y = linesEle.attribute("p2y").toInt();
                     int rgb = linesEle.attribute("rgb").toUInt();
                     int w = linesEle.attribute("width").toInt();
-                    QColor col = QColor::fromRgb(rgb);
-                    mPen.setColor(col);
-                    mPen.setWidth(w);
-                    mScene->addLine(p1x, p1y, p2x, p2y, mPen);
+                    int z = linesEle.attribute("z", 0).toInt();
+                    if (z == 0)
+                    {
+                        QColor col = QColor::fromRgb(rgb);
+                        mPen.setColor(col);
+                        mPen.setWidth(w);
+                        mScene->addLine(p1x, p1y, p2x, p2y, mPen);
+                    }
+                    else if (z == -1)
+                    {
+
+                    }
 
                     line = line.nextSibling();
                 }
@@ -460,21 +480,15 @@ void MainWindow::autoLoad(QString fileName)
     updateCommentLineEdits(mActiveComments);
 
     ui->labStoryboardInfo->setText(mActiveStoryboard);
-    ui->btnAddStoryboard->setEnabled(true);
-    ui->btnSaveProject->setEnabled(true);
-
-    ui->btnLoadBG->setEnabled(true);
-    ui->btnRemoveBG->setEnabled(true);
-    ui->btnClearCanvas->setEnabled(true);
-    ui->btnAddStoryboardPad->setEnabled(true);
-    ui->cbBG->setEnabled(true);
+    ui->cbStoryboards->addItem(mActiveStoryboard);
     qDebug() << "ms load: " << timer->elapsed();
-    mAutoSaveTimer->start();
+    if (mAutosave)
+        mAutoSaveTimer->start();
 }
 
 void MainWindow::autoSaveInvoked()
 {
-    if (mNeedSave)
+    if (mNeedSave && mAutosave)
     {
         saveProject();
         QSettings settings("TeamLamhauge", "daStoryboard");
@@ -554,15 +568,23 @@ void MainWindow::saveProject()
                 stream.writeAttribute("slug", mActiveComments.s);
                 for (int k = 0; k < items.size(); k++)
                 {
-                    if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k)))
+                    if (items.at(k)->zValue() == 0)
                     {
-                        stream.writeStartElement("line");
+                        QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(k));
+                        stream.writeStartElement("item");
                         stream.writeAttribute("p1x", QString::number( line->line().p1().x()));
                         stream.writeAttribute("p1y", QString::number( line->line().p1().y()));
                         stream.writeAttribute("p2x", QString::number( line->line().p2().x()));
                         stream.writeAttribute("p2y", QString::number( line->line().p2().y()));
                         stream.writeAttribute("rgb", QString::number( line->pen().color().rgb()));
                         stream.writeAttribute("width", QString::number(line->pen().width()));
+                        stream.writeEndElement(); // for line item
+                    }
+                    if (items.at(k)->zValue() == -1)
+                    {
+                        QGraphicsPixmapItem* pix = static_cast<QGraphicsPixmapItem*>(items.at(k));
+                        stream.writeStartElement("item");
+                        stream.writeAttribute("z", QString::number(pix->zValue()));
                         stream.writeEndElement(); // for line item
                     }
                 }
@@ -580,6 +602,7 @@ void MainWindow::saveProject()
         msgBox.setText(tr("Couldn't open file...."));
         msgBox.exec();
     }
+    mNeedSave = false;
     qDebug() << "ms save: " << timer->elapsed();
 }
 
@@ -619,6 +642,7 @@ void MainWindow::addPad()
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
     }
     entryList.clear();
+    mNeedSave = true;
 }
 
 void MainWindow::removePad()
@@ -633,12 +657,74 @@ void MainWindow::removePad()
     updateCommentLineEdits(mActiveComments);
     commentList.removeAt(mActiveStoryboardPad);
     ui->twStoryboard->removeColumn(mActiveStoryboardPad);
+    entryList.clear();
     copyTo_mScene(mDrawingPads.at(newPos));
+    mNeedSave = true;
 }
 
-void MainWindow::swapPads(int active, int neighbor)
+void MainWindow::insertPad()
 {
+    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+    int tmp = mActiveStoryboardPad;
+    int goal = mActiveStoryboardPad + 1;
+    addPad();
+    mActiveStoryboardPad = tmp;
+    if (mActiveStoryboardPad + 2 < mDrawingPads.size()) // if not, it equals append()
+    {
+        int start = mDrawingPads.size() - 1;
+        do
+        {
+            mDrawingPads.swapItemsAt(start - 1, start);
+            copyTo_mScene(mDrawingPads.at(start));
+            mActiveStoryboardPad = start;
+            updateStoryboard();
+            start--;
+        } while (goal < start);
+        mActiveStoryboardPad = start;
+        copyTo_mScene(mDrawingPads.at(start));
+        updateStoryboard();
+    }
+    mNeedSave = true;
+}
 
+void MainWindow::movePadLeft()
+{
+    if (mActiveStoryboardPad > 0)
+    {
+        QTableWidgetItem* itemA = ui->twStoryboard->takeItem(0, mActiveStoryboardPad - 1);
+        QTableWidgetItem* itemZ = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad, itemA);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad - 1, itemZ);
+
+        mDrawingPads.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
+        mStoryboardPads.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
+        commentList.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
+        mActiveStoryboardPad--;
+        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
+        ui->twStoryboard->clearSelection();
+        ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
+    }
+    mNeedSave = true;
+}
+
+void MainWindow::movePadRight()
+{
+    if (mActiveStoryboardPad < mDrawingPads.size() - 1)
+    {
+        QTableWidgetItem* itemA = ui->twStoryboard->takeItem(0, mActiveStoryboardPad + 1);
+        QTableWidgetItem* itemZ = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad, itemA);
+        ui->twStoryboard->setItem(0, mActiveStoryboardPad + 1, itemZ);
+
+        mDrawingPads.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
+        mStoryboardPads.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
+        commentList.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
+        mActiveStoryboardPad++;
+        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
+        ui->twStoryboard->clearSelection();
+        ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
+    }
+    mNeedSave = true;
 }
 
 void MainWindow::onCellClicked(int row, int column)
@@ -659,6 +745,51 @@ void MainWindow::onCellClicked(int row, int column)
     ui->gvSketchPad->setFocus();
 }
 
+void MainWindow::loadBackground()
+{
+    // code works, but I need to find a way to save BG with xml file...
+    /*
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    tr("Select background image"),
+                                                    mLastProjPath,
+                                                    tr("Image files (*.png *.jpg)"));
+    if (filename.isEmpty())
+        return;
+
+    QFile file(filename);
+    QStringList list = filename.split("/");
+    QString bgFile = mActiveStoryboardFull + "/" + "bg/" + list.last();
+    bool b = false;
+    if (!QFile::exists(bgFile))
+        b = file.copy(bgFile);
+    else
+        b = true;
+    if (b)
+    {
+        if (!file.open(QIODevice::ReadOnly))
+            return;
+
+        QPixmap pix(bgFile);
+        pix = pix.scaled(ui->gvSketchPad->size(), Qt::IgnoreAspectRatio);
+        QGraphicsPixmapItem* item = new QGraphicsPixmapItem;
+        item->setPixmap(pix);
+        item->setZValue(-1);
+        mScene->addItem(item);
+        updateStoryboard();
+    }
+*/
+}
+
+void MainWindow::removeBackground()
+{
+
+}
+
+void MainWindow::hideBackground()
+{
+
+}
+
 void MainWindow::resetPalette()
 {
     QListWidgetItem* item;
@@ -675,6 +806,7 @@ void MainWindow::resetPalette()
             item->setForeground(QBrush(Qt::white));
         ui->lwPalette->addItem(item);
     }
+    mNeedSave = true;
 }
 
 void MainWindow::changePaletteColor()
@@ -707,6 +839,7 @@ void MainWindow::changePaletteColor()
             mCurPalette.replace(i, color);
         }
     }
+    mNeedSave = true;
 }
 
 void MainWindow::savePalette()
@@ -773,6 +906,7 @@ void MainWindow::loadPalette()
                                                                     item->text()));
         mActivePaletteList.replace(i, list.at(3));
     }
+    mNeedSave = true;
 }
 
 void MainWindow::onItemChanged(QListWidgetItem *item)
@@ -803,12 +937,15 @@ void MainWindow::onPenWidthChanged(int w)
     mPen.setWidth(w);
     QSettings settings("TeamLamhauge", "daStoryboard");
     settings.setValue("penwidth", w);
+    ui->labPencolor->setFixedHeight(w);
+    mNeedSave = true;
 }
 
 void MainWindow::onTimingChanged(int timing)
 {
     mTiming.replace(mActiveStoryboardPad, timing);
     updateTimingLabel();
+    mNeedSave = true;
 }
 
 void MainWindow::updateTimingLabel()
@@ -835,6 +972,15 @@ void MainWindow::updateStoryboard()
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
     }
+    mNeedSave = true;
+}
+
+void MainWindow::refreshStoryboard()
+{
+    for (int i = 0; i < mStoryboardPads.size(); i++)
+    {
+
+    }
 }
 
 void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
@@ -842,8 +988,20 @@ void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
     scene->clear();
     QList<QGraphicsItem*> items = mScene->items();
     for (int i = 0; i < items.size(); i++)
-        if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
+    {
+        if (items.at(i)->zValue() == 0)
+        {
+            QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i));
             scene->addLine(line->line(), line->pen());
+        }
+        else if (items.at(i)->zValue() == -1)
+        {
+            QGraphicsPixmapItem* pix = static_cast<QGraphicsPixmapItem*>(items.at(i));
+            qDebug() << "test1";
+            pix->setZValue(-1);
+            scene->addItem(pix);
+        }
+    }
 }
 
 void MainWindow::copyTo_mScene(QGraphicsScene *scene)
@@ -851,8 +1009,20 @@ void MainWindow::copyTo_mScene(QGraphicsScene *scene)
     mScene->clear();
     QList<QGraphicsItem*> items = scene->items();
     for (int i = 0; i < items.size(); i++)
-        if (QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i)))
+        if (items.at(i)->zValue() == 0)
+        {
+            QGraphicsLineItem* line = static_cast<QGraphicsLineItem*>(items.at(i));
             mScene->addLine(line->line(), line->pen());
+        }
+        else if (items.at(i)->zValue() == -1)
+        {
+            QGraphicsPixmapItem* pix = static_cast<QGraphicsPixmapItem*>(items.at(i));
+            qDebug() << "test1";
+            pix->setZValue(-1);
+            qDebug() << "test2";
+            mScene->addItem(pix);
+            qDebug() << "test3";
+        }
 }
 
 void MainWindow::clearCanvas()
@@ -869,7 +1039,7 @@ void MainWindow::clearCanvas()
         entryList.clear();
         redoEntryList.clear();
         updateStoryboard();
-        setUndoRedoButtons();
+        mNeedSave = true;
     }
 }
 
@@ -896,7 +1066,7 @@ void MainWindow::clearSelected()
         entryList.clear();
         redoEntryList.clear();
         updateStoryboard();
-        setUndoRedoButtons();
+        mNeedSave = true;
     }
 }
 
@@ -923,7 +1093,7 @@ void MainWindow::clearButSelected()
         entryList.clear();
         redoEntryList.clear();
         updateStoryboard();
-        setUndoRedoButtons();
+        mNeedSave = true;
     }
 }
 
@@ -945,7 +1115,6 @@ void MainWindow::undoLast()
         mRedoEntry.last = mItemRedoList.size() - 1;
         redoEntryList.append(mRedoEntry);
         updateStoryboard();
-        setUndoRedoButtons();
     }
 }
 
@@ -965,20 +1134,7 @@ void MainWindow::redoLast()
         mEntry.last = mScene->items().size() -1;
         entryList.append(mEntry);
         updateStoryboard();
-        setUndoRedoButtons();
     }
-}
-
-void MainWindow::setUndoRedoButtons()
-{
-    if (entryList.isEmpty())
-        ui->btnUndo->setEnabled(false);
-    else
-        ui->btnUndo->setEnabled(true);
-    if (redoEntryList.isEmpty())
-        ui->btnRedo->setEnabled(false);
-    else
-        ui->btnRedo->setEnabled(true);
 }
 
 void MainWindow::updateCommentLineEdits(MainWindow::comments c)
@@ -995,6 +1151,7 @@ void MainWindow::updateCommentLineEdits(MainWindow::comments c)
     const QSignalBlocker b3(ui->leSlug);
     ui->leSlug->setText(c.s);
     }
+    mNeedSave = true;
 }
 
 void MainWindow::setPreferences()

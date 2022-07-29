@@ -16,6 +16,12 @@ PreferenceManager::PreferenceManager(QWidget *parent) :
     else
         ui->cbLoadLast->setChecked(true);
 
+    mAutosave = settings.value("autosave", false).toBool();
+    if (mAutosave == false)
+        ui->cbAutosave->setChecked(false);
+    else
+        ui->cbAutosave->setChecked(true);
+
     mFps = settings.value("prefFps", 25).toInt();
     ui->sbFps->setValue(mFps);
 
@@ -24,6 +30,7 @@ PreferenceManager::PreferenceManager(QWidget *parent) :
 
     connect(ui->cbLoadLast, &QCheckBox::stateChanged, this, &PreferenceManager::setLoadLastProject);
     connect(ui->sbFps, QOverload<int>::of(&QSpinBox::valueChanged), this, &PreferenceManager::setPreferredFps);
+    connect(ui->cbAutosave, &QCheckBox::stateChanged, this, &PreferenceManager::setAutosaveEnabled);
     connect(ui->sbAutosave, QOverload<int>::of(&QSpinBox::valueChanged), this, &PreferenceManager::setPreferredAutosaveInterval);
     connect(ui->btnDone, &QPushButton::clicked, this, &PreferenceManager::close);
 }
@@ -47,9 +54,20 @@ void PreferenceManager::setPreferredFps(int fps)
     settings.setValue("prefFps", mFps);
 }
 
+void PreferenceManager::setAutosaveEnabled(int state)
+{
+    if (state == 0)
+        mAutosave = false;
+    else
+        mAutosave = true;
+    QSettings settings("TeamLamhauge", "daStoryboard");
+    settings.setValue("autosave", mAutosave);
+}
+
 void PreferenceManager::setPreferredAutosaveInterval(int minutes)
 {
     mAutosaveInterval = minutes;
     QSettings settings("TeamLamhauge", "daStoryboard");
     settings.setValue("autosaveInterval", mAutosaveInterval);
 }
+

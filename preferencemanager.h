@@ -21,10 +21,12 @@ private:
 
     void setLoadLastProject(int state);
     void setPreferredFps(int fps);
+    void setAutosaveEnabled(int state);
     void setPreferredAutosaveInterval(int minutes);
 
     int mFps = 25;
     int mState = 0;
+    bool mAutosave = false;
     int mAutosaveInterval = 2;
 };
 

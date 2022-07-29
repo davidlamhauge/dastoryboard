@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1301</width>
-    <height>791</height>
+    <width>1246</width>
+    <height>765</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
     <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
      <widget class="QTableWidget" name="twStoryboard">
       <property name="minimumSize">
@@ -89,7 +89,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_12">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
@@ -198,61 +198,6 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
-          <item>
-           <widget class="QPushButton" name="btnSavePal">
-            <property name="text">
-             <string>Save palette</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnLoadPal">
-            <property name="text">
-             <string>Load palette</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_9">
-          <item>
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnResetPal">
-            <property name="text">
-             <string>Reset Palette</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QLabel" name="labPenWidth">
@@ -302,62 +247,23 @@
           </property>
          </widget>
         </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_17">
-          <item>
-           <widget class="QPushButton" name="btnClearSelColor">
-            <property name="text">
-             <string>Clear selected color</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnClearButSelColor">
-            <property name="text">
-             <string>Keep only selected color</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnClearCanvas">
-            <property name="text">
-             <string>Clear canvas</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnRemoveStoryboardPad">
-            <property name="text">
-             <string>Remove storyboard pad</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnAddStoryboardPad">
-            <property name="text">
-             <string>Add Storyboard pad</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QGraphicsView" name="gvSketchPad">
           <property name="sizePolicy">
@@ -390,66 +296,14 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QPushButton" name="btnLoadBG">
-            <property name="text">
-             <string>Load BG</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnRemoveBG">
-            <property name="text">
-             <string>Remove BG</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbBG">
-            <property name="text">
-             <string>Hide BG</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnUndo">
-            <property name="text">
-             <string>Undo</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnRedo">
-            <property name="text">
-             <string>Redo</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>797</width>
-            <height>13</height>
+            <width>20</width>
+            <height>40</height>
            </size>
           </property>
          </spacer>
@@ -457,168 +311,160 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_6">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QLabel" name="labStoryboardText">
-              <property name="text">
-               <string>Storyboard:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="labStoryboardInfo">
-              <property name="text">
-               <string notr="true">info</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="labStoryboardText">
+            <property name="text">
+             <string>Storyboard:</string>
+            </property>
+           </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
-             <widget class="QLabel" name="labFrames">
-              <property name="text">
-               <string>Frames:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="sbFrames">
-              <property name="toolTip">
-               <string>Interval: 1-999</string>
-              </property>
-              <property name="suffix">
-               <string> fr.</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>999</number>
-              </property>
-              <property name="value">
-               <number>50</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="labStoryboardsText">
-              <property name="text">
-               <string>Storyboards:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="cbStoryboards"/>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout">
-            <item>
-             <widget class="QLabel" name="labDialogue">
-              <property name="text">
-               <string>Dialogue:  (max 150 chars.)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="leDialogue">
-              <property name="maxLength">
-               <number>150</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="labAction">
-              <property name="text">
-               <string>Action: (max 150 chars)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="leAction">
-              <property name="maxLength">
-               <number>150</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="labSlug">
-              <property name="text">
-               <string>Slug: (max 150 chars.)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="leSlug">
-              <property name="maxLength">
-               <number>150</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <item row="2" column="0">
-             <widget class="QLabel" name="labTimeText">
-              <property name="text">
-               <string>Time:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="labTimeValue">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="labFramesCountValue">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="labActivePadValue">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="labFrameCountText">
-              <property name="text">
-               <string>Frames total:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="labActivePadText">
-              <property name="text">
-               <string>Active pad:</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QLabel" name="labStoryboardInfo">
+            <property name="text">
+             <string notr="true">info</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
+           <widget class="QLabel" name="labFrames">
+            <property name="text">
+             <string>Frames:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="sbFrames">
+            <property name="toolTip">
+             <string>Interval: 1-999</string>
+            </property>
+            <property name="suffix">
+             <string> fr.</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999</number>
+            </property>
+            <property name="value">
+             <number>50</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="labStoryboardsText">
+            <property name="text">
+             <string>Storyboards:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="cbStoryboards"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QLabel" name="labDialogue">
+            <property name="text">
+             <string>Dialogue:  (max 150 chars.)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="leDialogue">
+            <property name="maxLength">
+             <number>150</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labAction">
+            <property name="text">
+             <string>Action: (max 150 chars)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="leAction">
+            <property name="maxLength">
+             <number>150</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labSlug">
+            <property name="text">
+             <string>Slug: (max 150 chars.)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="leSlug">
+            <property name="maxLength">
+             <number>150</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labActivePadText">
+            <property name="text">
+             <string>Active pad:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labFrameCountText">
+            <property name="text">
+             <string>Frames total:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="labActivePadValue">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labTimeText">
+            <property name="text">
+             <string>Time:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="labFramesCountValue">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="labTimeValue">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -630,106 +476,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <item>
-             <widget class="QPushButton" name="btnNewProject">
-              <property name="text">
-               <string>New project</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_8">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnLoadProject">
-              <property name="text">
-               <string>Load project</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <widget class="QPushButton" name="btnAddStoryboard">
-              <property name="text">
-               <string>Add Storyboard</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnSaveProject">
-              <property name="text">
-               <string>Save Project</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
-            <item>
-             <widget class="QPushButton" name="btnPreferences">
-              <property name="text">
-               <string>Preferences</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnExit">
-              <property name="text">
-               <string>Exit</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
          </layout>
         </item>
@@ -744,10 +490,63 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1301</width>
+     <width>1246</width>
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionNew_project"/>
+    <addaction name="actionOpen_project"/>
+    <addaction name="actionSave_Project"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear_Pad"/>
+    <addaction name="actionClear_selected_color"/>
+    <addaction name="actionKeep_only_selected_color"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuPalette">
+    <property name="title">
+     <string>Palette</string>
+    </property>
+    <addaction name="actionSave_palette"/>
+    <addaction name="actionLoad_palette"/>
+    <addaction name="separator"/>
+    <addaction name="actionReset_Palette"/>
+   </widget>
+   <widget class="QMenu" name="menuStoryboard">
+    <property name="title">
+     <string>Storyboard</string>
+    </property>
+    <addaction name="actionAdd_Pad"/>
+    <addaction name="actionRemove_Pad"/>
+    <addaction name="actionInsert_Pad"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoad_Background"/>
+    <addaction name="actionRemove_Background"/>
+    <addaction name="actionHide_Background"/>
+    <addaction name="actionToggle_overlay"/>
+    <addaction name="separator"/>
+    <addaction name="actionMove_Pad_back"/>
+    <addaction name="actionMove_Pad_forward"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuStoryboard"/>
+   <addaction name="menuPalette"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="sizePolicy">
@@ -764,6 +563,158 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNew_project">
+   <property name="text">
+    <string>New Project</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpen_project">
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Project">
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Shift+Z</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+,</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionClear_Pad">
+   <property name="text">
+    <string>Clear Pad</string>
+   </property>
+  </action>
+  <action name="actionClear_selected_color">
+   <property name="text">
+    <string>Clear selected color</string>
+   </property>
+  </action>
+  <action name="actionKeep_only_selected_color">
+   <property name="text">
+    <string>Keep only selected color</string>
+   </property>
+  </action>
+  <action name="actionSave_palette">
+   <property name="text">
+    <string>Save palette</string>
+   </property>
+  </action>
+  <action name="actionLoad_palette">
+   <property name="text">
+    <string>Load palette</string>
+   </property>
+  </action>
+  <action name="actionReset_Palette">
+   <property name="text">
+    <string> Reset palette</string>
+   </property>
+  </action>
+  <action name="actionAdd_Pad">
+   <property name="text">
+    <string>Add Pad</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionRemove_Pad">
+   <property name="text">
+    <string>Remove Pad</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionInsert_Pad">
+   <property name="text">
+    <string>Insert Pad</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionLoad_Background">
+   <property name="text">
+    <string>Load Background</string>
+   </property>
+  </action>
+  <action name="actionRemove_Background">
+   <property name="text">
+    <string>Remove Background</string>
+   </property>
+  </action>
+  <action name="actionHide_Background">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toggle Background</string>
+   </property>
+  </action>
+  <action name="actionMove_Pad_back">
+   <property name="text">
+    <string>Move Pad left</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Left</string>
+   </property>
+  </action>
+  <action name="actionMove_Pad_forward">
+   <property name="text">
+    <string>Move Pad right</string>
+   </property>
+   <property name="shortcut">
+    <string notr="true">Ctrl+Right</string>
+   </property>
+  </action>
+  <action name="actionToggle_overlay">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toggle overlay</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

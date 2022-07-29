@@ -15,7 +15,7 @@ StartupMenu::StartupMenu(QWidget *parent) :
     mLastFolder = settings.value("lastProjPath", "").toString();
     mProjectPath = settings.value("project", "").toString();
     ui->labProject->setText(mProjectPath);
-    mStoryBoardPath = settings.value("scene", "").toString();
+    mStoryBoardPath = settings.value("storyboard", "").toString();
     ui->labStoryboard->setText(mStoryBoardPath);
     settings.setValue("ratio", "Standard");
     settings.setValue("fps", 25);
@@ -63,7 +63,7 @@ void StartupMenu::getStoryboardName()
         mLastFolder = mStoryBoardPath;
         ui->labStoryboard->setText(mStoryBoardPath);
         QSettings settings("TeamLamhauge", "daStoryboard");
-        settings.setValue("scene", mStoryBoardPath);
+        settings.setValue("storyboard", mStoryBoardPath);
         checkProgress();
     }
 }

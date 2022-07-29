@@ -46,10 +46,16 @@ private:
     void autoLoad(QString fileName);
     void autoSaveInvoked();
     void saveProject();
+
     void addPad();
     void removePad();
-    void swapPads(int active, int neighbor);
+    void insertPad();
+    void movePadLeft();
+    void movePadRight();
     void onCellClicked(int row, int column);
+    void loadBackground();
+    void removeBackground();
+    void hideBackground();
 
     void resetPalette();
     void changePaletteColor();
@@ -62,6 +68,7 @@ private:
     void updateTimingLabel();
 
     void updateStoryboard();
+    void refreshStoryboard();
     void copyFrom_mScene(QGraphicsScene* scene);
     void copyTo_mScene(QGraphicsScene* scene);
     void clearCanvas();
@@ -70,7 +77,6 @@ private:
 
     void undoLast();
     void redoLast();
-    void setUndoRedoButtons();
 
     void updateDialogue(QString d) { mActiveComments.d = d; commentList.replace(mActiveStoryboardPad, mActiveComments); }
     void updateAction(QString a)   { mActiveComments.a = a; commentList.replace(mActiveStoryboardPad, mActiveComments); }
@@ -99,6 +105,7 @@ private:
     QPen mPen;
     bool mPenIsPressed = false;
     bool mNeedSave = false;
+    bool mAutosave = false;
 
     // palette default colors
     const QColor mWHITE = QColor(255, 255, 255);
