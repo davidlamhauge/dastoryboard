@@ -111,6 +111,8 @@ MainWindow::MainWindow(QWidget *parent) :
         fileName = fileName + "/" + pName + ".dsb";
         if (QFile::exists(fileName))
             autoLoad(fileName);
+        else
+            newProject();
     }
 }
 
@@ -185,10 +187,6 @@ void MainWindow::init()
     ui->twStoryboard->horizontalHeader()->setFixedHeight(20);
     ui->twStoryboard->setRowHeight(0, 150);
     ui->twStoryboard->setColumnCount(0);
-    mActiveComments.d = ui->leDialogue->text();
-    mActiveComments.a = ui->leAction->text();
-    mActiveComments.s = ui->leSlug->text();
-    commentList.append(mActiveComments);
 
     QSettings settings("TeamLamhauge", "daStoryboard");
     mLastProjPath = settings.value("lastProjPath", "").toString();
@@ -216,7 +214,7 @@ void MainWindow::init()
                 item->setForeground(QBrush(Qt::black));
             else
                 item->setForeground(QBrush(Qt::white));
-            ui->lwPalette->addItem(item);
+            ui->lwPalette->insertItem(i, item);
             settings.setValue("palette/" + QString::number(i), QString(QString::number(mOrgPalette.at(i).red()) + "," +
                                                                        QString::number(mOrgPalette.at(i).green()) + "," +
                                                                        QString::number(mOrgPalette.at(i).blue()) + "," +
@@ -233,7 +231,7 @@ void MainWindow::init()
                 item->setForeground(QBrush(Qt::black));
             else
                 item->setForeground(QBrush(Qt::white));
-            ui->lwPalette->addItem(item);
+            ui->lwPalette->insertItem(i, item);
             settings.setValue("palette/" + QString::number(i),  QString(QString::number(color.red()) + "," +
                                                                         QString::number(color.green()) + "," +
                                                                         QString::number(color.blue()) + "," +
@@ -260,9 +258,7 @@ void MainWindow::newProject()
     else
     {
         mScene->clear();
-        mStoryboardPads.clear();
-        mDrawingPads.clear();
-        mTiming.clear();
+        mPadInfo.clear();
         mItemRedoList.clear();
         mActiveProjectFull = settings.value("project").toString();
         mActiveStoryboardFull = settings.value("storyboard").toString();
@@ -293,26 +289,26 @@ void MainWindow::newProject()
         }
         QGraphicsScene* sc = new QGraphicsScene;
         copyFrom_mScene(sc);
-        mDrawingPads.append(sc);
-        mTiming.append(ui->sbFrames->value());
+
+        mActivePadInfo.scene = sc;
+        mActivePadInfo.timing = ui->sbFrames->value();
 
         ui->leDialogue->clear();
         ui->leAction->clear();
         ui->leSlug->clear();
-        mActiveComments.d = ui->leDialogue->text();
-        mActiveComments.a = ui->leAction->text();
-        mActiveComments.s = ui->leSlug->text();
-        commentList.append(mActiveComments);
+        mActivePadInfo.dial = ui->leDialogue->text();
+        mActivePadInfo.action = ui->leAction->text();
+        mActivePadInfo.slug = ui->leSlug->text();
 
         ui->twStoryboard->setRowHeight(0, ui->gvSketchPad->height() / 4  + 20);
-        ui->twStoryboard->setColumnCount(mDrawingPads.size());
+        ui->twStoryboard->setColumnCount(1);
 
         QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
         if (!pix.isNull())
         {
             pix = pix.scaledToWidth(200);
             QIcon icon(pix);
-            mStoryboardPads.append(pix);
+            mActivePadInfo.pix = pix;
             QTableWidgetItem* item = new QTableWidgetItem();
             item->setIcon(icon);
             ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
@@ -321,6 +317,7 @@ void MainWindow::newProject()
         ui->labStoryboardInfo->setText(mActiveStoryboard);
         ui->gvSketchPad->setEnabled(true);
     }
+    mPadInfo.append(mActivePadInfo);
     if (mAutosave)
         mAutoSaveTimer->start();
 }
@@ -343,9 +340,7 @@ void MainWindow::autoLoad(QString fileName)
     if (file.open(QIODevice::ReadOnly | QFile::Text))
     {
         // reset local vars
-        mStoryboardPads.clear();
-        mDrawingPads.clear();
-        mTiming.clear();
+        mPadInfo.clear();
         mItemRedoList.clear();
         ui->gvSketchPad->setEnabled(true);
 
@@ -408,30 +403,36 @@ void MainWindow::autoLoad(QString fileName)
             int pads = stbEle.attribute("padCount").toInt();
             mActiveStoryboard = stbEle.attribute("folder", "");
             mActiveStoryboardFull = mActiveProjectFull + "/" + mActiveStoryboard;
+            /*
             for (int i = 0; i < pads; i++)
             {
+                mPadInfo.append(mActivePadInfo);
                 QGraphicsScene* scene = new QGraphicsScene();
                 scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height()));
-                mDrawingPads.append(scene);
+                mActivePadInfo.scene = scene;
             }
+            */
             ui->twStoryboard->clear();
             ui->twStoryboard->setColumnCount(pads);
 
             // now load pads
             QDomNode pad = stb.firstChild();
             mActiveStoryboardPad = -1;
-            commentList.clear();
             while (!pad.isNull())
             {   // in "pad"
                 QDomElement padEle = pad.toElement();
                 mActiveStoryboardPad++;
                 mScene->clear();
+
+                QGraphicsScene* scene = new QGraphicsScene();
+                scene->setSceneRect(QRectF(0, 0, mScene->width(), mScene->height()));
+                mActivePadInfo.scene = scene;
+
                 int timing = padEle.attribute("timing").toInt();
-                mTiming.append(timing);
-                mActiveComments.d = padEle.attribute("dial");
-                mActiveComments.a = padEle.attribute("action");
-                mActiveComments.s = padEle.attribute("slug");
-                commentList.append(mActiveComments);
+                mActivePadInfo.timing = timing;
+                mActivePadInfo.dial = padEle.attribute("dial");
+                mActivePadInfo.action = padEle.attribute("action");
+                mActivePadInfo.slug = padEle.attribute("slug");
 
                 // now load lines that make up the drawing
                 QDomNode line = pad.firstChild();
@@ -452,21 +453,18 @@ void MainWindow::autoLoad(QString fileName)
                         mPen.setWidth(w);
                         mScene->addLine(p1x, p1y, p2x, p2y, mPen);
                     }
-                    else if (z == -1)
-                    {
-
-                    }
 
                     line = line.nextSibling();
                 }
                 QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
-                mStoryboardPads.append(pix);
                 pix = pix.scaledToWidth(200);
+                mActivePadInfo.pix = pix;
                 QIcon icon(pix);
                 QTableWidgetItem* item = new QTableWidgetItem();
                 item->setIcon(icon);
                 ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
-                copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+                copyFrom_mScene(mActivePadInfo.scene);
+                mPadInfo.append(mActivePadInfo);
 
                 pad = pad.nextSibling();
             }
@@ -477,7 +475,7 @@ void MainWindow::autoLoad(QString fileName)
     }
 
     updateTimingLabel();
-    updateCommentLineEdits(mActiveComments);
+    updateCommentLineEdits(mActivePadInfo);
 
     ui->labStoryboardInfo->setText(mActiveStoryboard);
     ui->cbStoryboards->addItem(mActiveStoryboard);
@@ -505,7 +503,7 @@ void MainWindow::saveProject()
     QElapsedTimer* timer = new QElapsedTimer;
     timer->start();
     // first copy active pad from mScene
-    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
+    copyFrom_mScene(mActivePadInfo.scene);
 
     QString filePath = mActiveProjectFull + "/" + mActiveProject + ".dsb";
     QFile file(filePath);
@@ -554,18 +552,18 @@ void MainWindow::saveProject()
         {
             QString s = list.at(i);
             stream.writeStartElement("storyboard");
-            stream.writeAttribute("padCount", QString::number(mDrawingPads.size()));
+            stream.writeAttribute("padCount", QString::number(mPadInfo.size()));
             stream.writeAttribute("folder", s);
 
-            for (int j = 0; j < mDrawingPads.size(); j++)
+            for (int j = 0; j < mPadInfo.size(); j++)
             {
                 stream.writeStartElement("pad");
-                QList<QGraphicsItem*> items = mDrawingPads.at(j)->items();
-                stream.writeAttribute("timing", QString::number(mTiming.at(j)));
-                mActiveComments = commentList.at(j);
-                stream.writeAttribute("dial", mActiveComments.d);
-                stream.writeAttribute("action", mActiveComments.a);
-                stream.writeAttribute("slug", mActiveComments.s);
+                mActivePadInfo = mPadInfo.at(j);
+                QList<QGraphicsItem*> items = mActivePadInfo.scene->items();
+                stream.writeAttribute("timing", QString::number(mActivePadInfo.timing));
+                stream.writeAttribute("dial", mActivePadInfo.dial);
+                stream.writeAttribute("action", mActivePadInfo.action);
+                stream.writeAttribute("slug", mActivePadInfo.slug);
                 for (int k = 0; k < items.size(); k++)
                 {
                     if (items.at(k)->zValue() == 0)
@@ -594,7 +592,6 @@ void MainWindow::saveProject()
         }
         stream.writeEndElement(); // for project
         stream.writeEndDocument();
-        mActiveComments = commentList.at(mActiveStoryboardPad);
     }
     else
     {
@@ -609,80 +606,89 @@ void MainWindow::saveProject()
 void MainWindow::addPad()
 {
     // first copy active pad from mScene
-    QGraphicsScene* scene = mDrawingPads.at(mActiveStoryboardPad);
-    copyFrom_mScene(scene);
+    copyFrom_mScene(mActivePadInfo.scene);
+    mScene->clear();
 
     // then add new scene and column and make ready
     QGraphicsScene* sceneNew = new QGraphicsScene;
-    mDrawingPads.append(sceneNew);
-    mActiveStoryboardPad = mDrawingPads.size() - 1;
-    ui->twStoryboard->setColumnCount(mDrawingPads.size());
-    ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
-    mTiming.append(ui->sbFrames->value());
+    copyFrom_mScene(sceneNew);
+    mActivePadInfo.scene = sceneNew;
+    mPadInfo.append(mActivePadInfo);
+    mActiveStoryboardPad = mPadInfo.size() - 1;
+    ui->twStoryboard->setColumnCount(mPadInfo.size());
+    mActivePadInfo.timing = ui->sbFrames->value();
     ui->sbFrames->setValue(50); // resets the value just appended
 
     ui->leDialogue->clear();
     ui->leAction->clear();
     ui->leSlug->clear();
-    mActiveComments.d = ui->leDialogue->text();
-    mActiveComments.a = ui->leAction->text();
-    mActiveComments.s = ui->leSlug->text();
-    commentList.append(mActiveComments);
+    mActivePadInfo.dial = ui->leDialogue->text();
+    mActivePadInfo.action = ui->leAction->text();
+    mActivePadInfo.slug = ui->leSlug->text();
 
     // then save new, empty pixmap to file
-    mScene->clear();
     QPixmap pix = ui->gvSketchPad->grab(ui->gvSketchPad->rect());
     if (!pix.isNull())
     {
         pix = pix.scaledToWidth(200);
+        mActivePadInfo.pix = pix;
         QIcon icon(pix);
-        mStoryboardPads.append(pix);
         QTableWidgetItem* item = new QTableWidgetItem();
         item->setIcon(icon);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, item);
     }
     entryList.clear();
+    ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
     mNeedSave = true;
 }
 
 void MainWindow::removePad()
 {
-    int newPos = 0;
-    if (mActiveStoryboardPad == mDrawingPads.size() - 1)
-        newPos = mDrawingPads.size() - 1;
+    if (mActiveStoryboardPad == mPadInfo.size() - 1)
+    {
+        mPadInfo.removeLast();
+        ui->twStoryboard->removeColumn(mActiveStoryboardPad);
+        mActiveStoryboardPad--;
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+    }
     else
-        newPos = mActiveStoryboardPad;
-    mDrawingPads.remove(mActiveStoryboardPad);
-    mActiveComments = commentList.at(newPos);
-    updateCommentLineEdits(mActiveComments);
-    commentList.removeAt(mActiveStoryboardPad);
-    ui->twStoryboard->removeColumn(mActiveStoryboardPad);
+    {
+        mPadInfo.remove(mActiveStoryboardPad);
+        ui->twStoryboard->removeColumn(mActiveStoryboardPad);
+        mActiveStoryboardPad--;
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+    }
+    updateCommentLineEdits(mActivePadInfo);
     entryList.clear();
-    copyTo_mScene(mDrawingPads.at(newPos));
+    copyTo_mScene(mActivePadInfo.scene);
     mNeedSave = true;
 }
 
 void MainWindow::insertPad()
 {
-    copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
-    int tmp = mActiveStoryboardPad;
+    copyFrom_mScene(mActivePadInfo.scene);
     int goal = mActiveStoryboardPad + 1;
-    addPad();
-    mActiveStoryboardPad = tmp;
-    if (mActiveStoryboardPad + 2 < mDrawingPads.size()) // if not, it equals append()
+    if (goal == mPadInfo.size()) // equals append()
+        addPad();
+    else
     {
-        int start = mDrawingPads.size() - 1;
+        addPad();
+        int start = mPadInfo.size() - 1;
         do
         {
-            mDrawingPads.swapItemsAt(start - 1, start);
-            copyTo_mScene(mDrawingPads.at(start));
+            mPadInfo.swapItemsAt(start - 1, start);
+            mActivePadInfo = mPadInfo.at(start);
+            copyTo_mScene(mActivePadInfo.scene);
             mActiveStoryboardPad = start;
             updateStoryboard();
             start--;
         } while (goal < start);
+
         mActiveStoryboardPad = start;
-        copyTo_mScene(mDrawingPads.at(start));
+        mActivePadInfo = mPadInfo.at(start);
+        copyTo_mScene(mActivePadInfo.scene);
         updateStoryboard();
+        updateCommentLineEdits(mActivePadInfo);
     }
     mNeedSave = true;
 }
@@ -696,11 +702,10 @@ void MainWindow::movePadLeft()
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, itemA);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad - 1, itemZ);
 
-        mDrawingPads.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
-        mStoryboardPads.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
-        commentList.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
+        mPadInfo.swapItemsAt(mActiveStoryboardPad - 1, mActiveStoryboardPad);
         mActiveStoryboardPad--;
-        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+        copyTo_mScene(mActivePadInfo.scene);
         ui->twStoryboard->clearSelection();
         ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
     }
@@ -709,18 +714,17 @@ void MainWindow::movePadLeft()
 
 void MainWindow::movePadRight()
 {
-    if (mActiveStoryboardPad < mDrawingPads.size() - 1)
+    if (mActiveStoryboardPad < mPadInfo.size() - 1)
     {
         QTableWidgetItem* itemA = ui->twStoryboard->takeItem(0, mActiveStoryboardPad + 1);
         QTableWidgetItem* itemZ = ui->twStoryboard->takeItem(0, mActiveStoryboardPad);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad, itemA);
         ui->twStoryboard->setItem(0, mActiveStoryboardPad + 1, itemZ);
 
-        mDrawingPads.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
-        mStoryboardPads.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
-        commentList.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
+        mPadInfo.swapItemsAt(mActiveStoryboardPad, mActiveStoryboardPad + 1);
         mActiveStoryboardPad++;
-        copyTo_mScene(mDrawingPads.at(mActiveStoryboardPad));
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+        copyTo_mScene(mActivePadInfo.scene);
         ui->twStoryboard->clearSelection();
         ui->twStoryboard->setCurrentCell(0, mActiveStoryboardPad);
     }
@@ -732,14 +736,13 @@ void MainWindow::onCellClicked(int row, int column)
     Q_UNUSED(row);
     if (column != mActiveStoryboardPad)
     {
-        copyFrom_mScene(mDrawingPads.at(mActiveStoryboardPad));
-        copyTo_mScene(mDrawingPads.at(column));
-        commentList.replace(mActiveStoryboardPad, mActiveComments);
-        mActiveComments = commentList.at(column);
-        updateCommentLineEdits(mActiveComments);
+        copyFrom_mScene(mActivePadInfo.scene);
+        mPadInfo.replace(mActiveStoryboardPad, mActivePadInfo);
         mActiveStoryboardPad = column;
-        ui->sbFrames->setValue(mTiming.at(column));
-        updateCommentLineEdits(mActiveComments);
+        mActivePadInfo = mPadInfo.at(column);
+        copyTo_mScene(mActivePadInfo.scene);
+        updateCommentLineEdits(mActivePadInfo);
+        ui->sbFrames->setValue(mActivePadInfo.timing);
         ui->labActivePadValue->setText(QString::number(mActiveStoryboardPad + 1));
     }
     ui->gvSketchPad->setFocus();
@@ -794,6 +797,7 @@ void MainWindow::resetPalette()
 {
     QListWidgetItem* item;
     ui->lwPalette->clear();
+    qDebug() << "palettelist: " << mPaletteList;
     for (int i = 0; i < 10; i++)
     {
         item = new QListWidgetItem(mPaletteList.at(i));
@@ -804,7 +808,7 @@ void MainWindow::resetPalette()
             item->setForeground(QBrush(Qt::black));
         else
             item->setForeground(QBrush(Qt::white));
-        ui->lwPalette->addItem(item);
+        ui->lwPalette->insertItem(i, item);
     }
     mNeedSave = true;
 }
@@ -846,7 +850,7 @@ void MainWindow::savePalette()
 {
     QString filename = QFileDialog::getSaveFileName(this,
                                                     tr("Save palette as"),
-                                                    "",
+                                                    mLastProjPath,
                                                     tr("Palette files (*.dpal)"));
     if (filename.isEmpty())
         return;
@@ -875,7 +879,7 @@ void MainWindow::loadPalette()
 {
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Open palette"),
-                                                    "",
+                                                    mLastProjPath,
                                                     tr("Palette files (*.dpal)"));
     if (filename.isEmpty())
         return;
@@ -943,7 +947,7 @@ void MainWindow::onPenWidthChanged(int w)
 
 void MainWindow::onTimingChanged(int timing)
 {
-    mTiming.replace(mActiveStoryboardPad, timing);
+    mActivePadInfo.timing = timing;
     updateTimingLabel();
     mNeedSave = true;
 }
@@ -951,8 +955,8 @@ void MainWindow::onTimingChanged(int timing)
 void MainWindow::updateTimingLabel()
 {
     int t = 0;
-    for (int i = 0; i < mTiming.size(); i++)
-        t = t + mTiming.at(i);
+    for (int i = 0; i < mPadInfo.size(); i++)
+        t = t + mPadInfo.at(i).timing;
     ui->labFramesCountValue->setText(QString::number(t));
     int sec = t / mFps;
     int fr  = t - (sec * mFps);
@@ -975,14 +979,6 @@ void MainWindow::updateStoryboard()
     mNeedSave = true;
 }
 
-void MainWindow::refreshStoryboard()
-{
-    for (int i = 0; i < mStoryboardPads.size(); i++)
-    {
-
-    }
-}
-
 void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
 {
     scene->clear();
@@ -997,7 +993,6 @@ void MainWindow::copyFrom_mScene(QGraphicsScene *scene)
         else if (items.at(i)->zValue() == -1)
         {
             QGraphicsPixmapItem* pix = static_cast<QGraphicsPixmapItem*>(items.at(i));
-            qDebug() << "test1";
             pix->setZValue(-1);
             scene->addItem(pix);
         }
@@ -1017,11 +1012,8 @@ void MainWindow::copyTo_mScene(QGraphicsScene *scene)
         else if (items.at(i)->zValue() == -1)
         {
             QGraphicsPixmapItem* pix = static_cast<QGraphicsPixmapItem*>(items.at(i));
-            qDebug() << "test1";
             pix->setZValue(-1);
-            qDebug() << "test2";
             mScene->addItem(pix);
-            qDebug() << "test3";
         }
 }
 
@@ -1137,19 +1129,34 @@ void MainWindow::redoLast()
     }
 }
 
-void MainWindow::updateCommentLineEdits(MainWindow::comments c)
+void MainWindow::updateDialogue(QString d)
+{
+    mActivePadInfo.dial = d;
+}
+
+void MainWindow::updateAction(QString a)
+{
+    mActivePadInfo.action = a;
+}
+
+void MainWindow::updateSlug(QString s)
+{
+    mActivePadInfo.slug = s;
+}
+
+void MainWindow::updateCommentLineEdits(padInfo active)
 {
     {
     const QSignalBlocker b1(ui->leDialogue);
-    ui->leDialogue->setText(c.d);
+    ui->leDialogue->setText(active.dial);
     }
     {
     const QSignalBlocker b2(ui->leAction);
-    ui->leAction->setText(c.a);
+    ui->leAction->setText(active.action);
     }
     {
     const QSignalBlocker b3(ui->leSlug);
-    ui->leSlug->setText(c.s);
+    ui->leSlug->setText(active.slug);
     }
     mNeedSave = true;
 }

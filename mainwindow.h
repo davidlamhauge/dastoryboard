@@ -20,15 +20,20 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    // where lines start and stop
     struct strokes{
         int first;
         int last;
     };
 
-    struct comments{
-        QString d;
-        QString a;
-        QString s;
+    // all info on the pads
+    struct padInfo {
+        QGraphicsScene* scene;
+        QPixmap pix;
+        int timing;
+        QString dial;
+        QString action;
+        QString slug;
     };
 
 public:
@@ -68,7 +73,6 @@ private:
     void updateTimingLabel();
 
     void updateStoryboard();
-    void refreshStoryboard();
     void copyFrom_mScene(QGraphicsScene* scene);
     void copyTo_mScene(QGraphicsScene* scene);
     void clearCanvas();
@@ -78,10 +82,10 @@ private:
     void undoLast();
     void redoLast();
 
-    void updateDialogue(QString d) { mActiveComments.d = d; commentList.replace(mActiveStoryboardPad, mActiveComments); }
-    void updateAction(QString a)   { mActiveComments.a = a; commentList.replace(mActiveStoryboardPad, mActiveComments); }
-    void updateSlug(QString s)     { mActiveComments.s = s; commentList.replace(mActiveStoryboardPad, mActiveComments); }
-    void updateCommentLineEdits(comments c);
+    void updateDialogue(QString d);
+    void updateAction(QString a);
+    void updateSlug(QString s);
+    void updateCommentLineEdits(padInfo active);
 
     void setPreferences();
 
@@ -95,13 +99,10 @@ private:
     int mActiveStoryboardPad = 0;
     int mFps = 25;
     QString mRatio = "Standard";
-    QVector<QGraphicsScene*> mDrawingPads;
-    QVector<int> mTiming;
-    QVector<QPixmap> mStoryboardPads;
+    QVector<padInfo> mPadInfo;
     QList<QGraphicsItem*> mItemRedoList;
     QList<strokes> entryList;
     QList<strokes> redoEntryList;
-    QList<comments> commentList;
     QPen mPen;
     bool mPenIsPressed = false;
     bool mNeedSave = false;
@@ -131,7 +132,7 @@ private:
     QPointF mNextPoint;
     strokes mEntry;
     strokes mRedoEntry;
-    comments mActiveComments;
+    padInfo mActivePadInfo;
     StartupMenu* mStartupMenu = nullptr;
     PreferenceManager* mPrefs = nullptr;
     QTimer* mAutoSaveTimer = nullptr;
