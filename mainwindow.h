@@ -62,7 +62,9 @@ private:
     void removeBackground();
     void hideBackground();
 
-    void playAnimatic();
+    void playFromBegining();
+    void playFromActivePad();
+    void stopPlaying();
     void animaticChange();
 
     void resetPalette();

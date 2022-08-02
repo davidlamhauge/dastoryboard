@@ -547,7 +547,9 @@
     <property name="title">
      <string>Animatic</string>
     </property>
-    <addaction name="actionPlay"/>
+    <addaction name="actionPlay_from_Beginning"/>
+    <addaction name="actionPlay_from_Active_pad"/>
+    <addaction name="actionStop_Animatic"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -722,12 +724,28 @@
     <string>Toggle overlay</string>
    </property>
   </action>
-  <action name="actionPlay">
+  <action name="actionPlay_from_Beginning">
    <property name="text">
-    <string>Play</string>
+    <string>Play from Beginning</string>
    </property>
    <property name="shortcut">
-    <string>Alt+P</string>
+    <string>Alt+B</string>
+   </property>
+  </action>
+  <action name="actionStop_Animatic">
+   <property name="text">
+    <string>Stop Animatic</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionPlay_from_Active_pad">
+   <property name="text">
+    <string>Play from Active pad</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+A</string>
    </property>
   </action>
  </widget>

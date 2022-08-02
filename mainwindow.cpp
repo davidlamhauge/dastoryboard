@@ -80,7 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionToggle_overlay->setEnabled(false);
 
     // menu 'animatic'...
-    connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::playAnimatic);
+    connect(ui->actionPlay_from_Beginning, &QAction::triggered, this, &MainWindow::playFromBegining);
+    connect(ui->actionPlay_from_Active_pad, &QAction::triggered, this, &MainWindow::playFromActivePad);
+    connect(ui->actionStop_Animatic, &QAction::triggered, this, &MainWindow::stopPlaying);
 
     // menu 'palette'...
     connect(ui->actionSave_palette, &QAction::triggered, this, &MainWindow::savePalette);
@@ -796,7 +798,7 @@ void MainWindow::hideBackground()
 
 }
 
-void MainWindow::playAnimatic()
+void MainWindow::playFromBegining()
 {
     copyFrom_mScene(mActivePadInfo.scene);
 
@@ -804,6 +806,28 @@ void MainWindow::playAnimatic()
     connect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
     mActiveStoryboardPad = -1;
     animaticChange();
+}
+
+void MainWindow::playFromActivePad()
+{
+    if (mActiveStoryboardPad > 0)
+    {
+        mAnimaticTimer = new QTimer(this);
+        connect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
+        mActiveStoryboardPad--;
+        animaticChange();
+    }
+}
+
+void MainWindow::stopPlaying()
+{
+    if (mAnimaticTimer->isActive())
+    {
+        mAnimaticTimer->stop();
+        disconnect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+        copyTo_mScene(mActivePadInfo.scene);
+    }
 }
 
 void MainWindow::animaticChange()
@@ -817,6 +841,7 @@ void MainWindow::animaticChange()
     }
     else
     {
+        mActiveStoryboardPad--;
         mAnimaticTimer->stop();
         disconnect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
     }
