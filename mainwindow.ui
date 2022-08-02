@@ -543,10 +543,17 @@
     <addaction name="actionMove_Pad_back"/>
     <addaction name="actionMove_Pad_forward"/>
    </widget>
+   <widget class="QMenu" name="menuAnimatic">
+    <property name="title">
+     <string>Animatic</string>
+    </property>
+    <addaction name="actionPlay"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuStoryboard"/>
    <addaction name="menuPalette"/>
+   <addaction name="menuAnimatic"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="sizePolicy">
@@ -713,6 +720,14 @@
    </property>
    <property name="text">
     <string>Toggle overlay</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="text">
+    <string>Play</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+P</string>
    </property>
   </action>
  </widget>

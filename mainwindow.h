@@ -62,6 +62,9 @@ private:
     void removeBackground();
     void hideBackground();
 
+    void playAnimatic();
+    void animaticChange();
+
     void resetPalette();
     void changePaletteColor();
     void savePalette();
@@ -136,6 +139,7 @@ private:
     StartupMenu* mStartupMenu = nullptr;
     PreferenceManager* mPrefs = nullptr;
     QTimer* mAutoSaveTimer = nullptr;
+    QTimer* mAnimaticTimer = nullptr;
 };
 
 #endif // MAINWINDOW_H

@@ -79,6 +79,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionHide_Background->setEnabled(false);
     ui->actionToggle_overlay->setEnabled(false);
 
+    // menu 'animatic'...
+    connect(ui->actionPlay, &QAction::triggered, this, &MainWindow::playAnimatic);
+
     // menu 'palette'...
     connect(ui->actionSave_palette, &QAction::triggered, this, &MainWindow::savePalette);
     connect(ui->actionLoad_palette, &QAction::triggered, this, &MainWindow::loadPalette);
@@ -791,6 +794,32 @@ void MainWindow::removeBackground()
 void MainWindow::hideBackground()
 {
 
+}
+
+void MainWindow::playAnimatic()
+{
+    copyFrom_mScene(mActivePadInfo.scene);
+
+    mAnimaticTimer = new QTimer(this);
+    connect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
+    mActiveStoryboardPad = -1;
+    animaticChange();
+}
+
+void MainWindow::animaticChange()
+{
+    mActiveStoryboardPad++;
+    if (mActiveStoryboardPad < mPadInfo.size())
+    {
+        mActivePadInfo = mPadInfo.at(mActiveStoryboardPad);
+        copyTo_mScene(mActivePadInfo.scene);
+        mAnimaticTimer->start(mActivePadInfo.timing * (1000 / mFps));
+    }
+    else
+    {
+        mAnimaticTimer->stop();
+        disconnect(mAnimaticTimer, &QTimer::timeout, this, &MainWindow::animaticChange);
+    }
 }
 
 void MainWindow::resetPalette()
